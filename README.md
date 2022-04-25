@@ -1,2 +1,60 @@
-# tempview
+# Tempview
+
 Project work for FullStack 2022
+
+Idea: frontend and backend running in local Raspberry pi server, which collects and visualizes temperature and some other data. Frontend is build for browser and android device. Javascript is used as programming language.
+
+## Data sources
+
+Data is collected from sensors in two locations: home and summer cottage. In addition, some weather data is collected from Finnish Meterological Institute (https://en.ilmatieteenlaitos.fi/open-data).
+
+### Home
+
+- temperature (upstairs)
+- temperature (downstairs)
+
+### Cottage
+
+- temperature (inside)
+- temperature (outside)
+- temperature (cellar)
+- temperature (sauna)
+- temperature (lake)
+- temperature (sleeping barn)
+- waterlevel (lake)
+- waterlevel (well)
+- motionsensor (inside)
+- activity alert (mousetrap inside)
+
+### Controls
+
+- lights on/off (home)
+- heating on/off (cottage)
+
+### Finnish meteorological institute
+
+- Rain (cottage, Röykkä observatory)
+- Snow depth (cottage, Röykkä observatory)
+- Wind speed (cottage, Röykkä observatory)
+- Temperature (Home, Espoo)
+
+## Basic functionalities
+
+### Backend
+
+Framework: Express, graphQL
+Database: Postgres
+
+Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps. 
+
+### Frontend
+
+Framework: React (browser) and React native (mobile).
+
+Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition lights and heating can be activated from frontend. Same functionalities are implemented to both browser and andoird platform.
+
+### Production server
+
+Process manager: https://github.com/Unitech/pm2
+
+Production server will be run Raspberry PI 2 in address https://www.vuorenkoski.fi.
