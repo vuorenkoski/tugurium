@@ -57,7 +57,7 @@ Data is fetched from backend thourgh api layer and presented in different format
 
 Process manager: https://github.com/Unitech/pm2
 
-Production server will be run Raspberry PI 2 in address https://www.vuorenkoski.fi.
+Production server will be run Raspberry PI 2 in address https://tempview.vuorenkoski.fi.
 
 ## Set up development environment
 
