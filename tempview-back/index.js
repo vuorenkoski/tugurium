@@ -1,35 +1,19 @@
 const { ApolloServer, gql } = require('apollo-server')
-
-const sensors = [
-  {
-    sensorName: 'CINS',
-    sensorFullname: 'Mökin sisälämpötila',
-    ID: '1',
-  },
-  {
-    sensorName: 'COUT',
-    sensorFullname: 'Mökin ulkolämpötila',
-    ID: '2',
-  },
-  {
-    sensorName: 'CLAK',
-    sensorFullname: 'Mökin järven lämpötila',
-    ID: '3',
-  },
-]
-
-let measurementData = []
+const { Sequelize } = require('sequelize')
+const { connectToDatabase } = require('./util/db')
+const { Sensor, Measurement } = require('./models')
 
 const typeDefs = gql`
   type Sensor {
     id: ID!
     sensorName: String!
     sensorFullname: String!
+    sensorUnit: String!
   }
   type Measurement {
     id: ID!
     sensor: Sensor!
-    reading: String!
+    value: String!
     timestamp: Int!
   }
   type Query {
@@ -38,24 +22,50 @@ const typeDefs = gql`
     sensorData(sensorName: String!): [Measurement!]!
   }
   type Mutation {
-    addMeasurement(sensorName: String!, reading: String): Measurement
+    addMeasurement(sensorName: String!, value: String): Measurement
   }
 `
 
-const sensorData = (root, args) => {
-  const measurements = measurementData.filter(
-    (m) => m.sensorName === args.sensorName
-  )
-  console.log(measurements)
+const sensorData = async (root, args) => {
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+  })
+  const measurements = await Measurement.findAll({
+    where: { sensorId: sensor.id },
+  })
   return measurements
+}
+
+const allSensors = async () => {
+  const sensors = await Sensor.findAll()
+  return sensors
+}
+
+const addMeasurement = async (root, args) => {
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+  })
+  const value = parseFloat(args.value)
+  const measurement = await Measurement.create({
+    sensorId: sensor.id,
+    value,
+    timestamp: Math.floor(Date.now() / 1000),
+  })
+  return measurement
+}
+
+const sensorDetails = async (root, args) => {
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+  })
+  return sensor
 }
 
 const resolvers = {
   Query: {
-    sensorData: sensorData,
-    allSensors: () => sensors,
-    sensorDetails: (root, args) =>
-      sensors.find((s) => s.sensorName === args.sensorName),
+    sensorData,
+    allSensors,
+    sensorDetails,
   },
   Measurement: {
     sensor: ({ sensorName }) => {
@@ -65,11 +75,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    addMeasurement: (root, args) => {
-      const measurement = { ...args, timestamp: Math.floor(Date.now() / 1000) }
-      measurementData = measurementData.concat(measurement)
-      return measurement
-    },
+    addMeasurement,
   },
 }
 
@@ -78,6 +84,27 @@ const server = new ApolloServer({
   resolvers,
 })
 
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+})
+
+const main = async () => {
+  try {
+    await connectToDatabase()
+    await sequelize.authenticate()
+    console.log('Connection has been established successfully.')
+    sequelize.close()
+  } catch (error) {
+    console.error('Unable to connect to the database:', error)
+  }
+}
+
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`)
+  main()
 })

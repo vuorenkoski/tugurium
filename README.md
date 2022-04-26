@@ -45,7 +45,7 @@ Data is collected from sensors in two locations: home and summer cottage. In add
 Framework: Express, graphQL
 Database: Postgres
 
-Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps. 
+Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
 
 ### Frontend
 
@@ -58,3 +58,24 @@ Data is fetched from backend thourgh api layer and presented in different format
 Process manager: https://github.com/Unitech/pm2
 
 Production server will be run Raspberry PI 2 in address https://www.vuorenkoski.fi.
+
+## Set up development environment
+
+### Set up the database
+
+Install PostgreSQL:
+
+```
+sudo apt install postgresql postgresql-contrib libpq-dev
+```
+
+Create a database:
+
+```
+sudo -u postgres psql
+postgres=# create database tempviewdb;
+postgres=# create user tempviewuser with encrypted password 'secret';
+postgres=# grant all privileges on database tempviewdb to tempviewuser;
+postgres=# alter user tempviewuser createdb; --allow user to create a test database
+postgres=# \q
+```
