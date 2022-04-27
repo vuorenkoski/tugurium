@@ -47,6 +47,8 @@ Database: Postgres
 
 Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
 
+ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database
+
 ### Frontend
 
 Framework: React (browser) and React native (mobile).
@@ -59,9 +61,9 @@ Process manager: https://github.com/Unitech/pm2
 
 ## Development environment
 
-Backend is runnign in http://localhost:4000/
+Backend is running in http://localhost:4000/
 
-Backend is runnign in http://localhost:3000/
+Frontend is running in http://localhost:3000/
 
 ### Set up the database
 
@@ -84,8 +86,20 @@ postgres=# \q
 
 ## Production environment
 
-Production server will be run Raspberry PI 2 in address https://tempview.vuorenkoski.fi.
+Production server will be run Raspberry Pi 2 in address https://tempview.vuorenkoski.fi.
 
 Frontend: https://tempview.vuorenkoski.fi/
 
 Backend: https://tempview.vuorenkoski.fi/graphql
+
+restart after update
+
+```
+cd tempview/tempview-back
+npm install
+sudo service tempview restart
+
+cd tempview/tempview-front
+npm install
+npm run build
+```

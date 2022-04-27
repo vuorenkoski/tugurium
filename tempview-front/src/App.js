@@ -1,20 +1,20 @@
-import { useQuery } from "@apollo/client";
-import { SENSOR_DATA, ALL_SENSORS } from "./queries";
+import { useQuery } from '@apollo/client'
+import { SENSOR_DATA, ALL_SENSORS } from './queries'
 
 const App = () => {
-  const sensors = useQuery(ALL_SENSORS);
+  const sensors = useQuery(ALL_SENSORS)
   const data = useQuery(SENSOR_DATA, {
-    variables: { sensorName: "CINS" },
-  });
+    variables: { sensorName: 'CINS' },
+  })
 
-  let sensorList = [];
+  let sensorList = []
   if (sensors.data) {
-    sensorList = sensors.data.allSensors;
+    sensorList = sensors.data.allSensors
   }
 
-  let measurementList = [];
+  let measurementList = []
   if (data.data) {
-    measurementList = data.data.sensorData;
+    measurementList = data.data.sensorData
   }
 
   return (
@@ -52,7 +52,7 @@ const App = () => {
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

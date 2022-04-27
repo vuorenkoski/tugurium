@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const ALL_SENSORS = gql`
   query AllSensors {
@@ -8,7 +8,7 @@ export const ALL_SENSORS = gql`
       sensorUnit
     }
   }
-`;
+`
 
 export const SENSOR_DATA = gql`
   query SensorData($sensorName: String!) {
@@ -17,4 +17,4 @@ export const SENSOR_DATA = gql`
       timestamp
     }
   }
-`;
+`
