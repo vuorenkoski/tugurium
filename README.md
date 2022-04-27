@@ -57,9 +57,11 @@ Data is fetched from backend thourgh api layer and presented in different format
 
 Process manager: https://github.com/Unitech/pm2
 
-Production server will be run Raspberry PI 2 in address https://tempview.vuorenkoski.fi.
+## Development environment
 
-## Set up development environment
+Backend is runnign in http://localhost:4000/
+
+Backend is runnign in http://localhost:3000/
 
 ### Set up the database
 
@@ -79,3 +81,11 @@ postgres=# grant all privileges on database tempviewdb to tempviewuser;
 postgres=# alter user tempviewuser createdb; --allow user to create a test database
 postgres=# \q
 ```
+
+## Production environment
+
+Production server will be run Raspberry PI 2 in address https://tempview.vuorenkoski.fi.
+
+Frontend: https://tempview.vuorenkoski.fi/
+
+Backend: https://tempview.vuorenkoski.fi/graphql

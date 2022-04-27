@@ -4,4 +4,5 @@
 | :---: | :---- | :------------------------------------------------------------------------ |
 | 25.4. | 6     | Planning basci design and frameworks, inital framework, graphql scetching |
 | 26.4. | 6     | Postgre connection + setting up production server                         |
-| total | 12    |                                                                           |
+| 27.4. | 6     | Prod-serv configuration, data-push running, walking skeleton for front    |
+| total | 18    |                                                                           |
