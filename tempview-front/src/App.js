@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
-import { SENSOR_DATA, ALL_SENSORS } from './queries'
-import { convertDate, convertTemp } from './util/conversions'
+import { ALL_SENSORS } from './queries'
+import Timeseries from './components/Timeseries'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
@@ -27,37 +27,6 @@ const Sensors = ({ sensors }) => {
 
 const Home = () => {
   return <div></div>
-}
-
-const Timeseries = () => {
-  const data = useQuery(SENSOR_DATA, {
-    variables: { sensorName: 'CINS' },
-  })
-
-  let measurementList = []
-  if (data.data) {
-    measurementList = data.data.sensorData.map((m) => ({
-      ...m,
-      datetime: new Date(m.timestamp * 1000),
-    }))
-  }
-
-  return (
-    <table>
-      <tbody>
-        <tr>
-          <th>timestamp</th>
-          <th>value</th>
-        </tr>
-        {measurementList.map((a) => (
-          <tr key={a.timestamp}>
-            <td>{convertDate(a.datetime)}</td>
-            <td>{convertTemp(a.value)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
 }
 
 const App = () => {
