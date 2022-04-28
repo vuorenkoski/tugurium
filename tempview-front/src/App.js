@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { ALL_SENSORS } from './queries'
 import Timeseries from './components/Timeseries'
 import Sensors from './components/Sensors'
-import { Navbar, Nav, Row, NavbarBrand } from 'react-bootstrap'
+import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
@@ -73,7 +73,10 @@ const App = () => {
         <Routes>
           <Route path="/sensors" element={<Sensors sensors={sensorList} />} />
           <Route path="/" element={<Home />} />
-          <Route path="/timeseries" element={<Timeseries />} />
+          <Route
+            path="/timeseries"
+            element={<Timeseries sensors={sensorList} />}
+          />
         </Routes>
       </Router>
     </div>
