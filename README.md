@@ -42,7 +42,7 @@ Data is collected from sensors in two locations: home and summer cottage. In add
 
 ### Backend
 
-Framework: Express, graphQL
+Framework: Express, graphQL, Apolloserver, Sequalize, Umzug
 Database: Postgres
 
 Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
@@ -51,7 +51,7 @@ ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token 
 
 ### Frontend
 
-Framework: React (browser) and React native (mobile).
+Framework: React (browser) and React native (mobile), Apollo-client, Victory, Bootstrap
 
 Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition lights and heating can be activated from frontend. Same functionalities are implemented to both browser and andoird platform.
 
@@ -104,8 +104,11 @@ npm install
 npm run build
 ```
 
-Dump sql data:
+Dump and restore sql data:
 
 ```
-pg_dump -U tempviewuser -h localhost tempviewdb >> sqlfile.sql
+pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
+
+sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
+
 ```

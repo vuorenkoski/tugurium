@@ -1,28 +1,41 @@
 import { useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { VictoryChart, VictoryLine, VictoryScatter } from 'victory'
+import {
+  VictoryChart,
+  VictoryLine,
+  VictoryBrushContainer,
+  VictoryZoomContainer,
+  VictoryAxis,
+  VictoryTheme,
+  VictoryLegend,
+} from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 
 import { SENSOR_DATA } from '../queries'
+
 //import { convertDate, convertTemp } from '../util/conversions'
 
 const Timeseries = ({ sensors }) => {
-  // let s = sensors.reduce((p, c) => ({ ...p, [c.sensorName]: false }), {})
   const [checked, setChecked] = useState([])
+  const [zoomDomain, setZoomDomain] = useState({})
+  const [selectedDomain, setSelectedDomain] = useState({})
   const data = useQuery(SENSOR_DATA, {
     variables: { sensorName: checked },
   })
 
   let graphData = null
   if (data.data && data.data.sensorData.length > 0) {
-    graphData = data.data.sensorData.map((d) => ({
-      sensorFullname: d.sensorFullname,
-      unit: d.unit,
-      measurements: d.measurements.map((m) => ({
-        y: Number(m.value),
-        x: new Date(m.timestamp * 1000),
-      })),
-    }))
+    graphData = data.data.sensorData
+      .filter((d) => d.measurements.length > 0)
+      .map((d) => ({
+        sensorFullname: d.sensorFullname,
+        unit: d.unit,
+        min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
+        measurements: d.measurements.map((m) => ({
+          y: Number(m.value),
+          x: new Date(m.timestamp * 1000),
+        })),
+      }))
   }
 
   const handleCheckboxChange = (e) => {
@@ -32,6 +45,16 @@ const Timeseries = ({ sensors }) => {
       setChecked(checked.filter((i) => i !== e.target.id))
     }
   }
+
+  const handleZoom = (domain) => {
+    setSelectedDomain(domain)
+  }
+
+  const handleBrush = (domain) => {
+    setZoomDomain(domain)
+  }
+
+  const colors = ['black', 'red', 'blue', 'green']
 
   return (
     <div>
@@ -56,9 +79,75 @@ const Timeseries = ({ sensors }) => {
         </Col>
         {graphData && (
           <Col className="col-9">
-            <VictoryChart height={250}>
+            <VictoryChart
+              width={900}
+              height={600}
+              theme={VictoryTheme.material}
+              domain={{
+                y: [graphData.reduce((p, c) => Math.min(p, c.min), 0), 30],
+              }}
+              scale={{ x: 'time' }}
+              containerComponent={
+                <VictoryZoomContainer
+                  responsive={false}
+                  zoomDimension="x"
+                  zoomDomain={zoomDomain}
+                  onZoomDomainChange={handleZoom.bind(this)}
+                />
+              }
+            >
+              <VictoryAxis dependentAxis label="celsius" />
+              <VictoryAxis offsetY={50} label="Aika" />
+              <VictoryLegend
+                x={700}
+                y={0}
+                orientation="vertical"
+                style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
+                data={graphData.map((d, i) => ({
+                  name: d.sensorFullname,
+                  symbol: { fill: colors[i], type: 'square' },
+                }))}
+              />
+
+              {graphData.map((d, i) => (
+                <VictoryLine
+                  key={i}
+                  data={d.measurements}
+                  interpolation="monotoneX"
+                  name={d.sensorFullname}
+                  x={'x'}
+                  y={'y'}
+                  style={{ data: { stroke: colors[i] } }}
+                />
+              ))}
+            </VictoryChart>
+            <VictoryChart
+              width={900}
+              height={90}
+              scale={{ x: 'time' }}
+              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+              containerComponent={
+                <VictoryBrushContainer
+                  responsive={false}
+                  brushDimension="x"
+                  brushDomain={selectedDomain}
+                  onBrushDomainChange={handleBrush.bind(this)}
+                />
+              }
+            >
+              <VictoryAxis
+                dependentAxis
+                domain={[graphData.reduce((p, c) => Math.min(p, c.min), 0), 30]}
+                standalone={false}
+                style={{
+                  axis: { stroke: 'transparent' },
+                  ticks: { stroke: 'transparent' },
+                  tickLabels: { fill: 'transparent' },
+                }}
+              />
               {graphData.map((d) => (
                 <VictoryLine
+                  key={d.sensorFullname}
                   data={d.measurements}
                   interpolation="monotoneX"
                   x={'x'}
