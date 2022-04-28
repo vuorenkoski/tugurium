@@ -1,29 +1,10 @@
 import { useQuery } from '@apollo/client'
 import { ALL_SENSORS } from './queries'
 import Timeseries from './components/Timeseries'
+import Sensors from './components/Sensors'
+import { Navbar, Nav, Row, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
-const Sensors = ({ sensors }) => {
-  return (
-    <table>
-      <tbody>
-        <tr>
-          <th>name</th>
-          <th>description</th>
-          <th>unit</th>
-        </tr>
-        {sensors.map((a) => (
-          <tr key={a.sensorName}>
-            <td>{a.sensorName}</td>
-            <td>{a.sensorFullname}</td>
-            <td>{a.sensorUnit}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-}
 
 const Home = () => {
   return <div></div>
@@ -37,37 +18,65 @@ const App = () => {
     sensorList = sensors.data.allSensors
   }
 
-  const padding = {
-    padding: 5,
+  const user = null
+
+  const linkStyle = {
+    textDecoration: 'none',
+    color: 'white',
   }
 
   return (
-    <Router>
-      <div>
-        <b>TEMPVIEW</b>
-        <Link style={padding} to="/">
-          Lämpötilat nyt
-        </Link>
-        <Link style={padding} to="/sensors">
-          Sensorit
-        </Link>
-        <Link style={padding} to="/timeseries">
-          Aikasarjat
-        </Link>
-        <Link style={padding} to="/annual">
-          Vuosivertailu
-        </Link>
-        <Link style={padding} to="/commands">
-          Komennot
-        </Link>
-      </div>
-
-      <Routes>
-        <Route path="/sensors" element={<Sensors sensors={sensorList} />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/timeseries" element={<Timeseries />} />
-      </Routes>
-    </Router>
+    <div className="container">
+      <Router>
+        <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
+          <NavbarBrand className="text-white">TEMPVIEW</NavbarBrand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="#" as="span">
+                <Link to="/" style={linkStyle}>
+                  Lämpötilat nyt
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/sensors" style={linkStyle}>
+                  Sensorit
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/timeseries" style={linkStyle}>
+                  Aikasarjat
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/annual" style={linkStyle}>
+                  Vuosivertailu
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/commands" style={linkStyle}>
+                  Komennot
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                {user ? (
+                  <em>{user} logged in</em>
+                ) : (
+                  <Link to="/login" style={linkStyle}>
+                    login
+                  </Link>
+                )}
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes>
+          <Route path="/sensors" element={<Sensors sensors={sensorList} />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/timeseries" element={<Timeseries />} />
+        </Routes>
+      </Router>
+    </div>
   )
 }
 
