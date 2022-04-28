@@ -1,5 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
-const { Sequelize } = require('sequelize')
+const { Sequelize, Op } = require('sequelize')
 const { connectToDatabase } = require('./util/db')
 const { Sensor, Measurement, User } = require('./models')
 
@@ -13,6 +13,7 @@ const typeDefs = gql`
     sensorName: String!
     sensorFullname: String!
     sensorUnit: String!
+    measurements: [Measurement]
   }
   type Measurement {
     id: ID!
@@ -23,7 +24,7 @@ const typeDefs = gql`
   type Query {
     allSensors: [Sensor!]!
     sensorDetails(sensorName: String!): Sensor!
-    sensorData(sensorName: String!): [Measurement!]!
+    sensorData(sensorName: [String]): [Sensor]
   }
   type Mutation {
     addMeasurement(sensorName: String!, value: String): Measurement
@@ -32,12 +33,14 @@ const typeDefs = gql`
 `
 
 const sensorData = async (root, args) => {
-  const sensor = await Sensor.findOne({
-    where: { sensorName: args.sensorName },
+  const measurements = await Sensor.findAll({
+    include: {
+      model: Measurement,
+      attributes: ['value', 'timestamp'],
+    },
+    where: { sensorName: { [Op.in]: args.sensorName } },
   })
-  const measurements = await Measurement.findAll({
-    where: { sensorId: sensor.id },
-  })
+  console.log(JSON.stringify(measurements))
   return measurements
 }
 
@@ -93,13 +96,6 @@ const resolvers = {
     allSensors,
     sensorDetails,
   },
-  Measurement: {
-    sensor: ({ sensorName }) => {
-      return {
-        sensorName,
-      }
-    },
-  },
   Mutation: {
     addMeasurement,
     login,
@@ -110,14 +106,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    // Note: This example uses the `req` argument to access headers,
-    // but the arguments received by `context` vary by integration.
-    // This means they vary for Express, Koa, Lambda, etc.
-    //
-    // To find out the correct arguments for a specific integration,
-    // see https://www.apollographql.com/docs/apollo-server/api/apollo-server/#middleware-specific-context-fields
-
-    // Get the user token from the headers.
     let token = ''
     if (
       req.headers.authorization &&

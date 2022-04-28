@@ -11,10 +11,15 @@ export const ALL_SENSORS = gql`
 `
 
 export const SENSOR_DATA = gql`
-  query SensorData($sensorName: String!) {
+  query SensorData($sensorName: [String]) {
     sensorData(sensorName: $sensorName) {
-      value
-      timestamp
+      sensorName
+      sensorFullname
+      sensorUnit
+      measurements {
+        value
+        timestamp
+      }
     }
   }
 `

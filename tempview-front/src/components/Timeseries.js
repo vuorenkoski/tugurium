@@ -9,16 +9,19 @@ import { SENSOR_DATA } from '../queries'
 const Timeseries = ({ sensors }) => {
   // let s = sensors.reduce((p, c) => ({ ...p, [c.sensorName]: false }), {})
   const [checked, setChecked] = useState([])
-  console.log(checked[0])
   const data = useQuery(SENSOR_DATA, {
-    variables: { sensorName: checked[0] },
+    variables: { sensorName: checked },
   })
 
   let graphData = null
   if (data.data && data.data.sensorData.length > 0) {
-    graphData = data.data.sensorData.map((m) => ({
-      y: Number(m.value),
-      x: new Date(m.timestamp * 1000),
+    graphData = data.data.sensorData.map((d) => ({
+      sensorFullname: d.sensorFullname,
+      unit: d.unit,
+      measurements: d.measurements.map((m) => ({
+        y: Number(m.value),
+        x: new Date(m.timestamp * 1000),
+      })),
     }))
   }
 
@@ -28,7 +31,6 @@ const Timeseries = ({ sensors }) => {
     } else {
       setChecked(checked.filter((i) => i !== e.target.id))
     }
-    console.log(checked)
   }
 
   return (
@@ -54,19 +56,16 @@ const Timeseries = ({ sensors }) => {
         </Col>
         {graphData && (
           <Col className="col-9">
-            <VictoryChart data={graphData} height={250}>
-              <VictoryScatter
-                style={{ data: { fill: 'green' } }}
-                size={2}
-                data={graphData}
-              />
-              <VictoryLine
-                data={graphData}
-                interpolation="monotoneX"
-                x={'x'}
-                y={'y'}
-                style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
-              />
+            <VictoryChart height={250}>
+              {graphData.map((d) => (
+                <VictoryLine
+                  data={d.measurements}
+                  interpolation="monotoneX"
+                  x={'x'}
+                  y={'y'}
+                  style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
+                />
+              ))}
             </VictoryChart>
           </Col>
         )}
