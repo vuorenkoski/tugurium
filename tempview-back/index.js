@@ -40,7 +40,6 @@ const sensorData = async (root, args) => {
     },
     where: { sensorName: { [Op.in]: args.sensorName } },
   })
-  console.log(JSON.stringify(measurements))
   return measurements
 }
 
