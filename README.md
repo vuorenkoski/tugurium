@@ -103,3 +103,9 @@ cd tempview/tempview-front
 npm install
 npm run build
 ```
+
+Dump sql data:
+
+```
+pg_dump -U tempviewuser -h localhost tempviewdb >> sqlfile.sql
+```

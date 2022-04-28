@@ -57,12 +57,15 @@ const addMeasurement = async (root, args, token) => {
     where: { sensorName: args.sensorName },
   })
   const value = parseFloat(args.value)
-  const measurement = await Measurement.create({
-    sensorId: sensor.id,
-    value,
-    timestamp: Math.floor(Date.now() / 1000),
-  })
-  return measurement
+  if (value) {
+    const measurement = await Measurement.create({
+      sensorId: sensor.id,
+      value,
+      timestamp: Math.floor(Date.now() / 1000),
+    })
+    return measurement
+  }
+  return
 }
 
 const login = async (root, args) => {
