@@ -95,13 +95,7 @@ Backend: https://tempview.vuorenkoski.fi/graphql
 restart after update
 
 ```
-cd tempview/tempview-back
-npm install
-sudo service tempview restart
-
-cd tempview/tempview-front
-npm install
-npm run build
+sh build.sh
 ```
 
 Dump and restore sql data:
@@ -109,6 +103,6 @@ Dump and restore sql data:
 ```
 pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
 
-sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
+sudo -u postgres pg_restore -d tempviewdb -cC sqlfile.sql
 
 ```
