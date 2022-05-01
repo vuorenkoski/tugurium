@@ -103,6 +103,6 @@ Dump and restore sql data:
 ```
 pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
 
-sudo -u postgres pg_restore -d tempviewdb -cC sqlfile.sql
+sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
 
 ```
