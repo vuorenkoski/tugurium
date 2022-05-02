@@ -31,6 +31,7 @@ const Timeseries = ({ sensors }) => {
         sensorFullname: d.sensorFullname,
         unit: d.unit,
         min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
+        max: d.measurements.reduce((p, c) => Math.max(p, c.value), 25),
         measurements: d.measurements.map((m) => ({
           y: Number(m.value),
           x: new Date(m.timestamp * 1000),
@@ -84,7 +85,10 @@ const Timeseries = ({ sensors }) => {
               height={600}
               theme={VictoryTheme.material}
               domain={{
-                y: [graphData.reduce((p, c) => Math.min(p, c.min), 0), 30],
+                y: [
+                  graphData.reduce((p, c) => Math.min(p, c.min), 0) - 5,
+                  graphData.reduce((p, c) => Math.max(p, c.max), 25),
+                ],
               }}
               scale={{ x: 'time' }}
               containerComponent={
@@ -96,8 +100,24 @@ const Timeseries = ({ sensors }) => {
                 />
               }
             >
-              <VictoryAxis dependentAxis label="celsius" />
-              <VictoryAxis offsetY={50} label="Aika" />
+              <VictoryAxis
+                dependentAxis
+                crossAxis={false}
+                label="celsius"
+                style={{
+                  axisLabel: { fontSize: 20, padding: 30 },
+                  tickLabels: { fontSize: 15, padding: 5 },
+                }}
+              />
+              <VictoryAxis
+                offsetY={50}
+                tickCount={10}
+                label="Aika"
+                style={{
+                  axisLabel: { fontSize: 20, padding: 30 },
+                  tickLabels: { fontSize: 15, padding: 5 },
+                }}
+              />
               <VictoryLegend
                 x={700}
                 y={0}
