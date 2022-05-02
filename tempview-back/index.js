@@ -25,6 +25,7 @@ const typeDefs = gql`
     allSensors: [Sensor!]!
     sensorDetails(sensorName: String!): Sensor!
     sensorData(sensorName: [String]): [Sensor]
+    currentSensorData: [Measurement]
   }
   type Mutation {
     addMeasurement(sensorName: String!, value: String): Measurement
@@ -39,6 +40,29 @@ const sensorData = async (root, args) => {
       attributes: ['value', 'timestamp'],
     },
     where: { sensorName: { [Op.in]: args.sensorName } },
+  })
+  return measurements
+}
+
+const currentSensorData = async () => {
+  console.log('asdasd')
+  const measurements = await Measurement.findAll({
+    attributes: [
+      sequelize.literal(
+        'DISTINCT ON ("measurement"."sensor_id") "measurement"."sensor_id"'
+      ),
+      'value',
+      'timestamp',
+      'id',
+    ],
+    include: {
+      model: Sensor,
+      attributes: ['sensorFullname', 'sensorUnit'],
+    },
+    order: [
+      ['sensor_id', 'DESC'],
+      ['timestamp', 'DESC'],
+    ],
   })
   return measurements
 }
@@ -95,6 +119,7 @@ const sensorDetails = async (root, args) => {
 const resolvers = {
   Query: {
     sensorData,
+    currentSensorData,
     allSensors,
     sensorDetails,
   },

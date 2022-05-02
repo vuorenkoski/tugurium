@@ -2,13 +2,10 @@ import { useQuery } from '@apollo/client'
 import { ALL_SENSORS } from './queries'
 import Timeseries from './components/Timeseries'
 import Sensors from './components/Sensors'
+import Home from './components/Home'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
-const Home = () => {
-  return <div></div>
-}
 
 const App = () => {
   const sensors = useQuery(ALL_SENSORS)

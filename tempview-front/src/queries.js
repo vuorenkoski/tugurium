@@ -23,3 +23,15 @@ export const SENSOR_DATA = gql`
     }
   }
 `
+export const CURRENT_SENSOR_DATA = gql`
+  query Query {
+    currentSensorData {
+      timestamp
+      value
+      sensor {
+        sensorFullname
+        sensorUnit
+      }
+    }
+  }
+`

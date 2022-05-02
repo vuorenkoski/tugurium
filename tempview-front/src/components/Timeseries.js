@@ -13,8 +13,6 @@ import { Row, Col, Form } from 'react-bootstrap'
 
 import { SENSOR_DATA } from '../queries'
 
-//import { convertDate, convertTemp } from '../util/conversions'
-
 const Timeseries = ({ sensors }) => {
   const [checked, setChecked] = useState([])
   const [zoomDomain, setZoomDomain] = useState({})
