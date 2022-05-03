@@ -11,6 +11,8 @@ const tables = [
   { filename: '../data/rauhalassa.csv', sensorName: 'CRAU' },
   { filename: '../data/jarvessa.csv', sensorName: 'CLAK' },
   { filename: '../data/saunassa.csv', sensorName: 'CSAU' },
+  { filename: '../data/ylakerta.csv', sensorName: 'HUPS' },
+  { filename: '../data/alakerta.csv', sensorName: 'HDOW' },
 ]
 
 const sequelize = new Sequelize(DATABASE_URL, {
