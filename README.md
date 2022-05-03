@@ -73,7 +73,7 @@ Install PostgreSQL:
 sudo apt install postgresql postgresql-contrib libpq-dev
 ```
 
-Create a database:
+Create database:
 
 ```
 sudo -u postgres psql
@@ -81,6 +81,15 @@ postgres=# create database tempviewdb;
 postgres=# create user tempviewuser with encrypted password 'secret';
 postgres=# grant all privileges on database tempviewdb to tempviewuser;
 postgres=# alter user tempviewuser createdb; --allow user to create a test database
+postgres=# \q
+```
+
+Clear database:
+
+```
+sudo -u postgres psql
+postgres=# \c tempviewdb;
+postgres=# truncate table measurements;
 postgres=# \q
 ```
 
