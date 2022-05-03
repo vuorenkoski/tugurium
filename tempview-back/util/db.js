@@ -11,6 +11,15 @@ const sequelize = new Sequelize(DATABASE_URL, {
   },
 })
 
+const sequelizeRaw = new Sequelize(DATABASE_URL, {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+})
+
 const runMigrations = async () => {
   const migrator = new Umzug({
     migrations: {
@@ -39,4 +48,4 @@ const connectToDatabase = async () => {
   return null
 }
 
-module.exports = { connectToDatabase, sequelize }
+module.exports = { connectToDatabase, sequelize, sequelizeRaw }

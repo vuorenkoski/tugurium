@@ -1,4 +1,4 @@
-import { Table, Row } from 'react-bootstrap'
+import { Table, Row, Col } from 'react-bootstrap'
 
 const Sensors = ({ sensors }) => {
   return (
@@ -8,22 +8,24 @@ const Sensors = ({ sensors }) => {
       </Row>
 
       <Row className="p-4">
-        <Table striped>
-          <tbody>
-            <tr>
-              <th>Nimi</th>
-              <th>Kuvaus</th>
-              <th>Mittayksikkö</th>
-            </tr>
-            {sensors.map((a) => (
-              <tr key={a.sensorName}>
-                <td>{a.sensorName}</td>
-                <td>{a.sensorFullname}</td>
-                <td>{a.sensorUnit}</td>
+        <Col className="col-8">
+          <Table striped>
+            <tbody>
+              <tr>
+                <th>Nimi</th>
+                <th>Kuvaus</th>
+                <th>Mittayksikkö</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+              {sensors.map((a) => (
+                <tr key={a.sensorName}>
+                  <td>{a.sensorName}</td>
+                  <td>{a.sensorFullname}</td>
+                  <td>{a.sensorUnit}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
       </Row>
     </div>
   )

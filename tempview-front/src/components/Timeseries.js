@@ -14,11 +14,12 @@ import { Row, Col, Form } from 'react-bootstrap'
 import { SENSOR_DATA } from '../queries'
 
 const Timeseries = ({ sensors }) => {
-  const [checked, setChecked] = useState([])
+  const [selectedSensors, setSelectedSensors] = useState([])
+  const [average, setAverage] = useState('NO')
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
   const data = useQuery(SENSOR_DATA, {
-    variables: { sensorName: checked },
+    variables: { sensorName: selectedSensors, average: average },
   })
 
   let graphData = null
@@ -39,10 +40,15 @@ const Timeseries = ({ sensors }) => {
 
   const handleCheckboxChange = (e) => {
     if (e.target.checked) {
-      setChecked(checked.concat(e.target.id))
+      setSelectedSensors(selectedSensors.concat(e.target.id))
     } else {
-      setChecked(checked.filter((i) => i !== e.target.id))
+      setSelectedSensors(selectedSensors.filter((i) => i !== e.target.id))
     }
+  }
+
+  const handleRadioChange = (e) => {
+    console.log(e.target.value)
+    setAverage(e.target.value)
   }
 
   const handleZoom = (domain) => {
@@ -63,6 +69,7 @@ const Timeseries = ({ sensors }) => {
       <Row className="p-4">
         <Col className="col-3">
           <Form>
+            <h3>Sensorit</h3>
             {sensors.map((s) => (
               <div key={s.sensorName}>
                 <Form.Check
@@ -74,6 +81,32 @@ const Timeseries = ({ sensors }) => {
                 />
               </div>
             ))}
+            <h3>Datan käsittely</h3>
+            <Form.Check
+              defaultChecked
+              type={'radio'}
+              id={'none'}
+              label={'Ei mitään'}
+              name={'average'}
+              defaultValue={'NO'}
+              onChange={handleRadioChange.bind(this)}
+            />
+            <Form.Check
+              type={'radio'}
+              id={'hour'}
+              label={'Tunnin keskiarvo'}
+              name={'average'}
+              defaultValue={'HOUR'}
+              onChange={handleRadioChange.bind(this)}
+            />
+            <Form.Check
+              type={'radio'}
+              id={'day'}
+              label={'Päivän keskiarvo'}
+              name={'average'}
+              defaultValue={'DAY'}
+              onChange={handleRadioChange.bind(this)}
+            />
           </Form>
         </Col>
         {graphData && (

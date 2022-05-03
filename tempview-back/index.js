@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server')
-const { Sequelize, Op } = require('sequelize')
-const { connectToDatabase } = require('./util/db')
+const { Sequelize, Op, QueryTypes } = require('sequelize')
+const { connectToDatabase, sequelizeRaw } = require('./util/db')
 const { Sensor, Measurement, User } = require('./models')
 
 const jwt = require('jsonwebtoken')
@@ -8,6 +8,11 @@ const bcrypt = require('bcrypt')
 const { SECRET, SENSOR_TOKEN } = require('./util/config')
 
 const typeDefs = gql`
+  enum Average {
+    NO
+    HOUR
+    DAY
+  }
   type Sensor {
     id: ID!
     sensorName: String!
@@ -24,7 +29,7 @@ const typeDefs = gql`
   type Query {
     allSensors: [Sensor!]!
     sensorDetails(sensorName: String!): Sensor!
-    sensorData(sensorName: [String]): [Sensor]
+    sensorData(sensorName: [String], average: Average): [Sensor]
     currentSensorData: [Measurement]
   }
   type Mutation {
@@ -34,14 +39,73 @@ const typeDefs = gql`
 `
 
 const sensorData = async (root, args) => {
-  const measurements = await Sensor.findAll({
-    include: {
-      model: Measurement,
-      attributes: ['value', 'timestamp'],
-    },
+  let period = 1
+  if (args.average === 'HOUR') {
+    period = 60 * 60
+  }
+  if (args.average === 'DAY') {
+    period = 24 * 60 * 60
+  }
+
+  const sensors = await Sensor.findAll({
     where: { sensorName: { [Op.in]: args.sensorName } },
+    raw: true,
   })
-  return measurements
+
+  let data = []
+  for (let i in sensors) {
+    let measurements = await sequelizeRaw.query(
+      `SELECT AVG(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' GROUP BY timestamp / ${period}`,
+      { nest: true, type: QueryTypes.SELECT }
+    )
+    measurements = measurements.map((m) => ({
+      value: m.value,
+      timestamp: m.timestamp * period,
+    }))
+    data.push({
+      sensorFullname: sensors[i].sensorFullname,
+      sensorName: sensors[i].sensorName,
+      sensorUnit: sensors[i].sensorUnit,
+      measurements: measurements,
+    })
+  }
+
+  // const data = await Sensor.findAll({
+  //   include: {
+  //     model: Measurement,
+  //     attributes: {
+  //       include: [
+  //         [
+  //           sequelize.literal(sequelize.col('timestamp').col + '/' + period),
+  //           'timestamp',
+  //         ],
+  //         [
+  //           sequelize.fn('MIN', sequelize.col('measurements.id')),
+  //           'measurements.id',
+  //         ],
+  //       ],
+  //     },
+  //   },
+  //   attributes: {
+  //     include: [
+  //       [
+  //         sequelize.fn('AVG', sequelize.col('measurements.value')),
+  //         'measurements.value',
+  //       ],
+  //       [
+  //         sequelize.fn('MIN', sequelize.col('measurements.id')),
+  //         'measurements.id',
+  //       ],
+  //     ],
+  //     exclude: ['id'],
+  //   },
+  //   where: { sensorName: { [Op.in]: args.sensorName } },
+  //   group: [
+  //     'sensor.id',
+  //     sequelize.literal(sequelize.col('timestamp').col + '/' + period),
+  //   ],
+  // })
+  return data
 }
 
 const currentSensorData = async () => {
