@@ -29,7 +29,12 @@ const typeDefs = gql`
   type Query {
     allSensors: [Sensor!]!
     sensorDetails(sensorName: String!): Sensor!
-    sensorData(sensorName: [String], average: Average): [Sensor]
+    sensorData(
+      sensorName: [String]
+      average: Average
+      minDate: Int
+      maxDate: Int
+    ): [Sensor]
     currentSensorData: [Measurement]
   }
   type Mutation {
@@ -55,7 +60,7 @@ const sensorData = async (root, args) => {
   let data = []
   for (let i in sensors) {
     let measurements = await sequelizeRaw.query(
-      `SELECT AVG(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' GROUP BY timestamp / ${period}`,
+      `SELECT AVG(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
     measurements = measurements.map((m) => ({

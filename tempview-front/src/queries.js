@@ -11,8 +11,18 @@ export const ALL_SENSORS = gql`
 `
 
 export const SENSOR_DATA = gql`
-  query SensorData($sensorName: [String], $average: Average) {
-    sensorData(sensorName: $sensorName, average: $average) {
+  query SensorData(
+    $sensorName: [String]
+    $average: Average
+    $minDate: Int
+    $maxDate: Int
+  ) {
+    sensorData(
+      sensorName: $sensorName
+      average: $average
+      minDate: $minDate
+      maxDate: $maxDate
+    ) {
       sensorName
       sensorFullname
       sensorUnit

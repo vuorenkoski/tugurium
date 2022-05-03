@@ -84,6 +84,12 @@ postgres=# alter user tempviewuser createdb; --allow user to create a test datab
 postgres=# \q
 ```
 
+Import old csv data to backend:
+
+```
+node importOld.js
+```
+
 Clear database:
 
 ```

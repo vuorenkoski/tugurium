@@ -13,13 +13,31 @@ import { Row, Col, Form } from 'react-bootstrap'
 
 import { SENSOR_DATA } from '../queries'
 
+const firstYear = 2014
+const currentYear = new Date().getFullYear()
+const years = Array(currentYear - firstYear + 1)
+  .fill()
+  .map((_, i) => currentYear - i)
+
+const yearToEpoch = (year) => {
+  const date = new Date(year, 0, 1)
+  return date.valueOf() / 1000
+}
+
 const Timeseries = ({ sensors }) => {
   const [selectedSensors, setSelectedSensors] = useState([])
-  const [average, setAverage] = useState('NO')
+  const [average, setAverage] = useState('HOUR')
+  const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
+  console.log(yearToEpoch(year + 1))
   const data = useQuery(SENSOR_DATA, {
-    variables: { sensorName: selectedSensors, average: average },
+    variables: {
+      sensorName: selectedSensors,
+      average: average,
+      minDate: yearToEpoch(year),
+      maxDate: yearToEpoch(year + 1),
+    },
   })
 
   let graphData = null
@@ -38,7 +56,7 @@ const Timeseries = ({ sensors }) => {
       }))
   }
 
-  const handleCheckboxChange = (e) => {
+  const handleSensorChange = (e) => {
     if (e.target.checked) {
       setSelectedSensors(selectedSensors.concat(e.target.id))
     } else {
@@ -47,8 +65,12 @@ const Timeseries = ({ sensors }) => {
   }
 
   const handleRadioChange = (e) => {
-    console.log(e.target.value)
     setAverage(e.target.value)
+  }
+
+  const handleYearChange = (e) => {
+    setYear(Number(e.target.value))
+    console.log(e.target.value)
   }
 
   const handleZoom = (domain) => {
@@ -77,13 +99,12 @@ const Timeseries = ({ sensors }) => {
                   id={s.sensorName}
                   label={s.sensorFullname}
                   defaultValue={false}
-                  onChange={handleCheckboxChange.bind(this)}
+                  onChange={handleSensorChange.bind(this)}
                 />
               </div>
             ))}
             <h3>Datan käsittely</h3>
             <Form.Check
-              defaultChecked
               type={'radio'}
               id={'none'}
               label={'Ei mitään'}
@@ -92,6 +113,7 @@ const Timeseries = ({ sensors }) => {
               onChange={handleRadioChange.bind(this)}
             />
             <Form.Check
+              defaultChecked
               type={'radio'}
               id={'hour'}
               label={'Tunnin keskiarvo'}
@@ -107,6 +129,17 @@ const Timeseries = ({ sensors }) => {
               defaultValue={'DAY'}
               onChange={handleRadioChange.bind(this)}
             />
+            <h3>Vuosi</h3>
+            <Form.Select
+              aria-label="Default select example"
+              onChange={handleYearChange.bind(this)}
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </Form.Select>
           </Form>
         </Col>
         {graphData && (
