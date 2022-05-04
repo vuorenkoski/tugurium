@@ -72,7 +72,6 @@ const Settings = () => {
   const handleSubmitSensor = async (event) => {
     event.preventDefault()
     if (sensorId === -1) {
-      console.log('asdasd')
       const variables = { sensorName, sensorFullname, sensorUnit }
       newSensor({ variables })
     } else {
@@ -134,14 +133,20 @@ const Settings = () => {
                   <td>{a.sensorUnit}</td>
                   <td>{a.id}</td>
                   <td>
-                    <a href="#" onClick={() => handeDeleteSensor(a.id)}>
+                    <button
+                      style={{ all: 'unset', color: 'red', cursor: 'hand' }}
+                      onClick={() => handeDeleteSensor(a.id)}
+                    >
                       poista
-                    </a>
+                    </button>
                   </td>
                   <td>
-                    <a href="#" onClick={() => handeUpdateSensor(a.id)}>
+                    <button
+                      style={{ all: 'unset', color: 'blue', cursor: 'hand' }}
+                      onClick={() => handeUpdateSensor(a.id)}
+                    >
                       päivitä
-                    </a>
+                    </button>
                   </td>
                 </tr>
               ))}

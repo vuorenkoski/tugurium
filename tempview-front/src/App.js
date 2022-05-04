@@ -72,9 +72,18 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <a href="#" onClick={logout} style={linkStyle}>
+                <button
+                  style={{
+                    color: 'white',
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    font: 'inherit',
+                  }}
+                  onClick={logout}
+                >
                   logout
-                </a>
+                </button>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
