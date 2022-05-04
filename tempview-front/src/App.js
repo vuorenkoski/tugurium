@@ -1,21 +1,37 @@
-import { useQuery } from '@apollo/client'
+import { useState } from 'react'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_SENSORS } from './queries'
 import Timeseries from './components/Timeseries'
 import Sensors from './components/Sensors'
 import Home from './components/Home'
+import Login from './components/Login'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
   const sensors = useQuery(ALL_SENSORS)
+  const [token, setToken] = useState(null)
+  const client = useApolloClient()
+
+  if (!token) {
+    return (
+      <div>
+        <Login setToken={setToken} />
+      </div>
+    )
+  }
+
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
 
   let sensorList = []
   if (sensors.data) {
     sensorList = sensors.data.allSensors
   }
-
-  const user = null
 
   const linkStyle = {
     textDecoration: 'none',
@@ -56,13 +72,9 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                {user ? (
-                  <em>{user} logged in</em>
-                ) : (
-                  <Link to="/login" style={linkStyle}>
-                    login
-                  </Link>
-                )}
+                <a href="#" onClick={logout} style={linkStyle}>
+                  logout
+                </a>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

@@ -47,7 +47,7 @@ Database: Postgres
 
 Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
 
-ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database
+ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
 
 ### Frontend
 
@@ -134,14 +134,18 @@ sudo apt install postgresql postgresql-contrib nodejs
 sudo cp /home/pi/tempview/tempview-back/tempview.service /etc/systemd/system/.
 ```
 
-5. Install dependencies, build frontend and start background service
+5. Create .env file for backend
+
+SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
+
+6. Install dependencies, build frontend and start background service
 
 ```
 sh build.sh
 ```
 
-5. Insert script to fetch data from FMI to crontab (every 60 minutes)
+7. Insert to crontab a script to fetch data from FMI (every 60 minutes)
 
 ```
-30 * * * * /usr/bin/node /home/pi/tempview/tempview-back/getFmiData.js
+30 * * * * sh /home/pi/tempview/getFmiData.sh
 ```

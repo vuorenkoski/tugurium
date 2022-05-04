@@ -33,6 +33,15 @@ export const SENSOR_DATA = gql`
     }
   }
 `
+
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`
+
 export const CURRENT_SENSOR_DATA = gql`
   query Query {
     currentSensorData {

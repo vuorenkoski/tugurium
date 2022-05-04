@@ -13,6 +13,7 @@ const typeDefs = gql`
     HOUR
     DAY
   }
+
   type Sensor {
     id: ID!
     sensorName: String!
@@ -20,12 +21,14 @@ const typeDefs = gql`
     sensorUnit: String!
     measurements: [Measurement]
   }
+
   type Measurement {
     id: ID!
     sensor: Sensor!
     value: String!
     timestamp: Int!
   }
+
   type Query {
     allSensors: [Sensor!]!
     sensorDetails(sensorName: String!): Sensor!
@@ -37,13 +40,23 @@ const typeDefs = gql`
     ): [Sensor]
     currentSensorData: [Measurement]
   }
+
+  type Token {
+    value: String!
+  }
+
   type Mutation {
     addMeasurement(sensorName: String!, value: String): Measurement
-    login(username: String!, password: String!): String
+    login(username: String!, password: String!): Token
+    createUser(username: String!, password: String!): String
   }
 `
 
-const sensorData = async (root, args) => {
+const sensorData = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+
   let period = 1
   if (args.average === 'HOUR') {
     period = 60 * 60
@@ -74,47 +87,14 @@ const sensorData = async (root, args) => {
       measurements: measurements,
     })
   }
-
-  // const data = await Sensor.findAll({
-  //   include: {
-  //     model: Measurement,
-  //     attributes: {
-  //       include: [
-  //         [
-  //           sequelize.literal(sequelize.col('timestamp').col + '/' + period),
-  //           'timestamp',
-  //         ],
-  //         [
-  //           sequelize.fn('MIN', sequelize.col('measurements.id')),
-  //           'measurements.id',
-  //         ],
-  //       ],
-  //     },
-  //   },
-  //   attributes: {
-  //     include: [
-  //       [
-  //         sequelize.fn('AVG', sequelize.col('measurements.value')),
-  //         'measurements.value',
-  //       ],
-  //       [
-  //         sequelize.fn('MIN', sequelize.col('measurements.id')),
-  //         'measurements.id',
-  //       ],
-  //     ],
-  //     exclude: ['id'],
-  //   },
-  //   where: { sensorName: { [Op.in]: args.sensorName } },
-  //   group: [
-  //     'sensor.id',
-  //     sequelize.literal(sequelize.col('timestamp').col + '/' + period),
-  //   ],
-  // })
   return data
 }
 
-const currentSensorData = async () => {
-  console.log('asdasd')
+const currentSensorData = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+
   const measurements = await Measurement.findAll({
     attributes: [
       sequelize.literal(
@@ -136,13 +116,16 @@ const currentSensorData = async () => {
   return measurements
 }
 
-const allSensors = async () => {
+const allSensors = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
   const sensors = await Sensor.findAll()
   return sensors
 }
 
-const addMeasurement = async (root, args, token) => {
-  if (token.token !== SENSOR_TOKEN) {
+const addMeasurement = async (root, args, context) => {
+  if (context.token !== SENSOR_TOKEN) {
     return
   }
   const sensor = await Sensor.findOne({
@@ -175,7 +158,17 @@ const login = async (root, args) => {
   }
   const token = jwt.sign(userForToken, SECRET)
 
-  return token
+  return { value: token }
+}
+
+const createUser = async (root, args) => {
+  const { username, password } = args
+  const passwordHash = await bcrypt.hash(password, 10)
+  const user = await Measurement.create({
+    username,
+    passwordHash,
+  })
+  return user
 }
 
 const sensorDetails = async (root, args) => {
@@ -195,21 +188,28 @@ const resolvers = {
   Mutation: {
     addMeasurement,
     login,
+    createUser,
   },
 }
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
-    let token = ''
+  context: async ({ req }) => {
+    let data = {}
     if (
       req.headers.authorization &&
       req.headers.authorization.toLowerCase().startsWith('bearer ')
     ) {
-      token = req.headers.authorization.substring(7)
+      data['token'] = req.headers.authorization.substring(7)
+      if (data['token'] !== SENSOR_TOKEN) {
+        const decodedToken = jwt.verify(data['token'], SECRET)
+        data['currentUser'] = await User.findOne({
+          where: { id: decodedToken.id },
+        })
+      }
     }
-    return { token }
+    return data
   },
 })
 

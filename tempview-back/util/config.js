@@ -5,4 +5,5 @@ module.exports = {
   PORT: process.env.PORT || 3001,
   SECRET: process.env.SECRET,
   SENSOR_TOKEN: process.env.SENSOR_TOKEN,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
 }

@@ -30,7 +30,6 @@ const Timeseries = ({ sensors }) => {
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
-  console.log(yearToEpoch(year + 1))
   const data = useQuery(SENSOR_DATA, {
     variables: {
       sensorName: selectedSensors,

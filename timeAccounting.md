@@ -8,4 +8,5 @@
 | 28.4. | 9     | Init victory library, added more sensors, bootstrap init, selection in timeseies view, tuning VictoryGraph                |
 | 2.5.  | 2     | tuning VictoryGraph, current temps view                                                                                   |
 | 3.5.  | 9     | hour and day aggregate values, script to import old data, year selection, Exploration of FMI opendata api                 |
+| 4.5.  |       | fmi get data, loading...,                                                                                                 |
 | total | 41    |                                                                                                                           |
