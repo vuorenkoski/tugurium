@@ -57,6 +57,18 @@ const typeDefs = gql`
     addMeasurement(sensorName: String!, value: String): Measurement
     login(username: String!, password: String!): Token
     createUser(username: String!, password: String!): String
+    deleteSensor(id: Int!): Sensor
+    updateSensor(
+      sensorName: String!
+      sensorFullname: String!
+      sensorUnit: String!
+      id: Int!
+    ): Sensor
+    newSensor(
+      sensorName: String!
+      sensorFullname: String!
+      sensorUnit: String!
+    ): Sensor
   }
 `
 
@@ -100,10 +112,8 @@ const sensorData = async (root, args, context) => {
 
 const sensorToken = async (root, args, context) => {
   if (!context.currentUser) {
-    console.log('hylky')
     return
   }
-  console.log(SENSOR_TOKEN)
   return { value: SENSOR_TOKEN }
 }
 
@@ -139,6 +149,40 @@ const allSensors = async (root, args, context) => {
   }
   const sensors = await Sensor.findAll()
   return sensors
+}
+
+const deleteSensor = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+  await Measurement.destroy({ where: { sensorId: args.id } })
+  const sensor = await Sensor.findOne({ where: { id: args.id } })
+  await sensor.destroy()
+  return sensor
+}
+
+const updateSensor = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+  const sensor = await Sensor.findOne({ where: { id: args.id } })
+  sensor.sensorName = args.sensorName
+  sensor.sensorFullname = args.sensorFullname
+  sensor.sensorUnit = args.sensorUnit
+  await sensor.save()
+  return sensor
+}
+
+const newSensor = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+  const sensor = await Sensor.create({
+    sensorName: args.sensorName,
+    sensorFullname: args.sensorFullname,
+    sensorUnit: args.sensorUnit,
+  })
+  return sensor
 }
 
 const allUsers = async (root, args, context) => {
@@ -216,6 +260,9 @@ const resolvers = {
     addMeasurement,
     login,
     createUser,
+    deleteSensor,
+    updateSensor,
+    newSensor,
   },
 }
 

@@ -53,6 +53,52 @@ export const SENSOR_DATA = gql`
   }
 `
 
+export const DELETE_SENSOR = gql`
+  mutation Mutation($deleteSensorId: Int!) {
+    deleteSensor(id: $deleteSensorId) {
+      sensorName
+    }
+  }
+`
+export const UPDATE_SENSOR = gql`
+  mutation UpdateSensor(
+    $sensorName: String!
+    $sensorFullname: String!
+    $sensorUnit: String!
+    $updateSensorId: Int!
+  ) {
+    updateSensor(
+      sensorName: $sensorName
+      sensorFullname: $sensorFullname
+      sensorUnit: $sensorUnit
+      id: $updateSensorId
+    ) {
+      id
+      sensorName
+      sensorFullname
+      sensorUnit
+    }
+  }
+`
+
+export const NEW_SENSOR = gql`
+  mutation NewSensor(
+    $sensorName: String!
+    $sensorFullname: String!
+    $sensorUnit: String!
+  ) {
+    newSensor(
+      sensorName: $sensorName
+      sensorFullname: $sensorFullname
+      sensorUnit: $sensorUnit
+    ) {
+      sensorName
+      sensorFullname
+      sensorUnit
+    }
+  }
+`
+
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {

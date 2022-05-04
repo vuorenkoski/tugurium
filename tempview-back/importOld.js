@@ -13,6 +13,10 @@ const tables = [
   { filename: '../data/saunassa.csv', sensorName: 'CSAU' },
   { filename: '../data/ylakerta.csv', sensorName: 'HUPS' },
   { filename: '../data/alakerta.csv', sensorName: 'HDOW' },
+  { filename: '../data/lampo_roykka.csv', sensorName: 'FTVI' },
+  { filename: '../data/sade.csv', sensorName: 'FRVI' },
+  { filename: '../data/lumi.csv', sensorName: 'FSVI' },
+  { filename: '../data/tuuli.csv', sensorName: 'FWVI' },
 ]
 
 const sequelize = new Sequelize(DATABASE_URL, {
