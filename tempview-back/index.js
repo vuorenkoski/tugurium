@@ -29,8 +29,16 @@ const typeDefs = gql`
     timestamp: Int!
   }
 
+  type User {
+    id: ID!
+    username: String!
+    admin: Boolean!
+  }
+
   type Query {
-    allSensors: [Sensor!]!
+    allSensors: [Sensor]
+    sensorToken: Token
+    allUsers: [User]
     sensorDetails(sensorName: String!): Sensor!
     sensorData(
       sensorName: [String]
@@ -90,6 +98,15 @@ const sensorData = async (root, args, context) => {
   return data
 }
 
+const sensorToken = async (root, args, context) => {
+  if (!context.currentUser) {
+    console.log('hylky')
+    return
+  }
+  console.log(SENSOR_TOKEN)
+  return { value: SENSOR_TOKEN }
+}
+
 const currentSensorData = async (root, args, context) => {
   if (!context.currentUser) {
     return
@@ -122,6 +139,14 @@ const allSensors = async (root, args, context) => {
   }
   const sensors = await Sensor.findAll()
   return sensors
+}
+
+const allUsers = async (root, args, context) => {
+  if (!context.currentUser) {
+    return
+  }
+  const users = await User.findAll()
+  return users
 }
 
 const addMeasurement = async (root, args, context) => {
@@ -184,6 +209,8 @@ const resolvers = {
     currentSensorData,
     allSensors,
     sensorDetails,
+    allUsers,
+    sensorToken,
   },
   Mutation: {
     addMeasurement,

@@ -3,9 +3,28 @@ import { gql } from '@apollo/client'
 export const ALL_SENSORS = gql`
   query AllSensors {
     allSensors {
+      id
       sensorName
       sensorFullname
       sensorUnit
+    }
+  }
+`
+
+export const ALL_USERS = gql`
+  query AllUsers {
+    allUsers {
+      id
+      username
+      admin
+    }
+  }
+`
+
+export const SENSOR_TOKEN = gql`
+  query SensorToken {
+    sensorToken {
+      value
     }
   }
 `

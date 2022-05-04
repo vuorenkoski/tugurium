@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_SENSORS } from './queries'
 import Timeseries from './components/Timeseries'
-import Sensors from './components/Sensors'
+import Settings from './components/Settings'
 import Home from './components/Home'
 import Login from './components/Login'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
@@ -52,11 +52,6 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/sensors" style={linkStyle}>
-                  Sensorit
-                </Link>
-              </Nav.Link>
-              <Nav.Link href="#" as="span">
                 <Link to="/timeseries" style={linkStyle}>
                   Aikasarjat
                 </Link>
@@ -72,6 +67,11 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
+                <Link to="/settings" style={linkStyle}>
+                  Asetukset
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
                 <a href="#" onClick={logout} style={linkStyle}>
                   logout
                 </a>
@@ -80,7 +80,7 @@ const App = () => {
           </Navbar.Collapse>
         </Navbar>
         <Routes>
-          <Route path="/sensors" element={<Sensors sensors={sensorList} />} />
+          <Route path="/settings" element={<Settings sensors={sensorList} />} />
           <Route path="/" element={<Home />} />
           <Route
             path="/timeseries"

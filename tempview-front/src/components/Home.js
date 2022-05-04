@@ -14,10 +14,12 @@ const Home = () => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Viimeisimmät Lämpötilat</h2>
+        <h2>Viimeisimmät lämpötilat</h2>
       </Row>
 
       <Row className="p-4">
+        {!sensorList && <h3>Loading...</h3>}
+
         <Col className="col-6">
           <Table striped>
             <tbody>
@@ -36,7 +38,6 @@ const Home = () => {
                     <td>{convertDate(a.timestamp)}</td>
                   </tr>
                 ))}
-              {!sensorList && <h3>Loading...</h3>}
             </tbody>
           </Table>
         </Col>

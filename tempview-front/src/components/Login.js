@@ -16,7 +16,6 @@ const Login = ({ setToken }) => {
 
   useEffect(() => {
     if (result.data) {
-      console.log(result.data)
       const token = result.data.login.value
       setToken(token)
       localStorage.setItem('tempview-user-token', token)
@@ -26,7 +25,6 @@ const Login = ({ setToken }) => {
   const handleLogin = async (event) => {
     event.preventDefault()
     const variables = { username, password }
-    console.log(variables)
     login({ variables })
   }
 
