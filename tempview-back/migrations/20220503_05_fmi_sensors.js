@@ -8,7 +8,7 @@ module.exports = {
       },
       {
         sensor_name: 'FRVI',
-        sensor_fullname: 'Sademäärä (Röykkä))',
+        sensor_fullname: 'Sademäärä (Röykkä)',
         sensor_unit: 'mm',
       },
       {

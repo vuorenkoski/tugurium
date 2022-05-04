@@ -99,6 +99,15 @@ postgres=# truncate table measurements;
 postgres=# \q
 ```
 
+Dump and restore sql data:
+
+```
+pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
+
+sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
+
+```
+
 ## Production environment
 
 Production server will be run Raspberry Pi 2 in address https://tempview.vuorenkoski.fi.
@@ -107,17 +116,32 @@ Frontend: https://tempview.vuorenkoski.fi/
 
 Backend: https://tempview.vuorenkoski.fi/graphql
 
-restart after update
+### Setting up production environment
+
+1. Install node, npm and postgre
+
+```
+sudo apt install postgresql postgresql-contrib nodejs
+```
+
+2. Create database (instructions in Create database -section)
+
+3. Clone repository to /home/pi/tempview
+
+4. Copy backround service script
+
+```
+sudo cp /home/pi/tempview/tempview-back/tempview.service /etc/systemd/system/.
+```
+
+5. Install dependencies, build frontend and start background service
 
 ```
 sh build.sh
 ```
 
-Dump and restore sql data:
+5. Insert script to fetch data from FMI to crontab (every 60 minutes)
 
 ```
-pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
-
-sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
-
+30 * * * * /usr/bin/node /home/pi/tempview/tempview-back/getFmiData.js
 ```
