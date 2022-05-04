@@ -14,7 +14,9 @@ Sensor.init(
     sensorName: {
       type: DataTypes.TEXT,
       unique: true,
-      len: [4, 4],
+      validate: {
+        len: [4, 4],
+      },
     },
     sensorFullname: {
       type: DataTypes.TEXT,

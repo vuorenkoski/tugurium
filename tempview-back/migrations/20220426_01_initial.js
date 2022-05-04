@@ -10,6 +10,11 @@ module.exports = {
       },
       sensor_name: {
         type: DataTypes.TEXT,
+        allowNull: false,
+        unique: true,
+        validate: {
+          len: [4, 4],
+        },
       },
       sensor_fullname: {
         type: DataTypes.TEXT,
