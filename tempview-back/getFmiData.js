@@ -74,7 +74,6 @@ const parseAndSaveMostRecent = async (data) => {
       value: response[keys[i]].value,
       timestamp: response[keys[i]].date.getTime() / 1000,
     }
-    console.log(data)
     await Measurement.create(data, { logging: false })
   }
 }

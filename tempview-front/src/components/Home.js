@@ -6,7 +6,7 @@ import { convertDate, convertTemp } from '../util/conversions'
 const Home = () => {
   const sensors = useQuery(CURRENT_SENSOR_DATA)
 
-  let sensorList = []
+  let sensorList = null
   if (sensors.data) {
     sensorList = sensors.data.currentSensorData
   }
@@ -26,15 +26,17 @@ const Home = () => {
                 <th>Lämpötila</th>
                 <th>Aikaleima</th>
               </tr>
-              {sensorList.map((a, i) => (
-                <tr key={i}>
-                  <td>{a.sensor.sensorFullname}</td>
-                  <td>
-                    {convertTemp(a.value)} {a.sensor.sensorUnit}
-                  </td>
-                  <td>{convertDate(a.timestamp)}</td>
-                </tr>
-              ))}
+              {sensorList &&
+                sensorList.map((a, i) => (
+                  <tr key={i}>
+                    <td>{a.sensor.sensorFullname}</td>
+                    <td>
+                      {convertTemp(a.value)} {a.sensor.sensorUnit}
+                    </td>
+                    <td>{convertDate(a.timestamp)}</td>
+                  </tr>
+                ))}
+              {!sensorList && <h3>Loading...</h3>}
             </tbody>
           </Table>
         </Col>

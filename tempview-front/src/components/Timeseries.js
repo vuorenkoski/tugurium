@@ -242,6 +242,11 @@ const Timeseries = ({ sensors }) => {
             </VictoryChart>
           </Col>
         )}
+        {!graphData && selectedSensors.length > 0 && (
+          <Col className="col-9">
+            <h3>loading...</h3>
+          </Col>
+        )}
       </Row>
     </div>
   )
