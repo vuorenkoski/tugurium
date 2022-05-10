@@ -136,8 +136,6 @@ const currentSensorData = async (root, args, context) => {
       nest: true,
     }
   )
-
-  console.log(measurements)
   return measurements
 }
 
