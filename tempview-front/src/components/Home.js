@@ -21,15 +21,15 @@ const Home = () => {
         {!sensorList && <h3>Loading...</h3>}
 
         <Col className="col-6">
-          <Table striped>
-            <tbody>
-              <tr>
-                <th>Sensori</th>
-                <th>Lämpötila</th>
-                <th>Aikaleima</th>
-              </tr>
-              {sensorList &&
-                sensorList.map((a, i) => (
+          {sensorList && (
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Sensori</th>
+                  <th>Lämpötila</th>
+                  <th>Aikaleima</th>
+                </tr>
+                {sensorList.map((a, i) => (
                   <tr key={i}>
                     <td>{a.sensor.sensorFullname}</td>
                     <td>
@@ -38,8 +38,9 @@ const Home = () => {
                     <td>{convertDate(a.timestamp)}</td>
                   </tr>
                 ))}
-            </tbody>
-          </Table>
+              </tbody>
+            </Table>
+          )}
         </Col>
       </Row>
     </div>

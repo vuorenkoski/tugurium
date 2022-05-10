@@ -10,7 +10,7 @@ const Login = ({ setToken }) => {
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      setErrorMessage(error.graphQLErrors[0])
+      setErrorMessage(error.graphQLErrors[0].message)
     },
   })
 
@@ -56,6 +56,8 @@ const Login = ({ setToken }) => {
             kirjaudu
           </Button>
         </Form>
+      </Row>
+      <Row className="p-4" style={{ color: 'red' }}>
         {errorMessage}
       </Row>
     </div>

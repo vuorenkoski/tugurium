@@ -14,7 +14,7 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
 
-  if (!token) {
+  if (!token && !localStorage.getItem('tempview-user-token')) {
     return (
       <div>
         <Login setToken={setToken} />

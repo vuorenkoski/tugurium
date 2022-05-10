@@ -56,7 +56,8 @@ const typeDefs = gql`
   type Mutation {
     addMeasurement(sensorName: String!, value: String): Measurement
     login(username: String!, password: String!): Token
-    createUser(username: String!, password: String!): String
+    createUser(username: String!, password: String!): User
+    deleteUser(id: Int!): User
     deleteSensor(id: Int!): Sensor
     updateSensor(
       sensorName: String!
@@ -162,7 +163,7 @@ const allSensors = async (root, args, context) => {
 }
 
 const deleteSensor = async (root, args, context) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.currentUser.admin) {
     throw new UserInputError('Not authorized', {
       invalidArgs: args.name,
     })
@@ -221,10 +222,8 @@ const allUsers = async (root, args, context) => {
 }
 
 const addMeasurement = async (root, args, context) => {
-  if (!context.currentUser) {
-    throw new UserInputError('Not authorized', {
-      invalidArgs: args.name,
-    })
+  if (context.token !== SENSOR_TOKEN) {
+    return
   }
   const sensor = await Sensor.findOne({
     where: { sensorName: args.sensorName },
@@ -250,7 +249,9 @@ const login = async (root, args) => {
   const passwordCorrect =
     user === null ? false : await bcrypt.compare(password, user.passwordHash)
   if (!(user && passwordCorrect)) {
-    return 'error'
+    throw new UserInputError('Invalid username/password', {
+      invalidArgs: args.name,
+    })
   }
 
   const userForToken = {
@@ -262,13 +263,44 @@ const login = async (root, args) => {
   return { value: token }
 }
 
-const createUser = async (root, args) => {
+const createUser = async (root, args, context) => {
+  if (!context.currentUser || !context.currentUser.admin) {
+    throw new UserInputError('Not authorized', {
+      invalidArgs: args.name,
+    })
+  }
+
+  const users = await User.findAll()
+  if (users.find((p) => p.username === args.username)) {
+    throw new UserInputError('username name must be unique', {
+      invalidArgs: args.name,
+    })
+  }
+
   const { username, password } = args
   const passwordHash = await bcrypt.hash(password, 10)
-  const user = await Measurement.create({
+  const user = await User.create({
     username,
     passwordHash,
   })
+  return user
+}
+
+const deleteUser = async (root, args, context) => {
+  if (!context.currentUser || !context.currentUser.admin) {
+    throw new UserInputError('Not authorized', {
+      invalidArgs: args.name,
+    })
+  }
+
+  const user = await User.findOne({ where: { id: args.id } })
+  if (user.admin) {
+    throw new UserInputError('Can not delete admin', {
+      invalidArgs: args.name,
+    })
+  }
+
+  await user.destroy()
   return user
 }
 
@@ -292,6 +324,7 @@ const resolvers = {
     addMeasurement,
     login,
     createUser,
+    deleteUser,
     deleteSensor,
     updateSensor,
     newSensor,

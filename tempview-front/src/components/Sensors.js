@@ -18,6 +18,12 @@ const Sensors = () => {
   const sensors = useQuery(ALL_SENSORS)
 
   const [deleteSensor] = useMutation(DELETE_SENSOR, {
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2000)
+    },
     refetchQueries: [{ query: ALL_SENSORS }],
   })
 
@@ -41,11 +47,6 @@ const Sensors = () => {
     refetchQueries: [{ query: ALL_SENSORS }],
   })
 
-  let sensorList = null
-  if (sensors.data) {
-    sensorList = sensors.data.allSensors
-  }
-
   const handeDeleteSensor = (id) => {
     const variables = { deleteSensorId: Number(id) }
     deleteSensor({ variables })
@@ -53,7 +54,7 @@ const Sensors = () => {
 
   const handeUpdateSensor = (id) => {
     setDisplaySensorForm(true)
-    const sensor = sensorList.filter((s) => s.id === id)[0]
+    const sensor = sensors.data.allSensors.filter((s) => s.id === id)[0]
     setSensorName(sensor.sensorName)
     setSensorFullname(sensor.sensorFullname)
     setSensorUnit(sensor.sensorUnit)
@@ -90,7 +91,7 @@ const Sensors = () => {
   }
 
   return (
-    <Row className="p-4" style={{ caretColor: 'white' }}>
+    <Row className="p-4">
       <h2>Sensorit</h2>
       <Col className="col-8">
         <Row>
@@ -104,30 +105,43 @@ const Sensors = () => {
                 <th></th>
                 <th></th>
               </tr>
-              {sensorList.map((a) => (
-                <tr key={a.id}>
-                  <td>{a.sensorName}</td>
-                  <td>{a.sensorFullname}</td>
-                  <td>{a.sensorUnit}</td>
-                  <td>{a.id}</td>
-                  <td>
-                    <button
-                      style={{ all: 'unset', color: 'red', cursor: 'hand' }}
-                      onClick={() => handeDeleteSensor(a.id)}
-                    >
-                      poista
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      style={{ all: 'unset', color: 'blue', cursor: 'hand' }}
-                      onClick={() => handeUpdateSensor(a.id)}
-                    >
-                      päivitä
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {sensors.data &&
+                sensors.data.allSensors.map((a) => (
+                  <tr key={a.id}>
+                    <td>{a.sensorName}</td>
+                    <td>{a.sensorFullname}</td>
+                    <td>{a.sensorUnit}</td>
+                    <td>{a.id}</td>
+                    <td>
+                      <Button
+                        style={{
+                          color: 'red',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          font: 'inherit',
+                        }}
+                        onClick={() => handeDeleteSensor(a.id)}
+                      >
+                        poista
+                      </Button>
+                    </td>
+                    <td>
+                      <Button
+                        style={{
+                          color: 'blue',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          font: 'inherit',
+                        }}
+                        onClick={() => handeUpdateSensor(a.id)}
+                      >
+                        päivitä
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
         </Row>
@@ -143,7 +157,6 @@ const Sensors = () => {
                       type="text"
                       value={sensorName}
                       onChange={({ target }) => setSensorName(target.value)}
-                      style={{ caretColor: 'black' }}
                     />
                   </Form.Group>
                 </Form>
@@ -156,7 +169,6 @@ const Sensors = () => {
                       type="text"
                       value={sensorFullname}
                       onChange={({ target }) => setSensorFullname(target.value)}
-                      style={{ caretColor: 'black' }}
                     />
                   </Form.Group>
                 </Form>
@@ -169,7 +181,6 @@ const Sensors = () => {
                       type="text"
                       value={sensorUnit}
                       onChange={({ target }) => setSensorUnit(target.value)}
-                      style={{ caretColor: 'black' }}
                     />
                   </Form.Group>
                 </Form>
@@ -181,12 +192,14 @@ const Sensors = () => {
                 <Button onClick={closeSensorForm}>peruuta</Button>
               </Col>
             </Row>
-            <Row style={{ color: 'red' }}>{errorMessage}</Row>
           </div>
         )}
         {!displaySensorForm && (
           <Button onClick={() => handeNewSensor()}>Lisää uusi</Button>
         )}
+        <Row className="p-4" style={{ color: 'red' }}>
+          {errorMessage}
+        </Row>
       </Col>
     </Row>
   )
