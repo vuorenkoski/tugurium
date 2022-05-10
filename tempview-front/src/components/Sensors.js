@@ -12,6 +12,7 @@ const Sensors = () => {
   const [displaySensorForm, setDisplaySensorForm] = useState(false)
   const [sensorName, setSensorName] = useState('')
   const [sensorUnit, setSensorUnit] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
   const [sensorFullname, setSensorFullname] = useState('')
   const [sensorId, setSensorId] = useState(-1)
   const sensors = useQuery(ALL_SENSORS)
@@ -21,10 +22,22 @@ const Sensors = () => {
   })
 
   const [updateSensor] = useMutation(UPDATE_SENSOR, {
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+    },
+    onCompleted: (data) => {
+      closeSensorForm()
+    },
     refetchQueries: [{ query: ALL_SENSORS }],
   })
 
   const [newSensor] = useMutation(NEW_SENSOR, {
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message)
+    },
+    onCompleted: (data) => {
+      closeSensorForm()
+    },
     refetchQueries: [{ query: ALL_SENSORS }],
   })
 
@@ -59,7 +72,7 @@ const Sensors = () => {
     event.preventDefault()
     if (sensorId === -1) {
       const variables = { sensorName, sensorFullname, sensorUnit }
-      newSensor({ variables })
+      await newSensor({ variables })
     } else {
       const variables = {
         sensorName,
@@ -67,8 +80,12 @@ const Sensors = () => {
         sensorUnit,
         updateSensorId: sensorId,
       }
-      updateSensor({ variables })
+      await updateSensor({ variables })
     }
+  }
+
+  const closeSensorForm = () => {
+    setErrorMessage(null)
     setDisplaySensorForm(false)
   }
 
@@ -116,52 +133,56 @@ const Sensors = () => {
         </Row>
 
         {displaySensorForm && (
-          <Row className="align-items-end">
-            <Col className="col-2">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Nimi</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={sensorName}
-                    onChange={({ target }) => setSensorName(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-            <Col className="col-4">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Kuvaus</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={sensorFullname}
-                    onChange={({ target }) => setSensorFullname(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-            <Col className="col-2">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Mittayksikkö</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={sensorUnit}
-                    onChange={({ target }) => setSensorUnit(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-            <Col className="col-2">
-              <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
-            </Col>
-            <Col className="col-2">
-              <Button onClick={() => setDisplaySensorForm(false)}>
-                peruuta
-              </Button>
-            </Col>
-          </Row>
+          <div>
+            <Row className="align-items-end">
+              <Col className="col-2">
+                <Form>
+                  <Form.Group>
+                    <Form.Label>Nimi</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={sensorName}
+                      onChange={({ target }) => setSensorName(target.value)}
+                      style={{ caretColor: 'black' }}
+                    />
+                  </Form.Group>
+                </Form>
+              </Col>
+              <Col className="col-4">
+                <Form>
+                  <Form.Group>
+                    <Form.Label>Kuvaus</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={sensorFullname}
+                      onChange={({ target }) => setSensorFullname(target.value)}
+                      style={{ caretColor: 'black' }}
+                    />
+                  </Form.Group>
+                </Form>
+              </Col>
+              <Col className="col-2">
+                <Form>
+                  <Form.Group>
+                    <Form.Label>Mittayksikkö</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={sensorUnit}
+                      onChange={({ target }) => setSensorUnit(target.value)}
+                      style={{ caretColor: 'black' }}
+                    />
+                  </Form.Group>
+                </Form>
+              </Col>
+              <Col className="col-2">
+                <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
+              </Col>
+              <Col className="col-2">
+                <Button onClick={closeSensorForm}>peruuta</Button>
+              </Col>
+            </Row>
+            <Row style={{ color: 'red' }}>{errorMessage}</Row>
+          </div>
         )}
         {!displaySensorForm && (
           <Button onClick={() => handeNewSensor()}>Lisää uusi</Button>
