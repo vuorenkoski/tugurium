@@ -129,25 +129,15 @@ const currentSensorData = async (root, args, context) => {
       invalidArgs: args.name,
     })
   }
+  const measurements = await sequelizeRaw.query(
+    'SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName", sensors.sensor_fullname AS "sensor.sensorFullname", sensors.sensor_unit AS "sensor.sensorUnit" FROM measurements AS a INNER JOIN (SELECT sensor_id, MAX(timestamp) AS timestamp FROM measurements GROUP BY sensor_id) AS b ON a.sensor_id = b.sensor_id AND a.timestamp = b.timestamp INNER JOIN sensors ON sensors.id = a.sensor_id',
+    {
+      type: QueryTypes.SELECT,
+      nest: true,
+    }
+  )
 
-  const measurements = await Measurement.findAll({
-    attributes: [
-      sequelize.literal(
-        'DISTINCT ON ("measurement"."sensor_id") "measurement"."sensor_id"'
-      ),
-      'value',
-      'timestamp',
-      'id',
-    ],
-    include: {
-      model: Sensor,
-      attributes: ['sensorFullname', 'sensorUnit'],
-    },
-    order: [
-      ['sensor_id', 'DESC'],
-      ['timestamp', 'DESC'],
-    ],
-  })
+  console.log(measurements)
   return measurements
 }
 
