@@ -24,25 +24,10 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const Timeseries = () => {
-  const [selectedSensors, setSelectedSensors] = useState([])
-  const [average, setAverage] = useState('HOUR')
-  const [year, setYear] = useState(currentYear)
-  const [zoomDomain, setZoomDomain] = useState({})
-  const [selectedDomain, setSelectedDomain] = useState({})
-  const data = useQuery(SENSOR_DATA, {
-    variables: {
-      sensorName: selectedSensors,
-      average: average,
-      minDate: yearToEpoch(year),
-      maxDate: yearToEpoch(year + 1),
-    },
-  })
-  const sensors = useQuery(ALL_SENSORS)
-
+const processData = (data, setData) => {
   let graphData = null
-  if (data.data && data.data.sensorData.length > 0) {
-    graphData = data.data.sensorData
+  if (data.sensorData.length > 0) {
+    graphData = data.sensorData
       .filter((d) => d.measurements.length > 0)
       .map((d) => ({
         sensorFullname: d.sensorFullname,
@@ -55,6 +40,28 @@ const Timeseries = () => {
         })),
       }))
   }
+  setData(graphData)
+}
+
+const Timeseries = () => {
+  const [selectedSensors, setSelectedSensors] = useState([])
+  const [average, setAverage] = useState('HOUR')
+  const [year, setYear] = useState(currentYear)
+  const [zoomDomain, setZoomDomain] = useState({})
+  const [selectedDomain, setSelectedDomain] = useState({})
+  const [data, setData] = useState(null)
+
+  useQuery(SENSOR_DATA, {
+    variables: {
+      sensorName: selectedSensors,
+      average: average,
+      minDate: yearToEpoch(year),
+      maxDate: yearToEpoch(year + 1),
+    },
+    onCompleted: (data) => processData(data, setData),
+  })
+
+  const sensors = useQuery(ALL_SENSORS)
 
   const handleSensorChange = (e) => {
     if (e.target.checked) {
@@ -143,7 +150,7 @@ const Timeseries = () => {
             </Form.Select>
           </Form>
         </Col>
-        {graphData && (
+        {data && (
           <Col className="col-9">
             <VictoryChart
               width={900}
@@ -151,8 +158,8 @@ const Timeseries = () => {
               theme={VictoryTheme.material}
               domain={{
                 y: [
-                  graphData.reduce((p, c) => Math.min(p, c.min), 0) - 5,
-                  graphData.reduce((p, c) => Math.max(p, c.max), 25),
+                  data.reduce((p, c) => Math.min(p, c.min), 0) - 5,
+                  data.reduce((p, c) => Math.max(p, c.max), 25),
                 ],
               }}
               scale={{ x: 'time' }}
@@ -188,13 +195,13 @@ const Timeseries = () => {
                 y={0}
                 orientation="vertical"
                 style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
-                data={graphData.map((d, i) => ({
+                data={data.map((d, i) => ({
                   name: d.sensorFullname,
                   symbol: { fill: colors[i], type: 'square' },
                 }))}
               />
 
-              {graphData.map((d, i) => (
+              {data.map((d, i) => (
                 <VictoryLine
                   key={i}
                   data={d.measurements}
@@ -222,7 +229,7 @@ const Timeseries = () => {
             >
               <VictoryAxis
                 dependentAxis
-                domain={[graphData.reduce((p, c) => Math.min(p, c.min), 0), 30]}
+                domain={[data.reduce((p, c) => Math.min(p, c.min), 0), 30]}
                 standalone={false}
                 style={{
                   axis: { stroke: 'transparent' },
@@ -230,7 +237,7 @@ const Timeseries = () => {
                   tickLabels: { fill: 'transparent' },
                 }}
               />
-              {graphData.map((d) => (
+              {data.map((d) => (
                 <VictoryLine
                   key={d.sensorFullname}
                   data={d.measurements}
@@ -243,7 +250,7 @@ const Timeseries = () => {
             </VictoryChart>
           </Col>
         )}
-        {!graphData && selectedSensors.length > 0 && (
+        {!data && selectedSensors.length > 0 && (
           <Col className="col-9">
             <h3>loading...</h3>
           </Col>

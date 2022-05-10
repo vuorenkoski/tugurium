@@ -108,7 +108,7 @@ const Years = () => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Vuosien välinen vertailu</h2>
+        <h2>Vuosien välinen vertailu (päivän keskiarvo)</h2>
       </Row>
       <Row className="p-4">
         <Col className="col-3">
