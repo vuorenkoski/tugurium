@@ -4,7 +4,9 @@ import { CURRENT_SENSOR_DATA } from '../queries'
 import { convertDate, convertTemp } from '../util/conversions'
 
 const Home = () => {
-  const sensors = useQuery(CURRENT_SENSOR_DATA)
+  const sensors = useQuery(CURRENT_SENSOR_DATA, {
+    fetchPolicy: 'network-only',
+  })
 
   let sensorList = null
   if (sensors.data) {
