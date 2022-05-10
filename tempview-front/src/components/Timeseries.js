@@ -11,7 +11,7 @@ import {
 } from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 
-import { SENSOR_DATA } from '../queries'
+import { ALL_SENSORS, SENSOR_DATA } from '../queries'
 
 const firstYear = 2014
 const currentYear = new Date().getFullYear()
@@ -24,7 +24,7 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const Timeseries = ({ sensors }) => {
+const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
   const [average, setAverage] = useState('HOUR')
   const [year, setYear] = useState(currentYear)
@@ -38,6 +38,7 @@ const Timeseries = ({ sensors }) => {
       maxDate: yearToEpoch(year + 1),
     },
   })
+  const sensors = useQuery(ALL_SENSORS)
 
   let graphData = null
   if (data.data && data.data.sensorData.length > 0) {
@@ -91,17 +92,18 @@ const Timeseries = ({ sensors }) => {
         <Col className="col-3">
           <Form>
             <h3>Sensorit</h3>
-            {sensors.map((s) => (
-              <div key={s.sensorName}>
-                <Form.Check
-                  type={'checkbox'}
-                  id={s.sensorName}
-                  label={s.sensorFullname}
-                  defaultValue={false}
-                  onChange={handleSensorChange.bind(this)}
-                />
-              </div>
-            ))}
+            {sensors.data &&
+              sensors.data.allSensors.map((s) => (
+                <div key={s.sensorName}>
+                  <Form.Check
+                    type={'checkbox'}
+                    id={s.sensorName}
+                    label={s.sensorFullname}
+                    defaultValue={false}
+                    onChange={handleSensorChange.bind(this)}
+                  />
+                </div>
+              ))}
             <h3>Datan käsittely</h3>
             <Form.Check
               type={'radio'}

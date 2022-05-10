@@ -5,6 +5,7 @@ import Timeseries from './components/Timeseries'
 import Settings from './components/Settings'
 import Home from './components/Home'
 import Login from './components/Login'
+import Years from './components/Years'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -89,7 +90,8 @@ const App = () => {
           </Navbar.Collapse>
         </Navbar>
         <Routes>
-          <Route path="/settings" element={<Settings sensors={sensorList} />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />
           <Route
             path="/timeseries"
