@@ -2,6 +2,7 @@
 // and send the measurement to backend.
 //
 // All error checking is lacking. 
+// NO HTTPS!!!!!
 
 #include <stdio.h> 
 #include <stdlib.h> 
