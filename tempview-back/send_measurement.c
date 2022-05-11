@@ -1,3 +1,8 @@
+// This is example code how to read temperature measurement from ds18b20 sensor
+// and send the measurement to backend.
+//
+// All error checking is lacking. 
+
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
@@ -9,7 +14,7 @@
 const int port = 4000;
 const char *host = "localhost";
 const char *sensor = "HDOW";
-const char *token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlbnNvciIsImlkIjoxLCJpYXQiOjE2NTEwNDY0OTN9.942e6l55Eh0y9nWwsdkS_s-q_6-EXeoGnDdsKp6vXho";
+const char *token = "xxxxx";
 const char *ds18b20 = "/sys/bus/w1/devices/28-000005d9ad73/w1_slave";
 
 void send_measurement(float value) {

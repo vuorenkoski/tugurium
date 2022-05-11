@@ -149,3 +149,5 @@ sh build.sh
 ```
 30 * * * * sh /home/pi/tempview/getFmiData.sh
 ```
+
+There is example c-code to read measurement from sensor and send it to backend (tempview-back/send_measurement.c).

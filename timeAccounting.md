@@ -10,12 +10,12 @@
 | 3.5.  | 9     | hour and day aggregate values, script to import old data, year selection, Exploration of FMI opendata api                          |
 | 4.5.  | 10    | fmi get data, loading... message, login, settings-tab, del/update/add sensors                                                      |
 | 10.5. | 10    | error handling, add+delete users, annual comparisons -view, timeseries: data processed only when needed, more efficient sql search |
+| 11.5. |       | c-code to send measurement to beckend                                                                                              |
 | total | 61    |                                                                                                                                    |
 
 ## Product backlog
 
 - sql indexointi nopeuden lisämiseksi
-- query network only - tämän hetkisten lämpotilojen näytössä
 - skaalat kuntoon
 - refactor backend
 - liiketunnistin
