@@ -83,35 +83,31 @@ const writeDb = async (data) => {
       ),
       { logging: false }
     )
-    console.log('block', block, 'done')
+    console.log('block', block + 1, 'done')
   }
+}
+
+const processFile = async (filename, sensorName, readFunction) => {
+  const sensor = await Sensor.findOne({
+    where: { sensorName: sensorName },
+    logging: false,
+  })
+  console.log('Importing: ' + filename)
+  const data = readFunction(filename, sensor.id)
+  console.log('File read')
+  await writeDb(data)
+  console.log('db appended')
+  console.log('')
 }
 
 const main = async () => {
   await connectToDatabase()
-
+  console.log('block size:', blockSize)
+  console.log('')
   for (let i in tables) {
-    const sensor = await Sensor.findOne({
-      where: { sensorName: tables[i].sensorName },
-    })
-    console.log('Importing: ' + tables[i].filename)
-    const data = readCsvFile(tables[i].filename, sensor.id)
-    console.log('File read')
-    await writeDb(data)
-    console.log('db appended')
-    console.log('')
+    await processFile(tables[i].filename, tables[i].sensorName, readCsvFile)
   }
-
-  const filename = '../data/liike.csv'
-  const sensorName = 'CMOT'
-  const sensor = await Sensor.findOne({
-    where: { sensorName: sensorName },
-  })
-  console.log('Importing: ' + filename)
-  const data = readCsvMotionFile(filename, sensor.id)
-  console.log('File read')
-  await writeDb(data)
-  console.log('db appended')
+  await processFile('../data/liike.csv', 'CMOT', readCsvMotionFile)
 }
 
 main()
