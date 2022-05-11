@@ -4,6 +4,8 @@ var fs = require('fs')
 const { Sequelize } = require('sequelize')
 const { DATABASE_URL } = require('./util/config')
 
+const blockSize = 200000
+
 const tables = [
   { filename: '../data/kellarissa.csv', sensorName: 'CKEL' },
   { filename: '../data/sisalla.csv', sensorName: 'CINS' },
@@ -72,8 +74,22 @@ const readCsvMotionFile = (filename, sensorId) => {
   return data
 }
 
+const writeDb = async (data) => {
+  for (let block = 0; block * blockSize < data.length; block++) {
+    await Measurement.bulkCreate(
+      data.slice(
+        block * blockSize,
+        Math.min(data.length, block * blockSize + blockSize - 1)
+      ),
+      { logging: false }
+    )
+    console.log('block', block, 'done')
+  }
+}
+
 const main = async () => {
   await connectToDatabase()
+
   for (let i in tables) {
     const sensor = await Sensor.findOne({
       where: { sensorName: tables[i].sensorName },
@@ -81,8 +97,9 @@ const main = async () => {
     console.log('Importing: ' + tables[i].filename)
     const data = readCsvFile(tables[i].filename, sensor.id)
     console.log('File read')
-    await Measurement.bulkCreate(data, { logging: false })
+    await writeDb(data)
     console.log('db appended')
+    console.log('')
   }
 
   const filename = '../data/liike.csv'
@@ -93,7 +110,7 @@ const main = async () => {
   console.log('Importing: ' + filename)
   const data = readCsvMotionFile(filename, sensor.id)
   console.log('File read')
-  await Measurement.bulkCreate(data, { logging: false })
+  await writeDb(data)
   console.log('db appended')
 }
 
