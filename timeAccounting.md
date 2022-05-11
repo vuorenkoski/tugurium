@@ -11,7 +11,7 @@
 | 4.5.  | 10    | fmi get data, loading... message, login, settings-tab, del/update/add sensors                                                      |
 | 10.5. | 10    | error handling, add+delete users, annual comparisons -view, timeseries: data processed only when needed, more efficient sql search |
 | 11.5. | 8     | c-code to send measurement, index for meas-table, backend refactored, aggragate method col, motion sensor, lake surface, importOld |
-| total | 61    |                                                                                                                                    |
+| total | 69    |                                                                                                                                    |
 
 ## Product backlog
 
