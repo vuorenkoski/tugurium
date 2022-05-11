@@ -13,7 +13,7 @@ Measurement.init(
     },
     value: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
     timestamp: {
       type: DataTypes.INTEGER,

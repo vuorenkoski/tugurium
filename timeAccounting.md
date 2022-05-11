@@ -10,12 +10,14 @@
 | 3.5.  | 9     | hour and day aggregate values, script to import old data, year selection, Exploration of FMI opendata api                          |
 | 4.5.  | 10    | fmi get data, loading... message, login, settings-tab, del/update/add sensors                                                      |
 | 10.5. | 10    | error handling, add+delete users, annual comparisons -view, timeseries: data processed only when needed, more efficient sql search |
-| 11.5. |       | c-code to send measurement to beckend, index for measurement table, backend refactored                                             |
+| 11.5. |       | c-code to send measurement, index for meas-table, backend refactored, aggragate method col, motion sensor                          |
 | total | 61    |                                                                                                                                    |
 
 ## Product backlog
 
-- liiketunnistin
+- fmi data vain jos riittävän uusi
+- järven pinta
+- sensorit aakkosjärjestykseen
 - skaalat kuntoon
 - testit
 - kontrol: lämmitys ja valot

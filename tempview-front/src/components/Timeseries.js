@@ -12,10 +12,10 @@ import {
 import { Row, Col, Form } from 'react-bootstrap'
 
 import { ALL_SENSORS, SENSOR_DATA } from '../queries'
+const { FIRST_YEAR } = require('../util/config')
 
-const firstYear = 2014
 const currentYear = new Date().getFullYear()
-const years = Array(currentYear - firstYear + 1)
+const years = Array(currentYear - FIRST_YEAR + 1)
   .fill()
   .map((_, i) => currentYear - i)
 
@@ -77,7 +77,6 @@ const Timeseries = () => {
 
   const handleYearChange = (e) => {
     setYear(Number(e.target.value))
-    console.log(e.target.value)
   }
 
   const handleZoom = (domain) => {
@@ -98,7 +97,7 @@ const Timeseries = () => {
       <Row className="p-4">
         <Col className="col-3">
           <Form>
-            <h3>Sensorit</h3>
+            <h4>Sensorit</h4>
             {sensors.data &&
               sensors.data.allSensors.map((s) => (
                 <div key={s.sensorName}>
@@ -111,11 +110,11 @@ const Timeseries = () => {
                   />
                 </div>
               ))}
-            <h3>Datan käsittely</h3>
+            <h4>Datapisteiden yhdistäminen</h4>
             <Form.Check
               type={'radio'}
               id={'none'}
-              label={'Ei mitään'}
+              label={'Kaikki'}
               name={'average'}
               defaultValue={'NO'}
               onChange={handleRadioChange.bind(this)}
@@ -124,7 +123,7 @@ const Timeseries = () => {
               defaultChecked
               type={'radio'}
               id={'hour'}
-              label={'Tunnin keskiarvo'}
+              label={'Tunti'}
               name={'average'}
               defaultValue={'HOUR'}
               onChange={handleRadioChange.bind(this)}
@@ -132,12 +131,12 @@ const Timeseries = () => {
             <Form.Check
               type={'radio'}
               id={'day'}
-              label={'Päivän keskiarvo'}
+              label={'Päivä'}
               name={'average'}
               defaultValue={'DAY'}
               onChange={handleRadioChange.bind(this)}
             />
-            <h3>Vuosi</h3>
+            <h4>Vuosi</h4>
             <Form.Select
               aria-label="Default select example"
               onChange={handleYearChange.bind(this)}

@@ -33,10 +33,7 @@ module.exports = {
       },
       value: {
         type: DataTypes.DECIMAL,
-        allowNull: false,
-        validate: {
-          isEmail: true,
-        },
+        allowNull: true,
       },
       timestamp: {
         type: DataTypes.INTEGER,

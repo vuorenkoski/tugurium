@@ -28,7 +28,7 @@ const sensorData = async (root, args, context) => {
   let data = []
   for (let i in sensors) {
     let measurements = await sequelizeRaw.query(
-      `SELECT AVG(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} GROUP BY timestamp / ${period}`,
+      `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
     measurements = measurements.map((m) => ({
@@ -39,6 +39,7 @@ const sensorData = async (root, args, context) => {
       sensorFullname: sensors[i].sensorFullname,
       sensorName: sensors[i].sensorName,
       sensorUnit: sensors[i].sensorUnit,
+      agrmethod: sensors[i].agrmethod,
       measurements: measurements,
     })
   }
@@ -96,6 +97,7 @@ const updateSensor = async (root, args, context) => {
   sensor.sensorName = args.sensorName
   sensor.sensorFullname = args.sensorFullname
   sensor.sensorUnit = args.sensorUnit
+  sensor.agrmethod = args.agrmethod
   await sensor.save()
   return sensor
 }
@@ -114,6 +116,7 @@ const newSensor = async (root, args, context) => {
     sensorName: args.sensorName,
     sensorFullname: args.sensorFullname,
     sensorUnit: args.sensorUnit,
+    agrmethod: args.agrmethod,
   })
   return sensor
 }

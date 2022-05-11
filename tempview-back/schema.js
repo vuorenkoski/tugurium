@@ -12,6 +12,7 @@ const typeDefs = gql`
     sensorName: String!
     sensorFullname: String!
     sensorUnit: String!
+    agrmethod: String!
     measurements: [Measurement]
   }
 
@@ -56,12 +57,14 @@ const typeDefs = gql`
       sensorName: String!
       sensorFullname: String!
       sensorUnit: String!
+      agrmethod: String!
       id: Int!
     ): Sensor
     newSensor(
       sensorName: String!
       sensorFullname: String!
       sensorUnit: String!
+      agrmethod: String!
     ): Sensor
   }
 `

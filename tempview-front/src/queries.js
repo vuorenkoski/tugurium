@@ -7,6 +7,7 @@ export const ALL_SENSORS = gql`
       sensorName
       sensorFullname
       sensorUnit
+      agrmethod
     }
   }
 `
@@ -66,17 +67,20 @@ export const UPDATE_SENSOR = gql`
     $sensorFullname: String!
     $sensorUnit: String!
     $updateSensorId: Int!
+    $agrmethod: String!
   ) {
     updateSensor(
       sensorName: $sensorName
       sensorFullname: $sensorFullname
       sensorUnit: $sensorUnit
       id: $updateSensorId
+      agrmethod: $agrmethod
     ) {
       id
       sensorName
       sensorFullname
       sensorUnit
+      agrmethod
     }
   }
 `
@@ -86,15 +90,18 @@ export const NEW_SENSOR = gql`
     $sensorName: String!
     $sensorFullname: String!
     $sensorUnit: String!
+    $agrmethod: String!
   ) {
     newSensor(
       sensorName: $sensorName
       sensorFullname: $sensorFullname
       sensorUnit: $sensorUnit
+      agrmethod: $agrmethod
     ) {
       sensorName
       sensorFullname
       sensorUnit
+      agrmethod
     }
   }
 `

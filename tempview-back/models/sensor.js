@@ -26,6 +26,13 @@ Sensor.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    agrmethod: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        isIn: [['SUM', 'AVG']],
+      },
+    },
   },
   {
     sequelize,

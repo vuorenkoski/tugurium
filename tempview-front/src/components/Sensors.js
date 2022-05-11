@@ -7,6 +7,7 @@ import {
   UPDATE_SENSOR,
   NEW_SENSOR,
 } from '../queries'
+const { AGGREGATE_METHODS } = require('../util/config')
 
 const Sensors = () => {
   const [displaySensorForm, setDisplaySensorForm] = useState(false)
@@ -14,6 +15,7 @@ const Sensors = () => {
   const [sensorUnit, setSensorUnit] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [sensorFullname, setSensorFullname] = useState('')
+  const [agrmethod, setAgrmethod] = useState('')
   const [sensorId, setSensorId] = useState(-1)
   const sensors = useQuery(ALL_SENSORS)
 
@@ -58,6 +60,7 @@ const Sensors = () => {
     setSensorName(sensor.sensorName)
     setSensorFullname(sensor.sensorFullname)
     setSensorUnit(sensor.sensorUnit)
+    setAgrmethod(sensor.agrmethod)
     setSensorId(Number(sensor.id))
   }
 
@@ -66,23 +69,29 @@ const Sensors = () => {
     setSensorName('')
     setSensorFullname('')
     setSensorUnit('')
+    setAgrmethod('AVG')
     setSensorId(-1)
   }
 
   const handleSubmitSensor = async (event) => {
     event.preventDefault()
     if (sensorId === -1) {
-      const variables = { sensorName, sensorFullname, sensorUnit }
+      const variables = { sensorName, sensorFullname, sensorUnit, agrmethod }
       await newSensor({ variables })
     } else {
       const variables = {
         sensorName,
         sensorFullname,
         sensorUnit,
+        agrmethod,
         updateSensorId: sensorId,
       }
       await updateSensor({ variables })
     }
+  }
+
+  const handleAgrChange = (e) => {
+    setAgrmethod(e.target.value)
   }
 
   const closeSensorForm = () => {
@@ -101,6 +110,7 @@ const Sensors = () => {
                 <th>Nimi</th>
                 <th>Kuvaus</th>
                 <th>Mittayksikkö</th>
+                <th>Koonti metodi</th>
                 <th>Id</th>
                 <th></th>
                 <th></th>
@@ -111,6 +121,7 @@ const Sensors = () => {
                     <td>{a.sensorName}</td>
                     <td>{a.sensorFullname}</td>
                     <td>{a.sensorUnit}</td>
+                    <td>{a.agrmethod}</td>
                     <td>{a.id}</td>
                     <td>
                       <Button
@@ -186,9 +197,23 @@ const Sensors = () => {
                 </Form>
               </Col>
               <Col className="col-2">
-                <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
+                <Form.Select
+                  onChange={handleAgrChange.bind(this)}
+                  defaultValue={agrmethod}
+                >
+                  {AGGREGATE_METHODS.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </Form.Select>
               </Col>
               <Col className="col-2">
+                <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
+              </Col>
+            </Row>
+            <Row className="p-2">
+              <Col className="text-end">
                 <Button onClick={closeSensorForm}>peruuta</Button>
               </Col>
             </Row>

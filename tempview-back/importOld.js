@@ -46,8 +46,26 @@ const readCsvFile = (filename, sensorId) => {
   content.split(/\r?\n/).forEach((line) => {
     const row = line.split(',')
     const value = parseFloat(row[1])
-    if (value && value > -50 && value < 100) {
+    if (!isNaN(value) && value > -150 && value < 150) {
       data.push({ timestamp: parseInt(row[0]) / 1000, value, sensorId })
+    }
+  })
+  return data
+}
+
+const readCsvMotionFile = (filename, sensorId) => {
+  let data = []
+  const content = fs.readFileSync(filename, 'utf8')
+  content.split(/\r?\n/).forEach((line) => {
+    try {
+      const timestamp = parseInt(line) / 1000
+      if (timestamp < 2000000000) {
+        data.push({ timestamp, value: 1, sensorId })
+      } else {
+        console.log('error:' + line)
+      }
+    } catch (error) {
+      console.log('error:' + line)
     }
   })
   return data
@@ -65,6 +83,17 @@ const main = async () => {
     await Measurement.bulkCreate(data, { logging: false })
     console.log('db appended')
   }
+
+  const filename = '../data/liike.csv'
+  const sensorName = 'CMOT'
+  const sensor = await Sensor.findOne({
+    where: { sensorName: sensorName },
+  })
+  console.log('Importing: ' + filename)
+  const data = readCsvMotionFile(filename, sensor.id)
+  console.log('File read')
+  await Measurement.bulkCreate(data, { logging: false })
+  console.log('db appended')
 }
 
 main()
