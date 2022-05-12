@@ -100,7 +100,7 @@ const Sensors = () => {
   }
 
   return (
-    <Row className="p-4">
+    <Row className="p-4 pb-0">
       <h2>Sensorit</h2>
       <Col className="col-8">
         <Row>

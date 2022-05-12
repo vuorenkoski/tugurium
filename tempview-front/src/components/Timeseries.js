@@ -12,7 +12,7 @@ import {
 import { Row, Col, Form } from 'react-bootstrap'
 
 import { ALL_SENSORS, SENSOR_DATA } from '../queries'
-const { FIRST_YEAR } = require('../util/config')
+const { FIRST_YEAR, COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
 const years = Array(currentYear - FIRST_YEAR + 1)
@@ -24,22 +24,29 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const processData = (data, setData) => {
+const processData = (data, setData, setAxisLabel) => {
   let graphData = null
+  let units = ''
   if (data.sensorData.length > 0) {
     graphData = data.sensorData
       .filter((d) => d.measurements.length > 0)
       .map((d) => ({
         sensorFullname: d.sensorFullname,
-        unit: d.unit,
+        unit: d.sensorUnit,
         min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
-        max: d.measurements.reduce((p, c) => Math.max(p, c.value), 25),
+        max: d.measurements.reduce((p, c) => Math.max(p, c.value), 10),
         measurements: d.measurements.map((m) => ({
           y: Number(m.value),
           x: new Date(m.timestamp * 1000),
         })),
       }))
+    const unitList = graphData.reduce(
+      (p, c) => (p.includes(c.unit) ? p : p.concat(c.unit)),
+      []
+    )
+    units = unitList.reduce((p, c) => p.concat(c + ', '), '').slice(0, -2)
   }
+  setAxisLabel(units)
   setData(graphData)
 }
 
@@ -50,6 +57,7 @@ const Timeseries = () => {
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
   const [data, setData] = useState(null)
+  const [axisLabel, setAxisLabel] = useState(null)
 
   useQuery(SENSOR_DATA, {
     variables: {
@@ -58,7 +66,7 @@ const Timeseries = () => {
       minDate: yearToEpoch(year),
       maxDate: yearToEpoch(year + 1),
     },
-    onCompleted: (data) => processData(data, setData),
+    onCompleted: (data) => processData(data, setData, setAxisLabel),
   })
 
   const sensors = useQuery(ALL_SENSORS)
@@ -87,66 +95,70 @@ const Timeseries = () => {
     setZoomDomain(domain)
   }
 
-  const colors = ['black', 'red', 'blue', 'green']
-
   return (
     <div>
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <h2>Aikasarjat</h2>
       </Row>
       <Row className="p-4">
         <Col className="col-3">
           <Form>
-            <h4>Sensorit</h4>
-            {sensors.data &&
-              sensors.data.allSensors.map((s) => (
-                <div key={s.sensorName}>
-                  <Form.Check
-                    type={'checkbox'}
-                    id={s.sensorName}
-                    label={s.sensorFullname}
-                    defaultValue={false}
-                    onChange={handleSensorChange.bind(this)}
-                  />
-                </div>
-              ))}
-            <h4>Datapisteiden yhdistäminen</h4>
-            <Form.Check
-              type={'radio'}
-              id={'none'}
-              label={'Kaikki'}
-              name={'average'}
-              defaultValue={'NO'}
-              onChange={handleRadioChange.bind(this)}
-            />
-            <Form.Check
-              defaultChecked
-              type={'radio'}
-              id={'hour'}
-              label={'Tunti'}
-              name={'average'}
-              defaultValue={'HOUR'}
-              onChange={handleRadioChange.bind(this)}
-            />
-            <Form.Check
-              type={'radio'}
-              id={'day'}
-              label={'Päivä'}
-              name={'average'}
-              defaultValue={'DAY'}
-              onChange={handleRadioChange.bind(this)}
-            />
-            <h4>Vuosi</h4>
-            <Form.Select
-              aria-label="Default select example"
-              onChange={handleYearChange.bind(this)}
-            >
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </Form.Select>
+            <Row className="p-2">
+              <h4>Sensorit</h4>
+              {sensors.data &&
+                sensors.data.allSensors.map((s) => (
+                  <div key={s.sensorName}>
+                    <Form.Check
+                      type={'checkbox'}
+                      id={s.sensorName}
+                      label={s.sensorFullname}
+                      defaultValue={false}
+                      onChange={handleSensorChange.bind(this)}
+                    />
+                  </div>
+                ))}
+            </Row>
+            <Row className="p-2">
+              <h4>Datapisteiden yhdistäminen</h4>
+              <Form.Check
+                type={'radio'}
+                id={'none'}
+                label={'Kaikki'}
+                name={'average'}
+                defaultValue={'NO'}
+                onChange={handleRadioChange.bind(this)}
+              />
+              <Form.Check
+                defaultChecked
+                type={'radio'}
+                id={'hour'}
+                label={'Tunti'}
+                name={'average'}
+                defaultValue={'HOUR'}
+                onChange={handleRadioChange.bind(this)}
+              />
+              <Form.Check
+                type={'radio'}
+                id={'day'}
+                label={'Päivä'}
+                name={'average'}
+                defaultValue={'DAY'}
+                onChange={handleRadioChange.bind(this)}
+              />
+            </Row>
+            <Row className="p-2">
+              <h4>Vuosi</h4>
+              <Form.Select
+                aria-label="Default select example"
+                onChange={handleYearChange.bind(this)}
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </Form.Select>
+            </Row>
           </Form>
         </Col>
         {data && (
@@ -157,8 +169,8 @@ const Timeseries = () => {
               theme={VictoryTheme.material}
               domain={{
                 y: [
-                  data.reduce((p, c) => Math.min(p, c.min), 0) - 5,
-                  data.reduce((p, c) => Math.max(p, c.max), 25),
+                  data.reduce((p, c) => Math.min(p, c.min), 0),
+                  data.reduce((p, c) => Math.max(p, c.max), 10),
                 ],
               }}
               scale={{ x: 'time' }}
@@ -174,10 +186,10 @@ const Timeseries = () => {
               <VictoryAxis
                 dependentAxis
                 crossAxis={false}
-                label="celsius"
+                label={axisLabel}
                 style={{
-                  axisLabel: { fontSize: 20, padding: 30 },
-                  tickLabels: { fontSize: 15, padding: 5 },
+                  axisLabel: { fontSize: 20, padding: 35 },
+                  tickLabels: { fontSize: 15, padding: 0 },
                 }}
               />
               <VictoryAxis
@@ -196,7 +208,7 @@ const Timeseries = () => {
                 style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
                 data={data.map((d, i) => ({
                   name: d.sensorFullname,
-                  symbol: { fill: colors[i], type: 'square' },
+                  symbol: { fill: COLORS[i], type: 'square' },
                 }))}
               />
 
@@ -208,7 +220,7 @@ const Timeseries = () => {
                   name={d.sensorFullname}
                   x={'x'}
                   y={'y'}
-                  style={{ data: { stroke: colors[i] } }}
+                  style={{ data: { stroke: COLORS[i] } }}
                 />
               ))}
             </VictoryChart>

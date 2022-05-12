@@ -11,7 +11,7 @@ import {
 } from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 import { SENSOR_DATA, ALL_SENSORS } from '../queries'
-const { FIRST_YEAR } = require('../util/config')
+const { FIRST_YEAR, COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
 
@@ -25,7 +25,7 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const processData = (data, setData, setMax, setMin) => {
+const processData = (data, setData, setMax, setMin, setUnit) => {
   let graphData = null
   let minumum = 0
   let maximum = 25
@@ -59,6 +59,7 @@ const processData = (data, setData, setMax, setMin) => {
     setData(graphData)
     setMin(minumum)
     setMax(maximum)
+    setUnit(data.sensorData[0].sensorUnit)
   }
 }
 
@@ -70,6 +71,7 @@ const Years = () => {
   const [min, setMin] = useState(0)
   const [max, setMax] = useState(10)
   const [data, setData] = useState(null)
+  const [unit, setUnit] = useState(null)
 
   useQuery(SENSOR_DATA, {
     variables: {
@@ -78,7 +80,7 @@ const Years = () => {
       minDate: yearToEpoch(FIRST_YEAR),
       maxDate: yearToEpoch(currentYear + 1),
     },
-    onCompleted: (data) => processData(data, setData, setMax, setMin),
+    onCompleted: (data) => processData(data, setData, setMax, setMin, setUnit),
   })
   const sensors = useQuery(ALL_SENSORS)
 
@@ -103,42 +105,44 @@ const Years = () => {
     }
   }
 
-  const colors = ['black', 'red', 'blue', 'green']
-
   return (
     <div>
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <h2>Vuosien välinen vertailu (päivän keskiarvo)</h2>
       </Row>
       <Row className="p-4">
         <Col className="col-3">
           <Form>
-            <h3>Sensorit</h3>
-            {sensors.data &&
-              sensors.data.allSensors.map((s) => (
-                <div key={s.sensorName}>
+            <Row className="p-2">
+              <h3>Sensorit</h3>
+              {sensors.data &&
+                sensors.data.allSensors.map((s) => (
+                  <div key={s.sensorName}>
+                    <Form.Check
+                      type={'radio'}
+                      id={s.sensorName}
+                      label={s.sensorFullname}
+                      name={'sensor'}
+                      defaultValue={false}
+                      onChange={handleSensorChange.bind(this)}
+                    />
+                  </div>
+                ))}
+            </Row>
+            <Row className="p-2">
+              <h3>Vuodet</h3>
+              {years.map((y) => (
+                <div key={y}>
                   <Form.Check
-                    type={'radio'}
-                    id={s.sensorName}
-                    label={s.sensorFullname}
-                    name={'sensor'}
+                    type={'checkbox'}
+                    id={y}
+                    label={y}
                     defaultValue={false}
-                    onChange={handleSensorChange.bind(this)}
+                    onChange={handleYearChange.bind(this)}
                   />
                 </div>
               ))}
-            <h3>Vuodet</h3>
-            {years.map((y) => (
-              <div key={y}>
-                <Form.Check
-                  type={'checkbox'}
-                  id={y}
-                  label={y}
-                  defaultValue={false}
-                  onChange={handleYearChange.bind(this)}
-                />
-              </div>
-            ))}
+            </Row>
           </Form>
         </Col>
         {data && (
@@ -163,7 +167,7 @@ const Years = () => {
               <VictoryAxis
                 dependentAxis
                 crossAxis={false}
-                label="celsius"
+                label={unit}
                 style={{
                   axisLabel: { fontSize: 20, padding: 30 },
                   tickLabels: { fontSize: 15, padding: 5 },
@@ -187,7 +191,7 @@ const Years = () => {
                   .filter((d) => selectedYears.includes(d.year))
                   .map((d, i) => ({
                     name: d.year,
-                    symbol: { fill: colors[i], type: 'square' },
+                    symbol: { fill: COLORS[i], type: 'square' },
                   }))}
               />
 
@@ -201,7 +205,7 @@ const Years = () => {
                     name={d.year}
                     x={'x'}
                     y={'y'}
-                    style={{ data: { stroke: colors[i] } }}
+                    style={{ data: { stroke: COLORS[i] } }}
                   />
                 ))}
             </VictoryChart>
