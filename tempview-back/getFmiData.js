@@ -66,15 +66,18 @@ const parseAndSaveMostRecent = async (data) => {
   }
   const keys = Object.keys(response)
   for (let i in keys) {
-    const sensor = await Sensor.findOne({
-      where: { sensorName: nameConversion[keys[i]] },
-    })
-    const data = {
-      sensorId: sensor.id,
-      value: response[keys[i]].value,
-      timestamp: response[keys[i]].date.getTime() / 1000,
+    // Only 1.5 hour difference is allowed comapred to current time
+    if (new Date() - response[keys[i]].date < 90 * 60 * 1000) {
+      const sensor = await Sensor.findOne({
+        where: { sensorName: nameConversion[keys[i]] },
+      })
+      const data = {
+        sensorId: sensor.id,
+        value: response[keys[i]].value,
+        timestamp: response[keys[i]].date.getTime() / 1000,
+      }
+      await Measurement.create(data, { logging: false })
     }
-    await Measurement.create(data, { logging: false })
   }
 }
 
