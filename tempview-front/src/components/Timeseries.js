@@ -24,11 +24,11 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const processData = (data, setData, setAxisLabel) => {
+const processData = (recData, setData, setAxisLabel) => {
   let graphData = null
   let units = ''
-  if (data.sensorData.length > 0) {
-    graphData = data.sensorData
+  if (recData.sensorData.length > 0) {
+    graphData = recData.sensorData
       .filter((d) => d.measurements.length > 0)
       .map((d) => ({
         sensorFullname: d.sensorFullname,
@@ -52,7 +52,7 @@ const processData = (data, setData, setAxisLabel) => {
 
 const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
-  const [average, setAverage] = useState('HOUR')
+  const [period, setPeriod] = useState('HOUR')
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
@@ -62,11 +62,11 @@ const Timeseries = () => {
   useQuery(SENSOR_DATA, {
     variables: {
       sensorName: selectedSensors,
-      average: average,
+      average: period,
       minDate: yearToEpoch(year),
       maxDate: yearToEpoch(year + 1),
     },
-    onCompleted: (data) => processData(data, setData, setAxisLabel),
+    onCompleted: (recData) => processData(recData, setData, setAxisLabel),
   })
 
   const sensors = useQuery(ALL_SENSORS)
@@ -79,8 +79,8 @@ const Timeseries = () => {
     }
   }
 
-  const handleRadioChange = (e) => {
-    setAverage(e.target.value)
+  const handlePeriodChange = (e) => {
+    setPeriod(e.target.value)
   }
 
   const handleYearChange = (e) => {
@@ -124,26 +124,26 @@ const Timeseries = () => {
                 type={'radio'}
                 id={'none'}
                 label={'Kaikki'}
-                name={'average'}
+                name={'aggregatePeriod'}
                 defaultValue={'NO'}
-                onChange={handleRadioChange.bind(this)}
+                onChange={handlePeriodChange.bind(this)}
               />
               <Form.Check
                 defaultChecked
                 type={'radio'}
                 id={'hour'}
                 label={'Tunti'}
-                name={'average'}
+                name={'aggregatePeriod'}
                 defaultValue={'HOUR'}
-                onChange={handleRadioChange.bind(this)}
+                onChange={handlePeriodChange.bind(this)}
               />
               <Form.Check
                 type={'radio'}
                 id={'day'}
                 label={'Päivä'}
-                name={'average'}
+                name={'aggregatePeriod'}
                 defaultValue={'DAY'}
-                onChange={handleRadioChange.bind(this)}
+                onChange={handlePeriodChange.bind(this)}
               />
             </Row>
             <Row className="p-2">
