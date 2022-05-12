@@ -17,7 +17,7 @@ const Settings = () => {
     <div>
       <Users />
       <Sensors />
-      <Row className="p-4  pb-0">
+      <Row className="p-4 pb-0">
         <h2>Sensorien token</h2>
         <p style={{ fontFamily: 'monospace' }}>{token}</p>
       </Row>

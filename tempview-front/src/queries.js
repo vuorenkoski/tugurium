@@ -12,6 +12,19 @@ export const ALL_SENSORS = gql`
   }
 `
 
+export const SENSOR_STATS = gql`
+  query SensorStats {
+    sensorStats {
+      sensor {
+        sensorFullname
+        sensorName
+      }
+      firstTimestamp
+      count
+    }
+  }
+`
+
 export const ALL_USERS = gql`
   query AllUsers {
     allUsers {

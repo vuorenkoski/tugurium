@@ -1,6 +1,6 @@
 const { UserInputError, AuthenticationError } = require('apollo-server')
 const { Op, QueryTypes } = require('sequelize')
-const { sequelizeRaw } = require('./util/db')
+const { sequelize } = require('./util/db')
 const { Sensor, Measurement, User } = require('./models')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -27,7 +27,7 @@ const sensorData = async (root, args, context) => {
 
   let data = []
   for (let i in sensors) {
-    let measurements = await sequelizeRaw.query(
+    let measurements = await sequelize.query(
       `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp 
        FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} 
        GROUP BY timestamp / ${period}`,
@@ -60,7 +60,8 @@ const currentSensorData = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
   }
-  const measurements = await sequelizeRaw.query(
+
+  const measurements = await sequelize.query(
     `SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName", 
          sensors.sensor_fullname AS "sensor.sensorFullname", sensors.sensor_unit AS "sensor.sensorUnit" FROM measurements AS a 
      INNER JOIN (SELECT sensor_id, MAX(timestamp) AS timestamp FROM measurements 
@@ -75,12 +76,30 @@ const currentSensorData = async (root, args, context) => {
   return measurements
 }
 
-const allSensors = async (root, args, context) => {
+const allSensors = async (context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
   }
 
   const sensors = await Sensor.findAll({ order: [['sensorName', 'ASC']] })
+  return sensors
+}
+
+const sensorStats = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const sensors = await sequelize.query(
+    `SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor.id AS "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname", 
+    sensor.sensor_unit AS "sensor.sensorUnit", sensor.agrmethod AS "sensor.agrmethod" 
+    FROM measurements AS measurement 
+    LEFT OUTER JOIN sensors AS sensor ON measurement.sensor_id = sensor.id GROUP BY sensor.id `,
+    {
+      type: QueryTypes.SELECT,
+      nest: true,
+    }
+  )
   return sensors
 }
 
@@ -231,6 +250,7 @@ const resolvers = {
     sensorDetails,
     allUsers,
     sensorToken,
+    sensorStats,
   },
   Mutation: {
     addMeasurement,

@@ -16,6 +16,12 @@ const typeDefs = gql`
     measurements: [Measurement]
   }
 
+  type SensorStat {
+    sensor: Sensor!
+    firstTimestamp: String!
+    count: Int!
+  }
+
   type Measurement {
     id: ID!
     sensor: Sensor!
@@ -31,6 +37,7 @@ const typeDefs = gql`
 
   type Query {
     allSensors: [Sensor]
+    sensorStats: [SensorStat]
     sensorToken: Token
     allUsers: [User]
     sensorDetails(sensorName: String!): Sensor!

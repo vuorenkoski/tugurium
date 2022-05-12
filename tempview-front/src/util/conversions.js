@@ -11,6 +11,11 @@ const convertDate = (epoch) => {
   )
 }
 
+const convertDateToDate = (epoch) => {
+  const date = new Date(epoch * 1000)
+  return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()
+}
+
 const convertTemp = (temp) => {
   let plus = '+'
   if (temp < 0) {
@@ -19,4 +24,17 @@ const convertTemp = (temp) => {
   return plus + Number(temp).toFixed(1)
 }
 
-module.exports = { convertDate, convertTemp }
+const convertNumber = (number) => {
+  if (number < 1000) {
+    return String(number)
+  }
+  if (number < 10000) {
+    return String((number / 1000).toFixed(1)) + 'k'
+  }
+  if (number < 1000000) {
+    return String((number / 1000).toFixed(0)) + 'k'
+  }
+  return String((number / 1000000).toFixed(1)) + 'm'
+}
+
+module.exports = { convertDate, convertTemp, convertDateToDate, convertNumber }

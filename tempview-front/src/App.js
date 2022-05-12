@@ -6,6 +6,7 @@ import Settings from './components/Settings'
 import Home from './components/Home'
 import Login from './components/Login'
 import Years from './components/Years'
+import Statistics from './components/Statistics'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -63,6 +64,11 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
+                <Link to="/statistics" style={linkStyle}>
+                  Tilastoja
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
                 <Link to="/commands" style={linkStyle}>
                   Komennot
                 </Link>
@@ -90,6 +96,7 @@ const App = () => {
           </Navbar.Collapse>
         </Navbar>
         <Routes>
+          <Route path="/statistics" element={<Statistics />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />

@@ -11,14 +11,12 @@
 | 4.5.  | 10    | fmi get data, loading... message, login, settings-tab, del/update/add sensors                                                      |
 | 10.5. | 10    | error handling, add+delete users, annual comparisons -view, timeseries: data processed only when needed, more efficient sql search |
 | 11.5. | 8     | c-code to send measurement, index for meas-table, backend refactored, aggragate method col, motion sensor, lake surface, importOld |
-| 12.5. |       | sensorlist ordering, only recent fmi data, tunign axis,                                                                            |
+| 12.5. |       | sensorlist ordering, only recent fmi data, tuning axis, statistcs page                                                             |
 | total | 69    |                                                                                                                                    |
 
 ## Product backlog
 
-- skaalat kuntoon
 - vuosivertailu kuukauden keskiarvolla
-- statistiikka sivu (mittauspisteiden määrä eri sensoreilla)
 - testit
 - kontrol: lämmitys ja valot
 - config asetukset säädettäviksi
