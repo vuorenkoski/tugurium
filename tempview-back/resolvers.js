@@ -27,10 +27,18 @@ const sensorData = async (root, args, context) => {
 
   let data = []
   for (let i in sensors) {
+    let minReq = ''
+    let maxReq = ''
+    if (args.minDate) {
+      minReq = `AND timestamp>=${args.minDate} `
+    }
+    if (args.maxDate) {
+      maxReq = `AND timestamp<${args.maxDate} `
+    }
+
     let measurements = await sequelize.query(
       `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp 
-       FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} 
-       GROUP BY timestamp / ${period}`,
+       FROM measurements WHERE sensor_id='${sensors[i].id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
     measurements = measurements.map((m) => ({
@@ -76,7 +84,7 @@ const currentSensorData = async (root, args, context) => {
   return measurements
 }
 
-const allSensors = async (context) => {
+const allSensors = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
   }
@@ -101,6 +109,33 @@ const sensorStats = async (root, args, context) => {
     }
   )
   return sensors
+}
+
+const datapoints = async (root, args, context) => {
+  // if (!context.currentUser) {
+  //   throw new AuthenticationError('Not authorized')
+  // }
+  console.log('taalla')
+  console.log(args.sensorName)
+  const period = 24 * 60 * 60
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+    raw: true,
+  })
+  console.log(sensor)
+  let datapoints = await sequelize.query(
+    `SELECT COUNT(value) AS count, timestamp / ${period} as timestamp FROM measurements AS measurement 
+    WHERE sensor_id=${sensor.id} GROUP BY timestamp / ${period}`,
+    {
+      type: QueryTypes.SELECT,
+      nest: true,
+    }
+  )
+  datapoints = datapoints.map((m) => ({
+    count: m.count,
+    timestamp: m.timestamp * period,
+  }))
+  return datapoints
 }
 
 const deleteSensor = async (root, args, context) => {
@@ -251,6 +286,7 @@ const resolvers = {
     allUsers,
     sensorToken,
     sensorStats,
+    datapoints,
   },
   Mutation: {
     addMeasurement,

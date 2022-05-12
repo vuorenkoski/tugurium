@@ -29,6 +29,11 @@ const typeDefs = gql`
     timestamp: Int!
   }
 
+  type Datapoints {
+    count: Int!
+    timestamp: Int!
+  }
+
   type User {
     id: ID!
     username: String!
@@ -41,6 +46,7 @@ const typeDefs = gql`
     sensorToken: Token
     allUsers: [User]
     sensorDetails(sensorName: String!): Sensor!
+    datapoints(sensorName: String): [Datapoints]
     sensorData(
       sensorName: [String]
       average: Average

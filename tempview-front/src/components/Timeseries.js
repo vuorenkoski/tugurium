@@ -148,10 +148,7 @@ const Timeseries = () => {
             </Row>
             <Row className="p-2">
               <h4>Vuosi</h4>
-              <Form.Select
-                aria-label="Default select example"
-                onChange={handleYearChange.bind(this)}
-              >
+              <Form.Select onChange={handleYearChange.bind(this)}>
                 {years.map((y) => (
                   <option key={y} value={y}>
                     {y}

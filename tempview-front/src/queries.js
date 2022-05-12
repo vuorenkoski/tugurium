@@ -25,6 +25,15 @@ export const SENSOR_STATS = gql`
   }
 `
 
+export const DATAPOINTS = gql`
+  query Datapoints($sensorName: String) {
+    datapoints(sensorName: $sensorName) {
+      count
+      timestamp
+    }
+  }
+`
+
 export const ALL_USERS = gql`
   query AllUsers {
     allUsers {

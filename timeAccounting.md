@@ -16,6 +16,9 @@
 
 ## Product backlog
 
+- tilastoja: vuosittaiset datapisteet
+- tuunaa login ruutu
+- skaalaus x10 tai /10 (legendiin)
 - vuosivertailu kuukauden keskiarvolla
 - testit
 - kontrol: lämmitys ja valot
