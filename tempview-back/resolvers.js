@@ -112,9 +112,10 @@ const sensorStats = async (root, args, context) => {
 }
 
 const datapoints = async (root, args, context) => {
-  // if (!context.currentUser) {
-  //   throw new AuthenticationError('Not authorized')
-  // }
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
   console.log('taalla')
   console.log(args.sensorName)
   const period = 24 * 60 * 60

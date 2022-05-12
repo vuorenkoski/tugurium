@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Form, Row, Button } from 'react-bootstrap'
+import { Form, Row, Button, Col } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../queries'
 
@@ -31,31 +31,33 @@ const Login = ({ setToken }) => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Login</h2>
-        <Form onSubmit={handleLogin}>
-          <Form.Group className="mb-3" controlId="formBasicText">
-            <Form.Label>Käyttäjänimi</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="anna käyttäjänimi"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </Form.Group>
+        <Col className="col-4">
+          <h2>Login</h2>
+          <Form onSubmit={handleLogin}>
+            <Form.Group className="mb-3" controlId="formBasicText">
+              <Form.Label>Käyttäjänimi</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="anna käyttäjänimi"
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+              />
+            </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Salasana</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="salasana"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            kirjaudu
-          </Button>
-        </Form>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Salasana</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="salasana"
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              kirjaudu
+            </Button>
+          </Form>
+        </Col>
       </Row>
       <Row className="p-4" style={{ color: 'red' }}>
         {errorMessage}

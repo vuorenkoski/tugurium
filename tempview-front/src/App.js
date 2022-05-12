@@ -18,7 +18,14 @@ const App = () => {
 
   if (!token && !localStorage.getItem('tempview-user-token')) {
     return (
-      <div>
+      <div className="container">
+        <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
+          <NavbarBrand className="text-white">TEMPVIEW</NavbarBrand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto"></Nav>
+          </Navbar.Collapse>
+        </Navbar>
         <Login setToken={setToken} />
       </div>
     )
