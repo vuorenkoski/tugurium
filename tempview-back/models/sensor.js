@@ -29,6 +29,7 @@ Sensor.init(
     agrmethod: {
       type: DataTypes.TEXT,
       allowNull: false,
+      defaultValue: 'AVG',
       validate: {
         isIn: [['SUM', 'AVG']],
       },
