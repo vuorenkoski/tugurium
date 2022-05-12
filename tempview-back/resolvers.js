@@ -28,7 +28,9 @@ const sensorData = async (root, args, context) => {
   let data = []
   for (let i in sensors) {
     let measurements = await sequelizeRaw.query(
-      `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} GROUP BY timestamp / ${period}`,
+      `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp 
+       FROM measurements WHERE sensor_id='${sensors[i].id}' AND timestamp>=${args.minDate} AND timestamp<${args.maxDate} 
+       GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
     measurements = measurements.map((m) => ({
@@ -59,7 +61,12 @@ const currentSensorData = async (root, args, context) => {
     throw new AuthenticationError('Not authorized')
   }
   const measurements = await sequelizeRaw.query(
-    'SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName", sensors.sensor_fullname AS "sensor.sensorFullname", sensors.sensor_unit AS "sensor.sensorUnit" FROM measurements AS a INNER JOIN (SELECT sensor_id, MAX(timestamp) AS timestamp FROM measurements GROUP BY sensor_id) AS b ON a.sensor_id = b.sensor_id AND a.timestamp = b.timestamp INNER JOIN sensors ON sensors.id = a.sensor_id',
+    `SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName", 
+         sensors.sensor_fullname AS "sensor.sensorFullname", sensors.sensor_unit AS "sensor.sensorUnit" FROM measurements AS a 
+     INNER JOIN (SELECT sensor_id, MAX(timestamp) AS timestamp FROM measurements 
+     GROUP BY sensor_id) AS b ON a.sensor_id = b.sensor_id AND a.timestamp = b.timestamp 
+     INNER JOIN sensors ON sensors.id = a.sensor_id 
+     ORDER BY sensors.sensor_name`,
     {
       type: QueryTypes.SELECT,
       nest: true,
@@ -73,7 +80,7 @@ const allSensors = async (root, args, context) => {
     throw new AuthenticationError('Not authorized')
   }
 
-  const sensors = await Sensor.findAll()
+  const sensors = await Sensor.findAll({ order: [['sensorName', 'ASC']] })
   return sensors
 }
 
