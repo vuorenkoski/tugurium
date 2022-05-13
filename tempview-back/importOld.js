@@ -49,7 +49,11 @@ const readCsvFile = (filename, sensorId) => {
   content.split(/\r?\n/).forEach((line) => {
     const row = line.split(',')
     const value = parseFloat(row[1])
-    if (!isNaN(value) && value > -150 && value < 150) {
+    if (
+      sensorId === 'CLAK' ||
+      sensorId === 'FSVI' ||
+      (!isNaN(value) && value > -40 && value < 80)
+    ) {
       data.push({ timestamp: parseInt(row[0]) / 1000, value, sensorId })
     }
   })

@@ -25,63 +25,103 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const monthlyData = (measurements) => {
-  measurements.map((m) => ({
-    value: m.value,
-    timestamp: m.timestamp,
-    month: new Date(m.timestamp * 1000).getMonth(),
-    year: new Date(m.timestamp * 1000).getFullYear(),
-  }))
+const monthlyDataFromDaily = (dailyData) => {
+  const currentMonthYear = new Date().getMonth() + new Date().getFullYear() * 12
+  let graphData = []
+  let min = 0
+  let max = 10
 
-  //  for (let i = 0; i < measurements.length; i++) {}
-  return measurements
+  dailyData.graphData.forEach((d) => {
+    let result = []
+    if (d.measurements.length > 0) {
+      const data = d.measurements.map((m) => ({
+        value: Number(m.y),
+        timestamp: m.x,
+        monthYear: new Date(m.x).getMonth() + new Date(m.x).getFullYear() * 12,
+      }))
+      const minEpoch = data.reduce(
+        (p, c) => Math.min(p, c.monthYear),
+        currentMonthYear
+      )
+      const maxEpoch = data.reduce((p, c) => Math.max(p, c.monthYear), 0)
+      let sum = new Array(maxEpoch - minEpoch + 1).fill(0)
+      let count = new Array(maxEpoch - minEpoch + 1).fill(0)
+      data.forEach((d) => {
+        sum[d.monthYear - minEpoch] += d.value
+        count[d.monthYear - minEpoch]++
+      })
+
+      sum.forEach((x, i) => {
+        if (count[i] > 0) {
+          const value = sum[i] / count[i]
+          min = Math.min(min, value)
+          max = Math.max(max, value)
+
+          result.push({
+            y: value,
+            x: new Date(
+              Math.floor((i + minEpoch) / 12),
+              (i + minEpoch) % 12,
+              1
+            ),
+          })
+        }
+      })
+    }
+    graphData.push({ year: d.year, measurements: result })
+  })
+  return { min, max, graphData }
 }
 
-const processData = (recData, setData, setMax, setMin, setUnit, period) => {
+const groupByYear = (measurements) => {
   let graphData = null
-  let minumum = 0
-  let maximum = 15
-  if (recData.sensorData.length > 0) {
-    let sum = {}
-    let count = {}
-    let measurements = []
+  let min = 0
+  let max = 10
+  let sum = {}
+  let count = {}
 
-    if (period === 'MONTH') {
-      measurements = monthlyData(recData.sensorData[0].measurements)
-    } else {
-      measurements = recData.sensorData[0].measurements
-    }
+  // Create series for every year
+  graphData = years.map((y) => ({ year: y, measurements: [] }))
+  for (let i = 0; i < measurements.length; i++) {
+    const date = new Date(measurements[i].timestamp * 1000)
+    const year = date.getFullYear()
+    date.setFullYear(currentYear)
+    const value = Number(measurements[i].value)
 
-    // Create series for every year
-    graphData = years.map((y) => ({ year: y, measurements: [] }))
-    for (let i = 0; i < measurements.length; i++) {
-      const date = new Date(measurements[i].timestamp * 1000)
-      const year = date.getFullYear()
-      date.setFullYear(currentYear)
-      const value = Number(measurements[i].value)
-      graphData[year - FIRST_YEAR].measurements.push({
-        y: value,
-        x: date,
-      })
-      const epoch = measurements[i].timestamp - yearToEpoch(year)
-      sum[epoch] = sum[epoch] ? sum[epoch] + value : value
-      count[epoch] = count[epoch] ? count[epoch] + 1 : 1
-      minumum = Math.min(minumum, value)
-      maximum = Math.max(maximum, value)
-    }
+    graphData[year - FIRST_YEAR].measurements.push({
+      y: value,
+      x: date,
+    })
 
-    // Create average series
-    const avgIndex = currentYear - FIRST_YEAR + 1
-    for (const key in sum) {
+    const epoch = measurements[i].timestamp - yearToEpoch(year)
+    sum[epoch] = sum[epoch] ? sum[epoch] + value : value
+    count[epoch] = count[epoch] ? count[epoch] + 1 : 1
+    min = Math.min(min, value)
+    max = Math.max(max, value)
+  }
+
+  const avgIndex = currentYear - FIRST_YEAR + 1
+  for (const key in sum) {
+    // we do not take account the last year of leap year
+    if (Number(key) < 365 * 24 * 60 * 60) {
       graphData[avgIndex].measurements.push({
         y: sum[key] / count[key],
         x: (Number(key) + yearToEpoch(currentYear)) * 1000,
       })
     }
-    setData(graphData)
-    setMin(minumum)
-    setMax(maximum)
-    setUnit(recData.sensorData[0].sensorUnit)
+  }
+  return { min, max, graphData }
+}
+
+const processData = (recData, setData) => {
+  if (recData.sensorData.length > 0) {
+    const measurements = recData.sensorData[0].measurements
+    const daily = groupByYear(measurements)
+    const monthly = monthlyDataFromDaily(daily)
+    const unit = recData.sensorData[0].sensorUnit
+    const result = { monthly, daily, unit }
+    console.log(result)
+    setData(result)
   }
 }
 
@@ -90,11 +130,8 @@ const Years = () => {
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
   const [selectedYears, setSelectedYears] = useState([])
-  const [min, setMin] = useState(0)
-  const [max, setMax] = useState(10)
   const [data, setData] = useState(null)
-  const [unit, setUnit] = useState(null)
-  const [period, setPeriod] = useState('DAY')
+  const [period, setPeriod] = useState('daily')
 
   useQuery(SENSOR_DATA, {
     variables: {
@@ -103,14 +140,14 @@ const Years = () => {
       minDate: yearToEpoch(FIRST_YEAR),
       maxDate: yearToEpoch(currentYear + 1),
     },
-    onCompleted: (recData) =>
-      processData(recData, setData, setMax, setMin, setUnit, period),
+    onCompleted: (recData) => processData(recData, setData),
   })
   const sensors = useQuery(ALL_SENSORS)
 
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.id)
     setZoomDomain({})
+    setData(null)
   }
 
   const handleZoom = (domain) => {
@@ -179,7 +216,7 @@ const Years = () => {
                 id={'day'}
                 label={'Päivä'}
                 name={'aggregatePeriod'}
-                defaultValue={'DAY'}
+                defaultValue={'daily'}
                 onChange={handlePeriodChange.bind(this)}
               />
               <Form.Check
@@ -187,7 +224,7 @@ const Years = () => {
                 id={'month'}
                 label={'Kuukausi'}
                 name={'aggregatePeriod'}
-                defaultValue={'MONTH'}
+                defaultValue={'monthly'}
                 onChange={handlePeriodChange.bind(this)}
               />
             </Row>
@@ -200,7 +237,7 @@ const Years = () => {
               height={600}
               theme={VictoryTheme.material}
               domain={{
-                y: [min, max],
+                y: [data[period].min, data[period].max],
               }}
               scale={{ x: 'time' }}
               containerComponent={
@@ -215,7 +252,7 @@ const Years = () => {
               <VictoryAxis
                 dependentAxis
                 crossAxis={false}
-                label={unit}
+                label={data.unit}
                 style={{
                   axisLabel: { fontSize: 20, padding: 30 },
                   tickLabels: { fontSize: 15, padding: 5 },
@@ -235,7 +272,7 @@ const Years = () => {
                 y={0}
                 orientation="vertical"
                 style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
-                data={data
+                data={data.daily.graphData
                   .filter((d) => selectedYears.includes(d.year))
                   .map((d, i) => ({
                     name: d.year,
@@ -243,7 +280,7 @@ const Years = () => {
                   }))}
               />
 
-              {data
+              {data[period].graphData
                 .filter((d) => selectedYears.includes(d.year))
                 .map((d, i) => (
                   <VictoryLine
@@ -280,7 +317,7 @@ const Years = () => {
                   tickLabels: { fill: 'transparent' },
                 }}
               />
-              {data
+              {data[period].graphData
                 .filter((d) => selectedYears.includes(d.year))
                 .map((d) => (
                   <VictoryLine
@@ -297,7 +334,7 @@ const Years = () => {
         )}
         {!data && selectedSensor && (
           <Col className="col-9">
-            <h3>loading...</h3>
+            <p>Lataa tietoja...</p>
           </Col>
         )}
       </Row>
