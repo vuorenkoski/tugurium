@@ -9,6 +9,8 @@ import {
   ApolloProvider,
 } from '@apollo/client'
 
+const { BACKEND_URL } = require('./util/config')
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('tempview-user-token')
   return {
@@ -19,16 +21,11 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-let uri = 'http://localhost:4000/graphql'
-if (process.env.NODE_ENV === 'production') {
-  uri = '/api/graphql'
-}
-
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: authLink.concat(
     new HttpLink({
-      uri,
+      uri: BACKEND_URL + '/graphql',
     })
   ),
 })

@@ -3,6 +3,7 @@ const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const http = require('http')
+const path = require('path')
 
 const { Sequelize } = require('sequelize')
 const { connectToDatabase } = require('./util/db')
@@ -22,6 +23,23 @@ const sequelize = new Sequelize(DATABASE_URL, {
   },
 })
 
+const checkToken = async ({ req }) => {
+  const auth = req ? req.headers.authorization : null
+  let data = {}
+  if (auth && auth.toLowerCase().startsWith('bearer ')) {
+    data['token'] = auth.substring(7)
+    if (data['token'] !== SENSOR_TOKEN) {
+      try {
+        const decodedToken = jwt.verify(data['token'], SECRET)
+        data['currentUser'] = await User.findByPk(decodedToken.id)
+      } catch (error) {
+        return data
+      }
+    }
+  }
+  return data
+}
+
 const start = async () => {
   try {
     await connectToDatabase()
@@ -34,8 +52,24 @@ const start = async () => {
 
   const app = express()
 
-  app.get('/images', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+  app.get('/image/:id', (req, res) => {
+    checkToken({ req }).then((user) => {
+      if (!user.currentUser) {
+        console.log('taalla')
+        res.status(401).send('unauthorized')
+      } else {
+        const filepath = 'image' + req.params.id + '.jpg'
+        var options = {
+          root: path.join(__dirname, 'public'),
+          dotfiles: 'deny',
+          headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true,
+          },
+        }
+        res.sendFile(filepath, options)
+      }
+    })
   })
 
   const httpServer = http.createServer(app)
@@ -44,18 +78,7 @@ const start = async () => {
 
   const server = new ApolloServer({
     schema,
-    context: async ({ req }) => {
-      const auth = req ? req.headers.authorization : null
-      if (auth && auth.toLowerCase().startsWith('bearer ')) {
-        let data = {}
-        data['token'] = auth.substring(7)
-        if (data['token'] !== SENSOR_TOKEN) {
-          const decodedToken = jwt.verify(data['token'], SECRET)
-          data['currentUser'] = await User.findByPk(decodedToken.id)
-        }
-        return data
-      }
-    },
+    context: checkToken,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   })
 
