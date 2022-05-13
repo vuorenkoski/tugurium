@@ -12,9 +12,8 @@
 | 10.5. | 10    | error handling, add+delete users, annual comparisons -view, timeseries: data processed only when needed, more efficient sql search            |
 | 11.5. | 8     | c-code to send measurement, index for meas-table, backend refactored, aggragate method col, motion sensor, lake surface, importOld            |
 | 12.5. | 8     | sensorlist ordering, only recent fmi data, tuning axis, statistcs page, login screen fix                                                      |
-| 13.5. |       | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
-
-| total | 77 | |
+| 13.5. | 8     | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
+| total | 85    |                                                                                                                                               |
 
 ## Product backlog
 
