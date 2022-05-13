@@ -105,7 +105,7 @@ const App = () => {
         </Navbar>
         <Routes>
           <Route path="/statistics" element={<Statistics />} />
-          <Route path="/commands" element={<Commands />} />
+          <Route path="/commands" element={<Commands token={token} />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />

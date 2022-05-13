@@ -19,6 +19,7 @@
 ## Product backlog
 
 - korjaa järven pinta aikajanoissa
+- vuosivertailun kuvio vain kun kaikki valittu
 - volukuvien kokonäkymä
 - osoitekenttä rapiksessa kuntoon
 - testit

@@ -4,6 +4,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const http = require('http')
 const path = require('path')
+var cors = require('cors')
 
 const { Sequelize } = require('sequelize')
 const { connectToDatabase } = require('./util/db')
@@ -51,11 +52,10 @@ const start = async () => {
   }
 
   const app = express()
-
+  app.use(cors())
   app.get('/image/:id', (req, res) => {
     checkToken({ req }).then((user) => {
       if (!user.currentUser) {
-        console.log('taalla')
         res.status(401).send('unauthorized')
       } else {
         const filepath = 'image' + req.params.id + '.jpg'
