@@ -30,16 +30,29 @@ const processData = (recData, setData, setAxisLabel) => {
   if (recData.sensorData.length > 0) {
     graphData = recData.sensorData
       .filter((d) => d.measurements.length > 0)
-      .map((d) => ({
-        sensorFullname: d.sensorFullname,
-        unit: d.sensorUnit,
-        min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
-        max: d.measurements.reduce((p, c) => Math.max(p, c.value), 10),
-        measurements: d.measurements.map((m) => ({
-          y: Number(m.value),
-          x: new Date(m.timestamp * 1000),
-        })),
-      }))
+      .map((d) => {
+        let scaleFn = (x) => x
+        let scaleTxt = ''
+        const max = d.measurements.reduce((p, c) => Math.max(p, c.value), 0)
+        if (max > 70) {
+          scaleFn = (x) => x / 10
+          scaleTxt = ' /10'
+        }
+        if (max < 4) {
+          scaleFn = (x) => x * 10
+          scaleTxt = ' x10'
+        }
+        return {
+          sensorFullname: d.sensorFullname + scaleTxt,
+          unit: d.sensorUnit,
+          min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
+          max: scaleFn(max),
+          measurements: d.measurements.map((m) => ({
+            y: scaleFn(Number(m.value)),
+            x: new Date(m.timestamp * 1000),
+          })),
+        }
+      })
     const unitList = graphData.reduce(
       (p, c) => (p.includes(c.unit) ? p : p.concat(c.unit)),
       []
@@ -87,6 +100,7 @@ const Timeseries = () => {
 
   const handleYearChange = (e) => {
     setYear(Number(e.target.value))
+    setData(null)
   }
 
   const handleZoom = (domain) => {
@@ -169,7 +183,7 @@ const Timeseries = () => {
               domain={{
                 y: [
                   data.reduce((p, c) => Math.min(p, c.min), 0),
-                  data.reduce((p, c) => Math.max(p, c.max), 10),
+                  data.reduce((p, c) => Math.max(p, c.max), 0),
                 ],
               }}
               scale={{ x: 'time' }}
@@ -204,7 +218,7 @@ const Timeseries = () => {
                 x={700}
                 y={0}
                 orientation="vertical"
-                style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
+                style={{ border: { stroke: 'none' }, title: { fontSize: 20 } }}
                 data={data.map((d, i) => ({
                   name: d.sensorFullname,
                   symbol: { fill: COLORS[i], type: 'square' },

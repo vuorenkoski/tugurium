@@ -120,7 +120,6 @@ const processData = (recData, setData) => {
     const monthly = monthlyDataFromDaily(daily)
     const unit = recData.sensorData[0].sensorUnit
     const result = { monthly, daily, unit }
-    console.log(result)
     setData(result)
   }
 }

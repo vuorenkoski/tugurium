@@ -19,9 +19,9 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-let uri = 'http://localhost:4000'
+let uri = 'http://localhost:4000/graphql'
 if (process.env.NODE_ENV === 'production') {
-  uri = '/graphql'
+  uri = '/api/graphql'
 }
 
 const client = new ApolloClient({
