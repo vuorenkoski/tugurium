@@ -63,7 +63,7 @@ const start = async () => {
 
   server.applyMiddleware({
     app,
-    path: '/',
+    path: '/graphql',
   })
 
   httpServer.listen(PORT, () =>
