@@ -20,7 +20,7 @@ const Home = () => {
       </Row>
 
       <Row className="p-4">
-        {!sensorList && <h3>Loading...</h3>}
+        {!sensorList && <p>Lataa tietoja...</p>}
 
         <Col className="col-6">
           {sensorList && (

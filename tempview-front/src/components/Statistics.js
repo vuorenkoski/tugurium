@@ -58,6 +58,7 @@ const Statistics = () => {
 
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.value)
+    setMeasurements(null)
   }
 
   const handleZoom = (domain) => {
@@ -76,7 +77,7 @@ const Statistics = () => {
 
       <Row className="p-4">
         <h3>Sensorien datapisteiden määrät ja alkupäivä</h3>
-        {!sensorList && <h3>Loading...</h3>}
+        {!sensorList && <p>Loading...</p>}
 
         <Col className="col-6">
           {sensorList && (
@@ -204,7 +205,7 @@ const Statistics = () => {
         )}
         {!measurements && selectedSensor && (
           <Col className="col-9">
-            <h3>loading...</h3>
+            <p>lataa tietoja...</p>
           </Col>
         )}
       </Row>

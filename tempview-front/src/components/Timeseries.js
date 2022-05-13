@@ -77,10 +77,12 @@ const Timeseries = () => {
     } else {
       setSelectedSensors(selectedSensors.filter((i) => i !== e.target.id))
     }
+    setData(null)
   }
 
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value)
+    setData(null)
   }
 
   const handleYearChange = (e) => {
@@ -260,7 +262,7 @@ const Timeseries = () => {
         )}
         {!data && selectedSensors.length > 0 && (
           <Col className="col-9">
-            <h3>loading...</h3>
+            <p>Lataa tietoja...</p>
           </Col>
         )}
       </Row>

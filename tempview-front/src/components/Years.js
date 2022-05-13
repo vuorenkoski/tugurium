@@ -25,14 +25,34 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const processData = (data, setData, setMax, setMin, setUnit) => {
+const monthlyData = (measurements) => {
+  measurements.map((m) => ({
+    value: m.value,
+    timestamp: m.timestamp,
+    month: new Date(m.timestamp * 1000).getMonth(),
+    year: new Date(m.timestamp * 1000).getFullYear(),
+  }))
+
+  //  for (let i = 0; i < measurements.length; i++) {}
+  return measurements
+}
+
+const processData = (recData, setData, setMax, setMin, setUnit, period) => {
   let graphData = null
   let minumum = 0
-  let maximum = 25
-  if (data.sensorData.length > 0) {
+  let maximum = 15
+  if (recData.sensorData.length > 0) {
     let sum = {}
     let count = {}
-    const measurements = data.sensorData[0].measurements
+    let measurements = []
+
+    if (period === 'MONTH') {
+      measurements = monthlyData(recData.sensorData[0].measurements)
+    } else {
+      measurements = recData.sensorData[0].measurements
+    }
+
+    // Create series for every year
     graphData = years.map((y) => ({ year: y, measurements: [] }))
     for (let i = 0; i < measurements.length; i++) {
       const date = new Date(measurements[i].timestamp * 1000)
@@ -49,6 +69,8 @@ const processData = (data, setData, setMax, setMin, setUnit) => {
       minumum = Math.min(minumum, value)
       maximum = Math.max(maximum, value)
     }
+
+    // Create average series
     const avgIndex = currentYear - FIRST_YEAR + 1
     for (const key in sum) {
       graphData[avgIndex].measurements.push({
@@ -59,7 +81,7 @@ const processData = (data, setData, setMax, setMin, setUnit) => {
     setData(graphData)
     setMin(minumum)
     setMax(maximum)
-    setUnit(data.sensorData[0].sensorUnit)
+    setUnit(recData.sensorData[0].sensorUnit)
   }
 }
 
@@ -72,6 +94,7 @@ const Years = () => {
   const [max, setMax] = useState(10)
   const [data, setData] = useState(null)
   const [unit, setUnit] = useState(null)
+  const [period, setPeriod] = useState('DAY')
 
   useQuery(SENSOR_DATA, {
     variables: {
@@ -80,7 +103,8 @@ const Years = () => {
       minDate: yearToEpoch(FIRST_YEAR),
       maxDate: yearToEpoch(currentYear + 1),
     },
-    onCompleted: (data) => processData(data, setData, setMax, setMin, setUnit),
+    onCompleted: (recData) =>
+      processData(recData, setData, setMax, setMin, setUnit, period),
   })
   const sensors = useQuery(ALL_SENSORS)
 
@@ -103,6 +127,10 @@ const Years = () => {
     } else {
       setSelectedYears(selectedYears.filter((i) => i !== e.target.id))
     }
+  }
+
+  const handlePeriodChange = (e) => {
+    setPeriod(e.target.value)
   }
 
   return (
@@ -142,6 +170,26 @@ const Years = () => {
                   />
                 </div>
               ))}
+            </Row>
+            <Row className="p-2">
+              <h4>Datapisteiden yhdistäminen</h4>
+              <Form.Check
+                defaultChecked
+                type={'radio'}
+                id={'day'}
+                label={'Päivä'}
+                name={'aggregatePeriod'}
+                defaultValue={'DAY'}
+                onChange={handlePeriodChange.bind(this)}
+              />
+              <Form.Check
+                type={'radio'}
+                id={'month'}
+                label={'Kuukausi'}
+                name={'aggregatePeriod'}
+                defaultValue={'MONTH'}
+                onChange={handlePeriodChange.bind(this)}
+              />
             </Row>
           </Form>
         </Col>
