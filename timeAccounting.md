@@ -19,9 +19,8 @@
 ## Product backlog
 
 - korjaa järven pinta aikajanoissa
-- vuosivertailun kuvio vain kun kaikki valittu
-- volukuvien kokonäkymä
-- osoitekenttä rapiksessa kuntoon
+- vuosivertailun kuvio vain kun vuosi valittu
+- valokuvien kokonäkymä
 - testit
 - kontrol: lämmitys ja valot
 - config asetukset säädettäviksi

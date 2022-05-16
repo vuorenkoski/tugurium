@@ -9,7 +9,9 @@ const { BACKEND_URL } = require('../util/config')
 
 const Commands = ({ token }) => {
   const [images, setImages] = useState(null)
-  const image_names = useQuery(ALL_IMAGES)
+  const image_names = useQuery(ALL_IMAGES, {
+    fetchPolicy: 'network-only',
+  })
 
   const fetchImage = async () => {
     const headers = {
