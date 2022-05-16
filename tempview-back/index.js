@@ -8,12 +8,14 @@ var cors = require('cors')
 
 const { Sequelize } = require('sequelize')
 const { connectToDatabase } = require('./util/db')
-const { User } = require('./models')
+const { User, Image } = require('./models')
 
 const jwt = require('jsonwebtoken')
 const { SECRET, SENSOR_TOKEN, PORT, DATABASE_URL } = require('./util/config')
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
+
+const multer = require('multer');
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialectOptions: {
@@ -53,22 +55,48 @@ const start = async () => {
 
   const app = express()
   app.use(cors())
-  app.get('/image/:id', (req, res) => {
+ 
+  app.get('/image/:name', (req, res) => {
     checkToken({ req }).then((user) => {
       if (!user.currentUser) {
         res.status(401).send('unauthorized')
       } else {
-        const filepath = 'image' + req.params.id + '.jpg'
-        var options = {
-          root: path.join(__dirname, 'public'),
-          dotfiles: 'deny',
-          headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true,
-          },
-        }
-        res.sendFile(filepath, options)
+        const image = Image.findOne({ where: {name: req.params.name }}).then((image) => {
+          if (image && image.image) {
+            var img = Buffer.from(image.image, 'base64');
+
+            res.writeHead(200, {
+              'Content-Type': 'image/jpg',
+              'Content-Length': img.length
+            });
+            res.end(img);
+          } else {
+            res.status(400).send('no such image slot')
+          } 
+        }, (error) => {
+          res.status(400).send(error)
+        })
       }
+      })
+  })
+
+  app.post('/image/:name', multer().single('file'), (req,res) => {
+    checkToken({ req }).then((user) => {
+      if (user.token!==SENSOR_TOKEN) {
+        res.status(401).send('unauthorized')
+      } else {
+        Image.findOne({ where: {name: req.params.name }}).then((image) => {
+          if (image) {
+            image['image']=req.file.buffer
+            image.save()
+            res.send('ok')
+          } else {
+            res.status(400).send('no such image slot')
+          }
+        })
+      }
+    }, (error) => {
+      res.send(error)
     })
   })
 

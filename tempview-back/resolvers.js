@@ -1,7 +1,7 @@
 const { UserInputError, AuthenticationError } = require('apollo-server')
 const { Op, QueryTypes } = require('sequelize')
 const { sequelize } = require('./util/db')
-const { Sensor, Measurement, User } = require('./models')
+const { Sensor, Measurement, User, Image } = require('./models')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
@@ -56,14 +56,6 @@ const sensorData = async (root, args, context) => {
   return data
 }
 
-const sensorToken = async (root, args, context) => {
-  if (!context.currentUser) {
-    throw new AuthenticationError('Not authorized')
-  }
-
-  return { value: SENSOR_TOKEN }
-}
-
 const currentSensorData = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
@@ -82,15 +74,6 @@ const currentSensorData = async (root, args, context) => {
     }
   )
   return measurements
-}
-
-const allSensors = async (root, args, context) => {
-  if (!context.currentUser) {
-    throw new AuthenticationError('Not authorized')
-  }
-
-  const sensors = await Sensor.findAll({ order: [['sensorName', 'ASC']] })
-  return sensors
 }
 
 const sensorStats = async (root, args, context) => {
@@ -116,14 +99,11 @@ const datapoints = async (root, args, context) => {
     throw new AuthenticationError('Not authorized')
   }
 
-  console.log('taalla')
-  console.log(args.sensorName)
   const period = 24 * 60 * 60
   const sensor = await Sensor.findOne({
     where: { sensorName: args.sensorName },
     raw: true,
   })
-  console.log(sensor)
   let datapoints = await sequelize.query(
     `SELECT COUNT(value) AS count, timestamp / ${period} as timestamp FROM measurements AS measurement 
     WHERE sensor_id=${sensor.id} GROUP BY timestamp / ${period}`,
@@ -137,6 +117,38 @@ const datapoints = async (root, args, context) => {
     timestamp: m.timestamp * period,
   }))
   return datapoints
+}
+
+const addMeasurement = async (root, args, context) => {
+  if (context.token !== SENSOR_TOKEN) {
+    throw new AuthenticationError('Not authorized')
+  }
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+  })
+  const value = parseFloat(args.value)
+  if (value) {
+    const measurement = await Measurement.create({
+      sensorId: sensor.id,
+      value,
+      timestamp: Math.floor(Date.now() / 1000),
+    })
+    return measurement
+  } else {
+    throw new UserInputError('Bad formatted measurement', {
+      invalidArgs: args.name,
+    })
+  }
+}
+
+// Sensors
+const allSensors = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const sensors = await Sensor.findAll({ order: [['sensorName', 'ASC']] })
+  return sensors
 }
 
 const deleteSensor = async (root, args, context) => {
@@ -183,6 +195,22 @@ const newSensor = async (root, args, context) => {
   return sensor
 }
 
+const sensorDetails = async (root, args) => {
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+  })
+  return sensor
+}
+
+const sensorToken = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  return { value: SENSOR_TOKEN }
+}
+
+// Users
 const allUsers = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
@@ -190,28 +218,6 @@ const allUsers = async (root, args, context) => {
 
   const users = await User.findAll()
   return users
-}
-
-const addMeasurement = async (root, args, context) => {
-  if (context.token !== SENSOR_TOKEN) {
-    throw new AuthenticationError('Not authorized')
-  }
-  const sensor = await Sensor.findOne({
-    where: { sensorName: args.sensorName },
-  })
-  const value = parseFloat(args.value)
-  if (value) {
-    const measurement = await Measurement.create({
-      sensorId: sensor.id,
-      value,
-      timestamp: Math.floor(Date.now() / 1000),
-    })
-    return measurement
-  } else {
-    throw new UserInputError('Bad formatted measurement', {
-      invalidArgs: args.name,
-    })
-  }
 }
 
 const login = async (root, args) => {
@@ -271,11 +277,53 @@ const deleteUser = async (root, args, context) => {
   return user
 }
 
-const sensorDetails = async (root, args) => {
-  const sensor = await Sensor.findOne({
-    where: { sensorName: args.sensorName },
+// Images
+const allImages = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const images = await Image.findAll({ order: [['name', 'ASC']] })
+  return images
+}
+
+const deleteImage = async (root, args, context) => {
+  if (!context.currentUser || !context.currentUser.admin) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const image = await Image.findOne({ where: { id: args.id } })
+  await image.destroy()
+  return image
+}
+
+const updateImage = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const image = await Image.findOne({ where: { id: args.id } })
+  image.name = args.name
+  image.description = args.description
+  await image.save()
+  return image
+}
+
+const newImage = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+  const images = await Image.findAll()
+  if (images.find((p) => p.name === args.name)) {
+    throw new UserInputError('Image name must be unique', {
+      invalidArgs: args.name,
+    })
+  }
+  const image = await Image.create({
+    name: args.name,
+    description: args.description,
   })
-  return sensor
+  return image
 }
 
 const resolvers = {
@@ -288,6 +336,7 @@ const resolvers = {
     sensorToken,
     sensorStats,
     datapoints,
+    allImages,
   },
   Mutation: {
     addMeasurement,
@@ -297,6 +346,9 @@ const resolvers = {
     deleteSensor,
     updateSensor,
     newSensor,
+    newImage,
+    updateImage,
+    deleteImage
   },
 }
 

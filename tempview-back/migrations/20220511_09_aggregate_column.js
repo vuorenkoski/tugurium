@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize')
 module.exports = {
   up: async ({ context: queryInterface }) => {
     await queryInterface.addColumn('sensors', 'agrmethod', {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'AVG',
       validate: {

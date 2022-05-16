@@ -16,6 +16,13 @@ const typeDefs = gql`
     measurements: [Measurement]
   }
 
+  type Image {
+    id: ID!
+    name: String!
+    description: String
+    updatedAt: String
+  }
+
   type SensorStat {
     sensor: Sensor!
     firstTimestamp: String!
@@ -42,6 +49,7 @@ const typeDefs = gql`
 
   type Query {
     allSensors: [Sensor]
+    allImages: [Image]
     sensorStats: [SensorStat]
     sensorToken: Token
     allUsers: [User]
@@ -79,6 +87,16 @@ const typeDefs = gql`
       sensorUnit: String!
       agrmethod: String!
     ): Sensor
+    newImage(
+      name: String!
+      description: String
+    ): Image
+    updateImage(
+      name: String!
+      description: String
+      id: Int!
+    ): Image
+    deleteImage(id: Int!): Image
   }
 `
 

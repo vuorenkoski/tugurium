@@ -12,22 +12,22 @@ Sensor.init(
       autoIncrement: true,
     },
     sensorName: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       unique: true,
       validate: {
         len: [4, 4],
       },
     },
     sensorFullname: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     sensorUnit: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     agrmethod: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'AVG',
       validate: {

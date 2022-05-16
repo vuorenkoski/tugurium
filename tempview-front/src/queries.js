@@ -1,17 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const ALL_SENSORS = gql`
-  query AllSensors {
-    allSensors {
-      id
-      sensorName
-      sensorFullname
-      sensorUnit
-      agrmethod
-    }
-  }
-`
-
 export const SENSOR_STATS = gql`
   query SensorStats {
     sensorStats {
@@ -76,6 +64,18 @@ export const SENSOR_DATA = gql`
   }
 `
 
+export const ALL_SENSORS = gql`
+  query AllSensors {
+    allSensors {
+      id
+      sensorName
+      sensorFullname
+      sensorUnit
+      agrmethod
+    }
+  }
+`
+
 export const DELETE_SENSOR = gql`
   mutation Mutation($deleteSensorId: Int!) {
     deleteSensor(id: $deleteSensorId) {
@@ -83,6 +83,7 @@ export const DELETE_SENSOR = gql`
     }
   }
 `
+
 export const UPDATE_SENSOR = gql`
   mutation UpdateSensor(
     $sensorName: String!
@@ -161,6 +162,60 @@ export const CURRENT_SENSOR_DATA = gql`
         sensorFullname
         sensorUnit
       }
+    }
+  }
+`
+// Images
+
+export const ALL_IMAGES = gql`
+  query AllImages {
+    allImages {
+      id
+      name
+      description
+      updatedAt
+    }
+  }
+`
+
+export const DELETE_IMAGE = gql`
+  mutation Mutation($deleteImageId: Int!) {
+    deleteImage(id: $deleteImageId) {
+      name
+    }
+  }
+`
+
+export const UPDATE_IMAGE = gql`
+  mutation UpdateImage(
+    $name: String!
+    $description: String!
+    $updateImageId: Int!
+  ) {
+    updateImage(
+      name: $name
+      description: $description
+      id: $updateImageId
+    ) {
+      id
+      name
+      description
+    }
+  }
+`
+
+export const NEW_IMAGE = gql`
+  mutation NewImage(
+    $name: String!
+    $description: String!
+  ) {
+    newImage(
+      name: $name
+      description: $description
+    ) {
+      id
+      name
+      description
     }
   }
 `

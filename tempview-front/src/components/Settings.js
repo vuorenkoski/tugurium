@@ -2,6 +2,7 @@ import { Row } from 'react-bootstrap'
 import { useQuery } from '@apollo/client'
 import Sensors from './Sensors'
 import Users from './Users'
+import Images from './Images'
 
 import { SENSOR_TOKEN } from '../queries'
 
@@ -21,6 +22,7 @@ const Settings = () => {
         <h2>Sensorien token</h2>
         <p style={{ fontFamily: 'monospace' }}>{token}</p>
       </Row>
+      <Images />
     </div>
   )
 }
