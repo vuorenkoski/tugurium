@@ -1,16 +1,16 @@
 // This is example code how to read temperature measurement from ds18b20 sensor
 // and send the measurement to backend.
 //
-// All error checking is lacking. 
+// All error checking is lacking.
 // NO HTTPS!!!!!
 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <string.h> 
-#include <sys/socket.h> 
-#include <netinet/in.h> 
-#include <netdb.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 const int port = 4000;
 const char *host = "localhost";
@@ -19,7 +19,7 @@ const char *token = "xxxxx";
 const char *ds18b20 = "/sys/bus/w1/devices/28-000005d9ad73/w1_slave";
 
 void send_measurement(float value) {
-    char *message_fmt = "POST /graphql HTTP/1.1\r\nContent-Type: application/json\r\nContent-Length: %i\r\nAuthorization: BEARER %s\r\n\r\n%s";
+    char *message_fmt = "POST /api/graphql HTTP/1.1\r\nContent-Type: application/json\r\nContent-Length: %i\r\nAuthorization: BEARER %s\r\n\r\n%s";
     char *content_fmt = "{ \"query\": \"%s\", \"variables\": { \"sensorName\": \"%s\", \"value\": \"%f\" }}\r\n";
     char *query = "mutation ($sensorName: String!, $value: String) {addMeasurement(sensorName: $sensorName, value: $value) {value}}";
     struct hostent *server;
