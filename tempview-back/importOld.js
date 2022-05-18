@@ -43,16 +43,18 @@ const connectToDatabase = async () => {
   return null
 }
 
-const readCsvFile = (filename, sensorId) => {
+const readCsvFile = (filename, sensorName, sensorId) => {
   let data = []
   const content = fs.readFileSync(filename, 'utf8')
   content.split(/\r?\n/).forEach((line) => {
     const row = line.split(',')
     const value = parseFloat(row[1])
+    // there are some invalid values in old data...
     if (
-      sensorId === 'CLAK' ||
-      sensorId === 'FSVI' ||
-      (!isNaN(value) && value > -40 && value < 80)
+      !isNaN(value) &&
+      (sensorName === 'CLSR' ||
+        sensorName === 'FSVI' ||
+        (value > -40 && value < 80))
     ) {
       data.push({ timestamp: parseInt(row[0]) / 1000, value, sensorId })
     }
@@ -60,7 +62,7 @@ const readCsvFile = (filename, sensorId) => {
   return data
 }
 
-const readCsvMotionFile = (filename, sensorId) => {
+const readCsvMotionFile = (filename, sensorName, sensorId) => {
   let data = []
   const content = fs.readFileSync(filename, 'utf8')
   content.split(/\r?\n/).forEach((line) => {
@@ -97,7 +99,7 @@ const processFile = async (filename, sensorName, readFunction) => {
     logging: false,
   })
   console.log('Importing: ' + filename)
-  const data = readFunction(filename, sensor.id)
+  const data = readFunction(filename, sensorName, sensor.id)
   console.log('File read')
   await writeDb(data)
   console.log('db appended')
