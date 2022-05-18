@@ -1,4 +1,4 @@
-import { Modal } from 'react-bootstrap'
+import { Modal, Button, Row } from 'react-bootstrap'
 import { convertDate } from '../util/conversions'
 
 const ShowImage = ({ image, setShowImage }) => {
@@ -10,9 +10,10 @@ const ShowImage = ({ image, setShowImage }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {image && (
-          <img src={image.data} alt={image.name} className="img-fluid" />
-        )}
+        {image && <img src={image.data} alt={image.name} />}
+        <br />
+        <br />
+        <Button onClick={() => setShowImage(null)}>takaisin</Button>
       </Modal.Body>
     </Modal>
   )

@@ -7,7 +7,8 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Years from './components/Years'
 import Statistics from './components/Statistics'
-import Commands from './components/Commands'
+import SwitchesView from './components/SwitchesView'
+import ImagesView from './components/ImagesView'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -72,13 +73,18 @@ const App = () => {
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/statistics" style={linkStyle}>
-                  Tilastoja
+                <Link to="/images" style={linkStyle}>
+                  Kuvat
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/commands" style={linkStyle}>
-                  Muuta
+                <Link to="/switches" style={linkStyle}>
+                  Kytkimet
+                </Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/statistics" style={linkStyle}>
+                  Tilastoja
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
@@ -105,7 +111,8 @@ const App = () => {
         </Navbar>
         <Routes>
           <Route path="/statistics" element={<Statistics />} />
-          <Route path="/commands" element={<Commands />} />
+          <Route path="/switches" element={<SwitchesView />} />
+          <Route path="/images" element={<ImagesView />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />

@@ -7,7 +7,7 @@ import { convertDate } from '../util/conversions'
 import ShowImage from './ShowImage'
 const { BACKEND_URL } = require('../util/config')
 
-const Commands = () => {
+const ImagesView = () => {
   const [images, setImages] = useState(null)
   const [showImage, setShowImage] = useState(null)
 
@@ -73,14 +73,8 @@ const Commands = () => {
             </Col>
           ))}
       </Row>
-      <Row className="p-4">
-        <h2>Aitan lämpöpatteri</h2>
-      </Row>
-      <Row className="p-4">
-        <h2>Kodin valot</h2>
-      </Row>
     </div>
   )
 }
 
-export default Commands
+export default ImagesView
