@@ -25,7 +25,7 @@ void send_measurement(float value) {
     struct hostent *server;
     struct sockaddr_in serv_addr;
     int sockfd, bytes, sent, received, total;
-    char message[1024],content[1024];
+    char message[1024],content[1024],response[4096];
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     server = gethostbyname(host);
@@ -46,6 +46,20 @@ void send_measurement(float value) {
             break;
         sent+=bytes;
     } while (sent < total);
+
+    /* receive the response */
+    memset(response,0,sizeof(response));
+    total = sizeof(response)-1;
+    received = 0;
+    do {
+        bytes = read(sockfd,response+received,total-received);
+        if (bytes < 0)
+            printf("ERROR reading response from socket");
+        if (bytes == 0)
+            break;
+        received+=bytes;
+    } while (received < total);
+    printf("Response:\n%s\n",response);
 
     close(sockfd);
 }

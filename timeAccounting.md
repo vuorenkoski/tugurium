@@ -13,12 +13,14 @@
 | 11.5. | 8     | c-code to send measurement, index for meas-table, backend refactored, aggragate method col, motion sensor, lake surface, importOld            |
 | 12.5. | 8     | sensorlist ordering, only recent fmi data, tuning axis, statistcs page, login screen fix                                                      |
 | 13.5. | 8     | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
-| 16.5. | 6     | dt images, get+post images, images to postgre|
+| 16.5. | 6     | dt images, get+post images, images to postgre                                                                                                 |
+| 18.5. |       | c-code for https,                                                                                                                             |
 | total | 91    |                                                                                                                                               |
 
 ## Product backlog
 
 - korjaa järven pinta aikajanoissa
+- näyttää tilaston myös jos mittauspisteitä 0
 - vuosivertailun kuvio vain kun vuosi valittu
 - valokuvien kokonäkymä
 - testit
