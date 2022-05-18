@@ -16,24 +16,28 @@ import { SENSOR_STATS, DATAPOINTS } from '../queries'
 const processData = (data, setMeasurements) => {
   const secondsInDay = 24 * 60 * 60
   const currentEpoch = Math.floor(new Date() / 1000)
+  if (data.datapoints.length > 0) {
+    const min = Math.floor(
+      data.datapoints.reduce((p, c) => Math.min(p, c.timestamp), currentEpoch) /
+        secondsInDay
+    )
 
-  const min = Math.floor(
-    data.datapoints.reduce((p, c) => Math.min(p, c.timestamp), currentEpoch) /
-      secondsInDay
-  )
+    const max = Math.floor(
+      data.datapoints.reduce((p, c) => Math.max(p, c.timestamp), 0) /
+        secondsInDay
+    )
 
-  const max = Math.floor(
-    data.datapoints.reduce((p, c) => Math.max(p, c.timestamp), 0) / secondsInDay
-  )
+    let mlist = new Array(max - min).fill(0)
+    data.datapoints.forEach(
+      (d) => (mlist[Math.floor(d.timestamp / secondsInDay) - min] = d.count)
+    )
 
-  let mlist = new Array(max - min).fill(0)
-  data.datapoints.forEach(
-    (d) => (mlist[Math.floor(d.timestamp / secondsInDay) - min] = d.count)
-  )
-
-  setMeasurements(
-    mlist.map((y, i) => ({ y, x: (i + min) * secondsInDay * 1000 }))
-  )
+    setMeasurements(
+      mlist.map((y, i) => ({ y, x: (i + min) * secondsInDay * 1000 }))
+    )
+  } else {
+    setMeasurements([])
+  }
 }
 
 const Statistics = () => {
@@ -88,11 +92,11 @@ const Statistics = () => {
                   <th>lukumäärä</th>
                   <th>Ensimmäinen aikaleima</th>
                 </tr>
-                {sensorList.map((a, i) => (
-                  <tr key={i}>
-                    <td>{a.sensor.sensorFullname}</td>
-                    <td>{convertNumber(a.count)}</td>
-                    <td>{convertDateToDate(a.firstTimestamp)}</td>
+                {sensorList.map((s) => (
+                  <tr key={s.sensor.sensorName}>
+                    <td>{s.sensor.sensorFullname}</td>
+                    <td>{convertNumber(s.count)}</td>
+                    <td>{convertDateToDate(s.firstTimestamp)}</td>
                   </tr>
                 ))}
                 <tr>
@@ -107,7 +111,7 @@ const Statistics = () => {
         </Col>
       </Row>
       <Row className="p-4">
-        <h3>Sensorin datapisteiden määrät vuorokaudessa aikajanalla</h3>
+        <h3>Sensorin datapisteiden määrät vuorokaudessa</h3>
         {sensorList && (
           <Row className="p-2">
             <Col className="col-3">
@@ -132,7 +136,7 @@ const Statistics = () => {
             </Col>
           </Row>
         )}
-        {measurements && (
+        {measurements && measurements.length > 0 && (
           <div>
             <VictoryChart
               width={900}
@@ -202,6 +206,11 @@ const Statistics = () => {
               />
             </VictoryChart>
           </div>
+        )}
+        {measurements && measurements.length === 0 && (
+          <Col className="col-9">
+            <p>ei datapisteitä</p>
+          </Col>
         )}
         {!measurements && selectedSensor && (
           <Col className="col-9">

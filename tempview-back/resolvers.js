@@ -76,24 +76,6 @@ const currentSensorData = async (root, args, context) => {
   return measurements
 }
 
-const sensorStats = async (root, args, context) => {
-  if (!context.currentUser) {
-    throw new AuthenticationError('Not authorized')
-  }
-
-  const sensors = await sequelize.query(
-    `SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor.id AS "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname", 
-    sensor.sensor_unit AS "sensor.sensorUnit", sensor.agrmethod AS "sensor.agrmethod" 
-    FROM measurements AS measurement 
-    LEFT OUTER JOIN sensors AS sensor ON measurement.sensor_id = sensor.id GROUP BY sensor.id `,
-    {
-      type: QueryTypes.SELECT,
-      nest: true,
-    }
-  )
-  return sensors
-}
-
 const datapoints = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
@@ -148,6 +130,24 @@ const allSensors = async (root, args, context) => {
   }
 
   const sensors = await Sensor.findAll({ order: [['sensorName', 'ASC']] })
+  return sensors
+}
+
+const sensorStats = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const sensors = await sequelize.query(
+    `SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor.id AS "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname", 
+    sensor.sensor_unit AS "sensor.sensorUnit", sensor.agrmethod AS "sensor.agrmethod" 
+    FROM measurements AS measurement 
+    FULL JOIN sensors AS sensor ON measurement.sensor_id = sensor.id GROUP BY sensor.id `,
+    {
+      type: QueryTypes.SELECT,
+      nest: true,
+    }
+  )
   return sensors
 }
 
@@ -348,7 +348,7 @@ const resolvers = {
     newSensor,
     newImage,
     updateImage,
-    deleteImage
+    deleteImage,
   },
 }
 

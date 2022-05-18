@@ -1,0 +1,21 @@
+import { Modal } from 'react-bootstrap'
+import { convertDate } from '../util/conversions'
+
+const ShowImage = ({ image, setShowImage }) => {
+  return (
+    <Modal show={true} onHide={() => setShowImage(null)} fullscreen={true}>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          {image.description}: {convertDate(image.updatedAt / 1000)}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {image && (
+          <img src={image.data} alt={image.name} className="img-fluid" />
+        )}
+      </Modal.Body>
+    </Modal>
+  )
+}
+
+export default ShowImage

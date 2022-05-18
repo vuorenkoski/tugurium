@@ -25,7 +25,7 @@ const typeDefs = gql`
 
   type SensorStat {
     sensor: Sensor!
-    firstTimestamp: String!
+    firstTimestamp: String
     count: Int!
   }
 
@@ -87,15 +87,8 @@ const typeDefs = gql`
       sensorUnit: String!
       agrmethod: String!
     ): Sensor
-    newImage(
-      name: String!
-      description: String
-    ): Image
-    updateImage(
-      name: String!
-      description: String
-      id: Int!
-    ): Image
+    newImage(name: String!, description: String): Image
+    updateImage(name: String!, description: String, id: Int!): Image
     deleteImage(id: Int!): Image
   }
 `

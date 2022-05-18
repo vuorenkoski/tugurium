@@ -12,6 +12,9 @@ const convertDate = (epoch) => {
 }
 
 const convertDateToDate = (epoch) => {
+  if (!epoch) {
+    return '- - - - -'
+  }
   const date = new Date(epoch * 1000)
   return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()
 }
