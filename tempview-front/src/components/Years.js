@@ -229,7 +229,7 @@ const Years = () => {
             </Row>
           </Form>
         </Col>
-        {data && (
+        {data && selectedYears.length > 0 && (
           <Col className="col-9">
             <VictoryChart
               width={900}
@@ -270,7 +270,10 @@ const Years = () => {
                 x={700}
                 y={0}
                 orientation="vertical"
-                style={{ border: { stroke: 'black' }, title: { fontSize: 20 } }}
+                style={{
+                  border: { stroke: 'black' },
+                  title: { fontSize: 20 },
+                }}
                 data={data.daily.graphData
                   .filter((d) => selectedYears.includes(d.year))
                   .map((d, i) => ({

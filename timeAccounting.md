@@ -14,17 +14,15 @@
 | 12.5. | 8     | sensorlist ordering, only recent fmi data, tuning axis, statistcs page, login screen fix                                                      |
 | 13.5. | 8     | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
 | 16.5. | 6     | dt images, get+post images, images to postgre                                                                                                 |
-| 18.5. |       | c-code for https, lakedata view fixed,                                                                                                        |
+| 18.5. |       | c-code for https, lakedata view fixed, fix to yearview,                                                                                       |
 | total | 91    |                                                                                                                                               |
 
 ## Product backlog
 
 - näyttää tilaston myös jos mittauspisteitä 0
-- vuosivertailun kuvio vain kun vuosi valittu
 - valokuvien kokonäkymä
-- testit
 - kontrol: lämmitys ja valot
-- config asetukset säädettäviksi
+- automaattinen 1. vuoden tunnistus
+- testit
 - android sovellus
-- https scripti c:llä
 - käyttöohjeet
