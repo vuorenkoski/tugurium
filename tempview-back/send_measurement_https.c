@@ -11,23 +11,37 @@
 
 const char *sensor = "TEST";
 const char *hostname = "tempview.vuorenkoski.fi";
-const char *token = "xxxx";
+const char *token = "xxx";
 const char *ds18b20 = "/sys/bus/w1/devices/28-000005d9ad73/w1_slave";
 const int port = 443;
 int debug = 0;
 
+// open http connection and send data
+void send_measurement(float);
+
+// Create tcp socket
 int create_socket();
-void send_measurement(float, SSL *);
+
+// send data with sll connection
+void send_data(float, SSL *);
+
+// get value from sensor
 float get_value();
 
-int main()
-{
+void main() {
+  float value;
+  value = get_value();
+  if (value != -99) {
+    send_measurement(value);
+  }
+}
+
+void send_measurement(float value) {
   X509 *cert = NULL;
   const SSL_METHOD *method;
   SSL_CTX *ctx;
   SSL *ssl;
   int server = 0;
-  float value;
 
   OpenSSL_add_all_algorithms();
   SSL_load_error_strings();
@@ -56,10 +70,7 @@ int main()
   if (cert == NULL && debug)
     printf("Error: Could not get a certificate from: %s.\n", hostname);
 
-  value = get_value();
-  if (value != -99) {
-    send_measurement(value, ssl);
-  }
+  send_data(value, ssl);
 
   SSL_free(ssl);
   close(server);
@@ -68,7 +79,7 @@ int main()
 
 int create_socket() {
   int sockfd;
-  char      *tmp_ptr = NULL;
+  char *tmp_ptr = NULL;
   struct hostent *host;
   struct sockaddr_in dest_addr;
 
@@ -91,7 +102,7 @@ int create_socket() {
   return sockfd;
 }
 
-void send_measurement(float value, SSL *ssl) {
+void send_data(float value, SSL *ssl) {
   char *message_fmt = "POST /api/graphql HTTP/1.0\r\nContent-Type: application/json\r\nContent-Length: %i\r\nAuthorization: BEARER %s\r\n\r\n%s";
   char *content_fmt = "{ \"query\": \"%s\", \"variables\": { \"sensorName\": \"%s\", \"value\": \"%f\" }}\r\n";
   char *query = "mutation ($sensorName: String!, $value: String) {addMeasurement(sensorName: $sensorName, value: $value) {value}}";
@@ -133,32 +144,32 @@ void send_measurement(float value, SSL *ssl) {
 }
 
 float get_value() {
-    FILE *fp;
-    int i,c;
-    char data[180],*ptr,temps[10];
-    float tempf;
+  FILE *fp;
+  int i,c;
+  char data[180],*ptr,temps[10];
+  float tempf;
 
-    tempf=-99;
-    fp=fopen(ds18b20,"r");
-    if (fp!=NULL) {
-        i=0;
-        while ((c=getc(fp))!=EOF) {
-            data[i]=c;
-            i++;
-        }
-        data[i]='\0';
-        fclose(fp);
-
-        if (strstr(data,"YES")!=NULL) {
-            ptr=strstr(data,"t=");
-            i=0;
-            do {
-                temps[i]=ptr[2+i];
-                i++;
-            } while ((temps[i-1]!='\0') && (i<8));
-            temps[i]='\0';
-            tempf=((float) atoi(temps)/1000);
-        }
+  tempf=-99;
+  fp=fopen(ds18b20,"r");
+  if (fp!=NULL) {
+    i=0;
+    while ((c=getc(fp))!=EOF) {
+      data[i]=c;
+      i++;
     }
-    return tempf;
+    data[i]='\0';
+    fclose(fp);
+
+    if (strstr(data,"YES")!=NULL) {
+      ptr=strstr(data,"t=");
+      i=0;
+      do {
+        temps[i]=ptr[2+i];
+        i++;
+      } while ((temps[i-1]!='\0') && (i<8));
+      temps[i]='\0';
+      tempf=((float) atoi(temps)/1000);
+    }
+  }
+  return tempf;
 }
