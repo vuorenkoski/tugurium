@@ -38,7 +38,7 @@ const processData = (recData, setData, setAxisLabel) => {
           scaleFn = (x) => x / 10
           scaleTxt = ' /10'
         }
-        if (max < 4) {
+        if (max < 4 && max > 0) {
           scaleFn = (x) => x * 10
           scaleTxt = ' x10'
         }
@@ -207,6 +207,7 @@ const Timeseries = () => {
               />
               <VictoryAxis
                 offsetY={50}
+                orientation="bottom"
                 tickCount={10}
                 label="Aika"
                 style={{
