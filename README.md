@@ -134,17 +134,32 @@ sudo apt install postgresql postgresql-contrib nodejs
 sudo cp /home/pi/tempview/tempview-back/tempview.service /etc/systemd/system/.
 ```
 
-5. Create .env file for backend
+5. Apache2 config
+
+Make necessary configs to tempview-ssl.conf
+
+```
+sudo cp tempview-ssl.conf /etc/apache2/sites-available/.
+sudo a2enmod proxy
+sudo a2enmod rewrite
+sudo a2ensite tempview-ssl.conf
+sudo service apache2 restart
+```
+
+6. Create .env file for backend
 
 SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
 
-6. Install dependencies, build frontend and start background service
+7. Install dependencies, build frontend and start background service
 
 ```
-sh build.sh
+npm install --prefix tempview-back/
+npm install --prefix tempview-front/
+npm run build --prefix tempview-front/
+sudo service tempview start
 ```
 
-7. Insert to crontab a script to fetch data from FMI (every 60 minutes)
+8. Insert to crontab a script to fetch data from FMI (every 60 minutes)
 
 ```
 30 * * * * sh /home/pi/tempview/getFmiData.sh
