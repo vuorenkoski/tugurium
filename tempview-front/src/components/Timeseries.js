@@ -11,13 +11,19 @@ import {
 } from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 
-import { ALL_SENSORS, SENSOR_DATA } from '../queries'
-const { FIRST_YEAR, COLORS } = require('../util/config')
+import { ALL_SENSORS, GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../queries'
+const { COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
-const years = Array(currentYear - FIRST_YEAR + 1)
-  .fill()
-  .map((_, i) => currentYear - i)
+
+const createYearSeries = (data, setYears) => {
+  const yearSeries = Array(
+    currentYear - new Date(data.getFirstTimestamp * 1000).getFullYear() + 1
+  )
+    .fill()
+    .map((_, i) => currentYear - i)
+  setYears(yearSeries)
+}
 
 const yearToEpoch = (year) => {
   const date = new Date(year, 0, 1)
@@ -65,12 +71,17 @@ const processData = (recData, setData, setAxisLabel) => {
 
 const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
+  const [years, setYears] = useState([currentYear])
   const [period, setPeriod] = useState('HOUR')
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
   const [data, setData] = useState(null)
   const [axisLabel, setAxisLabel] = useState(null)
+
+  useQuery(GET_FIRST_TIMESTAMP, {
+    onCompleted: (data) => createYearSeries(data, setYears),
+  })
 
   useQuery(SENSOR_DATA, {
     variables: {
@@ -174,7 +185,7 @@ const Timeseries = () => {
             </Row>
           </Form>
         </Col>
-        {data && (
+        {data && data.length > 0 && (
           <Col className="col-9">
             <VictoryChart
               width={900}

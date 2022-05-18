@@ -1,4 +1,4 @@
-import { Modal, Button, Row } from 'react-bootstrap'
+import { Modal, Button } from 'react-bootstrap'
 import { convertDate } from '../util/conversions'
 
 const ShowImage = ({ image, setShowImage }) => {

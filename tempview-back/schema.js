@@ -62,6 +62,7 @@ const typeDefs = gql`
       maxDate: Int
     ): [Sensor]
     currentSensorData: [Measurement]
+    getFirstTimestamp: Int!
   }
 
   type Token {

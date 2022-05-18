@@ -3,7 +3,6 @@ const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const http = require('http')
-const path = require('path')
 var cors = require('cors')
 
 const { Sequelize } = require('sequelize')
@@ -15,7 +14,7 @@ const { SECRET, SENSOR_TOKEN, PORT, DATABASE_URL } = require('./util/config')
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 
-const multer = require('multer');
+const multer = require('multer')
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialectOptions: {
@@ -55,49 +54,55 @@ const start = async () => {
 
   const app = express()
   app.use(cors())
- 
+
   app.get('/image/:name', (req, res) => {
     checkToken({ req }).then((user) => {
       if (!user.currentUser) {
         res.status(401).send('unauthorized')
       } else {
-        const image = Image.findOne({ where: {name: req.params.name }}).then((image) => {
-          if (image && image.image) {
-            var img = Buffer.from(image.image, 'base64');
+        Image.findOne({ where: { name: req.params.name } }).then(
+          (image) => {
+            if (image && image.image) {
+              var img = Buffer.from(image.image, 'base64')
 
-            res.writeHead(200, {
-              'Content-Type': 'image/jpg',
-              'Content-Length': img.length
-            });
-            res.end(img);
-          } else {
-            res.status(400).send('no such image slot')
-          } 
-        }, (error) => {
-          res.status(400).send(error)
-        })
+              res.writeHead(200, {
+                'Content-Type': 'image/jpg',
+                'Content-Length': img.length,
+              })
+              res.end(img)
+            } else {
+              res.status(400).send('no such image slot')
+            }
+          },
+          (error) => {
+            res.status(400).send(error)
+          }
+        )
       }
-      })
+    })
   })
 
-  app.post('/image/:name', multer().single('file'), (req,res) => {
-    checkToken({ req }).then((user) => {
-      if (user.token!==SENSOR_TOKEN) {
-        res.status(401).send('unauthorized')
-      } else {
-        Image.findOne({ where: {name: req.params.name }}).then((image) => {
-          if (image) {
-            image['image']=req.file.buffer
-            image.save()
-            res.send('ok')
-          } else {
-            res.status(400).send('no such image slot')
-          }
-        })
+  app.post('/image/:name', multer().single('file'), (req, res) => {
+    checkToken({ req }).then(
+      (user) => {
+        if (user.token !== SENSOR_TOKEN) {
+          res.status(401).send('unauthorized')
+        } else {
+          Image.findOne({ where: { name: req.params.name } }).then((image) => {
+            if (image) {
+              image['image'] = req.file.buffer
+              image.save()
+              res.send('ok')
+            } else {
+              res.status(400).send('no such image slot')
+            }
+          })
+        }
+      },
+      (error) => {
+        res.send(error)
       }
-    }, (error) => {
-      res.send(error)
-    })
+    )
   })
 
   const httpServer = http.createServer(app)

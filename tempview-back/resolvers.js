@@ -123,6 +123,23 @@ const addMeasurement = async (root, args, context) => {
   }
 }
 
+const getFirstTimestamp = async (root, args, context) => {
+  if (!context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
+  const timestamp = await sequelize.query(
+    'SELECT MIN(timestamp) AS timestamp FROM measurements',
+    {
+      type: QueryTypes.SELECT,
+      nest: true,
+    }
+  )
+  if (timestamp.length === 0) {
+    return 0
+  }
+  return timestamp[0].timestamp
+}
+
 // Sensors
 const allSensors = async (root, args, context) => {
   if (!context.currentUser) {
@@ -337,6 +354,7 @@ const resolvers = {
     sensorStats,
     datapoints,
     allImages,
+    getFirstTimestamp,
   },
   Mutation: {
     addMeasurement,

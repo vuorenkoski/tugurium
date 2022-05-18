@@ -40,6 +40,12 @@ export const SENSOR_TOKEN = gql`
   }
 `
 
+export const GET_FIRST_TIMESTAMP = gql`
+  query Query {
+    getFirstTimestamp
+  }
+`
+
 export const SENSOR_DATA = gql`
   query SensorData(
     $sensorName: [String]
@@ -192,11 +198,7 @@ export const UPDATE_IMAGE = gql`
     $description: String!
     $updateImageId: Int!
   ) {
-    updateImage(
-      name: $name
-      description: $description
-      id: $updateImageId
-    ) {
+    updateImage(name: $name, description: $description, id: $updateImageId) {
       id
       name
       description
@@ -205,14 +207,8 @@ export const UPDATE_IMAGE = gql`
 `
 
 export const NEW_IMAGE = gql`
-  mutation NewImage(
-    $name: String!
-    $description: String!
-  ) {
-    newImage(
-      name: $name
-      description: $description
-    ) {
+  mutation NewImage($name: String!, $description: String!) {
+    newImage(name: $name, description: $description) {
       id
       name
       description

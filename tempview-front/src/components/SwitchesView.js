@@ -1,6 +1,6 @@
-import { Row, Col } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 
-const Switches = () => {
+const SwitchesView = () => {
   return (
     <div>
       <Row className="p-4">
@@ -13,4 +13,4 @@ const Switches = () => {
   )
 }
 
-export default Switches
+export default SwitchesView

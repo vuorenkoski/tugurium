@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import {
   VictoryChart,
@@ -10,15 +10,20 @@ import {
   VictoryLegend,
 } from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
-import { SENSOR_DATA, ALL_SENSORS } from '../queries'
-const { FIRST_YEAR, COLORS } = require('../util/config')
+import { SENSOR_DATA, ALL_SENSORS, GET_FIRST_TIMESTAMP } from '../queries'
+const { COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
 
-let years = Array(currentYear - FIRST_YEAR + 1)
-  .fill()
-  .map((_, i) => (FIRST_YEAR + i).toString())
-years.push('keskiarvo')
+const createYearSeries = (data, setYears) => {
+  const firstYear = new Date(data.getFirstTimestamp * 1000).getFullYear()
+
+  const yearSeries = Array(currentYear - firstYear + 1)
+    .fill()
+    .map((_, i) => (firstYear + i).toString())
+  yearSeries.push('keskiarvo')
+  setYears(yearSeries)
+}
 
 const yearToEpoch = (year) => {
   const date = new Date(year, 0, 1)
@@ -73,7 +78,7 @@ const monthlyDataFromDaily = (dailyData) => {
   return { min, max, graphData }
 }
 
-const groupByYear = (measurements) => {
+const groupByYear = (measurements, years) => {
   let graphData = null
   let min = 0
   let max = 10
@@ -88,7 +93,7 @@ const groupByYear = (measurements) => {
     date.setFullYear(currentYear)
     const value = Number(measurements[i].value)
 
-    graphData[year - FIRST_YEAR].measurements.push({
+    graphData[year - parseInt(years[0])].measurements.push({
       y: value,
       x: date,
     })
@@ -100,7 +105,7 @@ const groupByYear = (measurements) => {
     max = Math.max(max, value)
   }
 
-  const avgIndex = currentYear - FIRST_YEAR + 1
+  const avgIndex = currentYear - parseInt(years[0]) + 1
   for (const key in sum) {
     // we do not take account the last year of leap year
     if (Number(key) < 365 * 24 * 60 * 60) {
@@ -113,10 +118,10 @@ const groupByYear = (measurements) => {
   return { min, max, graphData }
 }
 
-const processData = (recData, setData) => {
+const processData = (recData, setData, years) => {
   if (recData.sensorData.length > 0) {
     const measurements = recData.sensorData[0].measurements
-    const daily = groupByYear(measurements)
+    const daily = groupByYear(measurements, years)
     const monthly = monthlyDataFromDaily(daily)
     const unit = recData.sensorData[0].sensorUnit
     const result = { monthly, daily, unit }
@@ -125,6 +130,7 @@ const processData = (recData, setData) => {
 }
 
 const Years = () => {
+  const [years, setYears] = useState([])
   const [selectedSensor, setSelectedSensor] = useState('')
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
@@ -132,16 +138,23 @@ const Years = () => {
   const [data, setData] = useState(null)
   const [period, setPeriod] = useState('daily')
 
-  useQuery(SENSOR_DATA, {
+  useQuery(GET_FIRST_TIMESTAMP, {
+    onCompleted: (data) => createYearSeries(data, setYears),
+  })
+
+  const sensorData = useQuery(SENSOR_DATA, {
     variables: {
       sensorName: selectedSensor,
       average: 'DAY',
-      minDate: yearToEpoch(FIRST_YEAR),
-      maxDate: yearToEpoch(currentYear + 1),
     },
-    onCompleted: (recData) => processData(recData, setData),
   })
   const sensors = useQuery(ALL_SENSORS)
+
+  useEffect(() => {
+    if (years.length > 0 && sensorData.data) {
+      processData(sensorData.data, setData, years)
+    }
+  }, [years, sensorData])
 
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.id)
@@ -334,7 +347,7 @@ const Years = () => {
             </VictoryChart>
           </Col>
         )}
-        {!data && selectedSensor && (
+        {!sensorData.data && selectedSensor && (
           <Col className="col-9">
             <p>Lataa tietoja...</p>
           </Col>

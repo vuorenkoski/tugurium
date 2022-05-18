@@ -47,8 +47,6 @@ const ImagesView = () => {
     fetchImages()
   }, [image_names]) // eslint-disable-line
 
-  console.log(showImage)
-
   return (
     <div>
       {showImage && <ShowImage image={showImage} setShowImage={setShowImage} />}
