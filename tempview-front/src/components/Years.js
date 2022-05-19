@@ -15,14 +15,14 @@ const { COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
 
-const createYearSeries = (data, setYears) => {
-  const firstYear = new Date(data.getFirstTimestamp * 1000).getFullYear()
+const createYearSeries = (firstTimestamp) => {
+  const firstYear = new Date(firstTimestamp * 1000).getFullYear()
 
   const yearSeries = Array(currentYear - firstYear + 1)
     .fill()
     .map((_, i) => (firstYear + i).toString())
   yearSeries.push('keskiarvo')
-  setYears(yearSeries)
+  return yearSeries
 }
 
 const yearToEpoch = (year) => {
@@ -78,7 +78,7 @@ const monthlyDataFromDaily = (dailyData) => {
   return { min, max, graphData }
 }
 
-const groupByYear = (measurements, years) => {
+const groupByYear = (measurements, firstTimestamp) => {
   let graphData = null
   let min = 0
   let max = 10
@@ -86,6 +86,7 @@ const groupByYear = (measurements, years) => {
   let count = {}
 
   // Create series for every year
+  const years = createYearSeries(firstTimestamp)
   graphData = years.map((y) => ({ year: y, measurements: [] }))
   for (let i = 0; i < measurements.length; i++) {
     const date = new Date(measurements[i].timestamp * 1000)
@@ -115,22 +116,24 @@ const groupByYear = (measurements, years) => {
       })
     }
   }
+  // include only years with data
+  graphData = graphData.filter((d) => d.measurements.length > 0)
+  // setYears(data.daily.graphData.map((d) => d.year))
   return { min, max, graphData }
 }
 
-const processData = (recData, setData, years) => {
-  if (recData.sensorData.length > 0) {
-    const measurements = recData.sensorData[0].measurements
-    const daily = groupByYear(measurements, years)
+const processData = (sensorData, setData, firstTimestamp) => {
+  if (sensorData.length > 0) {
+    const measurements = sensorData[0].measurements
+    const daily = groupByYear(measurements, firstTimestamp)
     const monthly = monthlyDataFromDaily(daily)
-    const unit = recData.sensorData[0].sensorUnit
+    const unit = sensorData[0].sensorUnit
     const result = { monthly, daily, unit }
     setData(result)
   }
 }
 
 const Years = () => {
-  const [years, setYears] = useState([])
   const [selectedSensor, setSelectedSensor] = useState('')
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
@@ -138,9 +141,7 @@ const Years = () => {
   const [data, setData] = useState(null)
   const [period, setPeriod] = useState('daily')
 
-  useQuery(GET_FIRST_TIMESTAMP, {
-    onCompleted: (data) => createYearSeries(data, setYears),
-  })
+  const firstTimestamp = useQuery(GET_FIRST_TIMESTAMP)
 
   const sensorData = useQuery(SENSOR_DATA, {
     variables: {
@@ -151,10 +152,15 @@ const Years = () => {
   const sensors = useQuery(ALL_SENSORS)
 
   useEffect(() => {
-    if (years.length > 0 && sensorData.data) {
-      processData(sensorData.data, setData, years)
+    if (firstTimestamp.data && sensorData.data) {
+      setSelectedYears([])
+      processData(
+        sensorData.data.sensorData,
+        setData,
+        firstTimestamp.data.getFirstTimestamp
+      )
     }
-  }, [years, sensorData])
+  }, [firstTimestamp, sensorData])
 
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.id)
@@ -208,17 +214,18 @@ const Years = () => {
             </Row>
             <Row className="p-2">
               <h3>Vuodet</h3>
-              {years.map((y) => (
-                <div key={y}>
-                  <Form.Check
-                    type={'checkbox'}
-                    id={y}
-                    label={y}
-                    defaultValue={false}
-                    onChange={handleYearChange.bind(this)}
-                  />
-                </div>
-              ))}
+              {data &&
+                data.daily.graphData.map((d) => (
+                  <div key={d.year}>
+                    <Form.Check
+                      type={'checkbox'}
+                      id={d.year}
+                      label={d.year}
+                      defaultValue={false}
+                      onChange={handleYearChange.bind(this)}
+                    />
+                  </div>
+                ))}
             </Row>
             <Row className="p-2">
               <h4>Datapisteiden yhdistäminen</h4>

@@ -55,11 +55,6 @@ const Statistics = () => {
     onCompleted: (data) => processData(data, setMeasurements),
   })
 
-  let sensorList = null
-  if (sensors.data) {
-    sensorList = sensors.data.sensorStats
-  }
-
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.value)
     setMeasurements(null)
@@ -81,10 +76,10 @@ const Statistics = () => {
 
       <Row className="p-4">
         <h3>Sensorien datapisteiden määrät ja alkupäivä</h3>
-        {!sensorList && <p>Loading...</p>}
+        {!sensors.data && <p>Ladataan...</p>}
 
         <Col className="col-6">
-          {sensorList && (
+          {sensors.data && (
             <Table striped>
               <tbody>
                 <tr>
@@ -92,7 +87,7 @@ const Statistics = () => {
                   <th>lukumäärä</th>
                   <th>Ensimmäinen aikaleima</th>
                 </tr>
-                {sensorList.map((s) => (
+                {sensors.data.sensorStats.map((s) => (
                   <tr key={s.sensor.sensorName}>
                     <td>{s.sensor.sensorFullname}</td>
                     <td>{convertNumber(s.count)}</td>
@@ -102,7 +97,9 @@ const Statistics = () => {
                 <tr>
                   <td>YHTEENSÄ</td>
                   <td>
-                    {convertNumber(sensorList.reduce((p, c) => p + c.count, 0))}
+                    {convertNumber(
+                      sensors.data.sensorStats.reduce((p, c) => p + c.count, 0)
+                    )}
                   </td>
                 </tr>
               </tbody>
@@ -112,7 +109,8 @@ const Statistics = () => {
       </Row>
       <Row className="p-4">
         <h3>Sensorin datapisteiden määrät vuorokaudessa</h3>
-        {sensorList && (
+        {!sensors.data && <p>Ladataan...</p>}
+        {sensors.data && (
           <Row className="p-2">
             <Col className="col-3">
               <Form>
@@ -123,7 +121,7 @@ const Statistics = () => {
                   <option disabled value="empty">
                     -- valitse --
                   </option>
-                  {sensorList.map((s) => (
+                  {sensors.data.sensorStats.map((s) => (
                     <option
                       key={s.sensor.sensorName}
                       value={s.sensor.sensorName}

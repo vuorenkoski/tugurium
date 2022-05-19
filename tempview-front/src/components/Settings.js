@@ -10,11 +10,6 @@ import { SENSOR_TOKEN } from '../queries'
 const Settings = () => {
   const sensorToken = useQuery(SENSOR_TOKEN)
 
-  let token = ''
-  if (sensorToken.data) {
-    token = sensorToken.data.sensorToken.value
-  }
-
   return (
     <div>
       <Users />
@@ -23,7 +18,11 @@ const Settings = () => {
       <Switches />
       <Row className="p-4 pb-0">
         <h2>Sensorien/kameroiden/kytkimien token</h2>
-        <p style={{ fontFamily: 'monospace' }}>{token}</p>
+        {sensorToken.data && (
+          <p style={{ fontFamily: 'monospace' }}>
+            {sensorToken.data.sensorToken.value}
+          </p>
+        )}
       </Row>
     </div>
   )
