@@ -32,6 +32,9 @@ const Sensors = () => {
   const [updateSensor] = useMutation(UPDATE_SENSOR, {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2000)
     },
     onCompleted: (data) => {
       closeSensorForm()
@@ -54,7 +57,7 @@ const Sensors = () => {
     deleteSensor({ variables })
   }
 
-  const handeUpdateSensor = (id) => {
+  const handleUpdateSensor = (id) => {
     setDisplaySensorForm(true)
     const sensor = sensors.data.allSensors.filter((s) => s.id === id)[0]
     setSensorName(sensor.sensorName)
@@ -64,7 +67,7 @@ const Sensors = () => {
     setSensorId(Number(sensor.id))
   }
 
-  const handeNewSensor = (id) => {
+  const handleNewSensor = (id) => {
     setDisplaySensorForm(true)
     setSensorName('')
     setSensorFullname('')
@@ -146,7 +149,7 @@ const Sensors = () => {
                           padding: 0,
                           font: 'inherit',
                         }}
-                        onClick={() => handeUpdateSensor(a.id)}
+                        onClick={() => handleUpdateSensor(a.id)}
                       >
                         päivitä
                       </Button>
@@ -220,7 +223,7 @@ const Sensors = () => {
           </div>
         )}
         {!displaySensorForm && (
-          <Button onClick={() => handeNewSensor()}>Lisää uusi</Button>
+          <Button onClick={() => handleNewSensor()}>Lisää uusi</Button>
         )}
         <Row className="p-4" style={{ color: 'red' }}>
           {errorMessage}

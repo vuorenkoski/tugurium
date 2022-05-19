@@ -23,6 +23,16 @@ const typeDefs = gql`
     updatedAt: String
   }
 
+  type Switch {
+    id: ID!
+    name: String!
+    description: String
+    on: Boolean
+    command: Boolean
+    commandFile: String
+    updatedAt: String
+  }
+
   type SensorStat {
     sensor: Sensor!
     firstTimestamp: String
@@ -50,6 +60,7 @@ const typeDefs = gql`
   type Query {
     allSensors: [Sensor]
     allImages: [Image]
+    allSwitches: [Switch]
     sensorStats: [SensorStat]
     sensorToken: Token
     allUsers: [User]
@@ -91,6 +102,17 @@ const typeDefs = gql`
     newImage(name: String!, description: String): Image
     updateImage(name: String!, description: String, id: Int!): Image
     deleteImage(id: Int!): Image
+    newSwitch(name: String!, description: String, commandFile: String): Switch
+    updateSwitch(
+      name: String!
+      description: String
+      commandFile: String
+      id: Int!
+    ): Switch
+    deleteSwitch(id: Int!): Switch
+    setSwitch(id: Int!, on: Boolean): Switch
+    setSwitchCommand(id: Int!, command: Boolean): Switch
+    setSwitchStatus(id: Int!, on: Boolean): Switch
   }
 `
 

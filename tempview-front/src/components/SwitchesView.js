@@ -1,13 +1,65 @@
-import { Row } from 'react-bootstrap'
+import { Table, Row, Col, Button } from 'react-bootstrap'
+import { useQuery, useMutation } from '@apollo/client'
+import { ALL_SWITCHES, SET_SWITCH_COMMAND } from '../queries'
+import { convertDate } from '../util/conversions'
 
 const SwitchesView = () => {
+  const switches = useQuery(ALL_SWITCHES, {
+    fetchPolicy: 'network-only',
+  })
+
+  const [setSwitch] = useMutation(SET_SWITCH_COMMAND, {
+    refetchQueries: [{ query: ALL_SWITCHES }],
+  })
+
+  const handleClick = async (sw) => {
+    console.log(sw)
+    const variables = {
+      command: !sw.command,
+      setSwitchId: Number(sw.id),
+    }
+    await setSwitch({ variables })
+  }
+
   return (
     <div>
       <Row className="p-4">
-        <h2>Aitan lämpöpatteri</h2>
+        <h2>Kytkimet</h2>
       </Row>
+
       <Row className="p-4">
-        <h2>Kodin valot</h2>
+        {!switches.data && <p>Lataa tietoja...</p>}
+
+        <Col className="col-6">
+          {switches.data && (
+            <Table striped>
+              <tbody>
+                <tr>
+                  <th>Kytkin</th>
+                  <th>Tila</th>
+                  <th>Komento</th>
+                  <th>Aikaleima</th>
+                </tr>
+                {switches.data.allSwitches.map((sw) => (
+                  <tr key={sw.id}>
+                    <td>{sw.description}</td>
+                    <td>{sw.on ? <div>ON</div> : <div>OFF</div>}</td>
+                    <td>
+                      <Button
+                        variant={sw.command ? 'primary' : 'secondary'}
+                        size="sm"
+                        onClick={() => handleClick(sw)}
+                      >
+                        {sw.command ? <div>ON</div> : <div>OFF</div>}
+                      </Button>
+                    </td>
+                    <td>{convertDate(Number(sw.updatedAt) / 1000)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
+        </Col>
       </Row>
     </div>
   )

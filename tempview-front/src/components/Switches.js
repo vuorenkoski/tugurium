@@ -1,28 +1,34 @@
 import { Table, Row, Col, Form, Button } from 'react-bootstrap'
 import { useQuery, useMutation } from '@apollo/client'
 import { useState } from 'react'
-import { ALL_IMAGES, DELETE_IMAGE, UPDATE_IMAGE, NEW_IMAGE } from '../queries'
+import {
+  ALL_SWITCHES,
+  DELETE_SWITCH,
+  UPDATE_SWITCH,
+  NEW_SWITCH,
+} from '../queries'
 import { convertDate } from '../util/conversions'
 
-const Images = () => {
-  const [displayImageForm, setDisplayImageForm] = useState(false)
+const Switches = () => {
+  const [displaySwitchForm, setDisplaySwitchForm] = useState(false)
   const [name, setName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [description, setDescription] = useState('')
-  const [imageId, setImageId] = useState(-1)
-  const images = useQuery(ALL_IMAGES)
+  const [commandFile, setCommandFile] = useState('')
+  const [switchId, setSwitchId] = useState(-1)
+  const switches = useQuery(ALL_SWITCHES)
 
-  const [deleteImage] = useMutation(DELETE_IMAGE, {
+  const [deleteSwitch] = useMutation(DELETE_SWITCH, {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
       setTimeout(() => {
         setErrorMessage(null)
       }, 2000)
     },
-    refetchQueries: [{ query: ALL_IMAGES }],
+    refetchQueries: [{ query: ALL_SWITCHES }],
   })
 
-  const [updateImage] = useMutation(UPDATE_IMAGE, {
+  const [updateSwitch] = useMutation(UPDATE_SWITCH, {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
       setTimeout(() => {
@@ -30,64 +36,67 @@ const Images = () => {
       }, 2000)
     },
     onCompleted: (data) => {
-      closeImageForm()
+      closeSwitchForm()
     },
-    refetchQueries: [{ query: ALL_IMAGES }],
+    refetchQueries: [{ query: ALL_SWITCHES }],
   })
 
-  const [newImage] = useMutation(NEW_IMAGE, {
+  const [newSwitch] = useMutation(NEW_SWITCH, {
     onError: (error) => {
       setErrorMessage(error.graphQLErrors[0].message)
     },
     onCompleted: (data) => {
-      closeImageForm()
+      closeSwitchForm()
     },
-    refetchQueries: [{ query: ALL_IMAGES }],
+    refetchQueries: [{ query: ALL_SWITCHES }],
   })
 
-  const handleDeleteImage = (id) => {
-    const variables = { deleteImageId: Number(id) }
-    deleteImage({ variables })
+  const handleDeleteSwitch = (id) => {
+    const variables = { deleteSwitchId: Number(id) }
+    deleteSwitch({ variables })
   }
 
-  const handleUpdateImage = (id) => {
-    setDisplayImageForm(true)
-    const image = images.data.allImages.filter((s) => s.id === id)[0]
-    setName(image.name)
-    setDescription(image.description)
-    setImageId(Number(image.id))
+  const handleUpdateSwitch = (id) => {
+    setDisplaySwitchForm(true)
+    const sw = switches.data.allSwitches.filter((s) => s.id === id)[0]
+    setName(sw.name)
+    setDescription(sw.description)
+    setCommandFile(sw.commandFile)
+    setSwitchId(Number(sw.id))
   }
 
-  const handleNewImage = (id) => {
-    setDisplayImageForm(true)
+  const handleNewSwitch = (id) => {
+    setDisplaySwitchForm(true)
     setName('')
     setDescription('')
-    setImageId(-1)
+    setCommandFile('')
+    setSwitchId(-1)
   }
 
-  const handleSubmitImage = async (event) => {
+  const handleSubmitSwitch = async (event) => {
     event.preventDefault()
-    if (imageId === -1) {
-      const variables = { name, description }
-      await newImage({ variables })
+    if (switchId === -1) {
+      const variables = { name, description, commandFile }
+      await newSwitch({ variables })
     } else {
       const variables = {
         name,
         description,
-        updateImageId: imageId,
+        commandFile,
+        updateSwitchId: switchId,
       }
-      await updateImage({ variables })
+      await updateSwitch({ variables })
     }
   }
 
-  const closeImageForm = () => {
+  const closeSwitchForm = () => {
     setErrorMessage(null)
-    setDisplayImageForm(false)
+    setDisplaySwitchForm(false)
   }
 
   return (
     <Row className="p-4 pb-0">
-      <h2>Kamerat</h2>
+      <h2>Kytkimet</h2>
       <Col className="col-8">
         <Row>
           <Table striped>
@@ -95,16 +104,18 @@ const Images = () => {
               <tr>
                 <th>Nimi</th>
                 <th>Kuvaus</th>
+                <th>komentotiedosto</th>
                 <th>Päivitetty</th>
                 <th>Id</th>
                 <th></th>
                 <th></th>
               </tr>
-              {images.data &&
-                images.data.allImages.map((a) => (
+              {switches.data &&
+                switches.data.allSwitches.map((a) => (
                   <tr key={a.id}>
                     <td>{a.name}</td>
                     <td>{a.description}</td>
+                    <td>{a.commandFile}</td>
                     <td>{convertDate(a.updatedAt / 1000)}</td>
                     <td>{a.id}</td>
                     <td>
@@ -116,7 +127,7 @@ const Images = () => {
                           padding: 0,
                           font: 'inherit',
                         }}
-                        onClick={() => handleDeleteImage(a.id)}
+                        onClick={() => handleDeleteSwitch(a.id)}
                       >
                         poista
                       </Button>
@@ -130,7 +141,7 @@ const Images = () => {
                           padding: 0,
                           font: 'inherit',
                         }}
-                        onClick={() => handleUpdateImage(a.id)}
+                        onClick={() => handleUpdateSwitch(a.id)}
                       >
                         päivitä
                       </Button>
@@ -141,7 +152,7 @@ const Images = () => {
           </Table>
         </Row>
 
-        {displayImageForm && (
+        {displaySwitchForm && (
           <div>
             <Row className="align-items-end">
               <Col className="col-2">
@@ -156,7 +167,7 @@ const Images = () => {
                   </Form.Group>
                 </Form>
               </Col>
-              <Col className="col-4">
+              <Col className="col-3">
                 <Form>
                   <Form.Group>
                     <Form.Label>Kuvaus</Form.Label>
@@ -168,17 +179,29 @@ const Images = () => {
                   </Form.Group>
                 </Form>
               </Col>
-              <Col className="col-2">
-                <Button onClick={handleSubmitImage}>päivitä/lisää</Button>
+              <Col className="col-3">
+                <Form>
+                  <Form.Group>
+                    <Form.Label>Komentotiedosto</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={commandFile}
+                      onChange={({ target }) => setCommandFile(target.value)}
+                    />
+                  </Form.Group>
+                </Form>
               </Col>
               <Col className="col-2">
-                <Button onClick={closeImageForm}>peruuta</Button>
+                <Button onClick={handleSubmitSwitch}>päivitä/lisää</Button>
+              </Col>
+              <Col className="col-2">
+                <Button onClick={closeSwitchForm}>peruuta</Button>
               </Col>
             </Row>
           </div>
         )}
-        {!displayImageForm && (
-          <Button onClick={() => handleNewImage()}>Lisää uusi</Button>
+        {!displaySwitchForm && (
+          <Button onClick={() => handleNewSwitch()}>Lisää uusi</Button>
         )}
         <Row className="p-4" style={{ color: 'red' }}>
           {errorMessage}
@@ -188,4 +211,4 @@ const Images = () => {
   )
 }
 
-export default Images
+export default Switches

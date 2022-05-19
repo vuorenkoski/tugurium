@@ -128,10 +128,12 @@ sudo apt install postgresql postgresql-contrib nodejs
 
 3. Clone repository to /home/pi/tempview
 
-4. Copy backround service script
+4. Copy backround service script and activate run-on-boot
 
 ```
 sudo cp /home/pi/tempview/tempview-back/tempview.service /etc/systemd/system/.
+sudo systemctl daemon-reload
+sudo systemctl enable tempview.service
 ```
 
 5. Apache2 config

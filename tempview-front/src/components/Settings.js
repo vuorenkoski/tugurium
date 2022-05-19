@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import Sensors from './Sensors'
 import Users from './Users'
 import Images from './Images'
+import Switches from './Switches'
 
 import { SENSOR_TOKEN } from '../queries'
 
@@ -18,11 +19,12 @@ const Settings = () => {
     <div>
       <Users />
       <Sensors />
+      <Images />
+      <Switches />
       <Row className="p-4 pb-0">
-        <h2>Sensorien token</h2>
+        <h2>Sensorien/kameroiden/kytkimien token</h2>
         <p style={{ fontFamily: 'monospace' }}>{token}</p>
       </Row>
-      <Images />
     </div>
   )
 }

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 
 module.exports = {
   up: async ({ context: queryInterface }) => {
-    await queryInterface.createTable('images', {
+    await queryInterface.createTable('switches', {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -18,9 +18,16 @@ module.exports = {
       description: {
         type: DataTypes.STRING,
       },
-      image: {
-        type: DataTypes.BLOB('long'),
-        allowNull: true,
+      on: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      command: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      command_file: {
+        type: DataTypes.STRING,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -31,6 +38,6 @@ module.exports = {
     })
   },
   down: async ({ context: queryInterface }) => {
-    await queryInterface.dropTable('images')
+    await queryInterface.dropTable('switches')
   },
 }

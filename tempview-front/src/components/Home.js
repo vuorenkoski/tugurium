@@ -8,11 +8,6 @@ const Home = () => {
     fetchPolicy: 'network-only',
   })
 
-  let sensorList = null
-  if (sensors.data) {
-    sensorList = sensors.data.currentSensorData
-  }
-
   return (
     <div>
       <Row className="p-4">
@@ -20,10 +15,10 @@ const Home = () => {
       </Row>
 
       <Row className="p-4">
-        {!sensorList && <p>Lataa tietoja...</p>}
+        {!sensors.data && <p>Lataa tietoja...</p>}
 
         <Col className="col-6">
-          {sensorList && (
+          {sensors.data && (
             <Table striped>
               <tbody>
                 <tr>
@@ -31,7 +26,7 @@ const Home = () => {
                   <th>Lämpötila</th>
                   <th>Aikaleima</th>
                 </tr>
-                {sensorList.map((a, i) => (
+                {sensors.data.currentSensorData.map((a, i) => (
                   <tr key={i}>
                     <td>{a.sensor.sensorFullname}</td>
                     <td>

@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true,
       },
       sensor_name: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
@@ -17,11 +17,11 @@ module.exports = {
         },
       },
       sensor_fullname: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       sensor_unit: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
       },
     })

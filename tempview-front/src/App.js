@@ -59,7 +59,7 @@ const App = () => {
             <Nav className="mr-auto">
               <Nav.Link href="#" as="span">
                 <Link to="/" style={linkStyle}>
-                  Lämpötilat nyt
+                  Mittaukset nyt
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
@@ -74,7 +74,7 @@ const App = () => {
               </Nav.Link>
               <Nav.Link href="#" as="span">
                 <Link to="/images" style={linkStyle}>
-                  Kuvat
+                  Kamerat
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
