@@ -5,6 +5,6 @@ module.exports = {
     process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:4000',
   WEBSOCKET_URL:
     process.env.NODE_ENV === 'production'
-      ? `wss://${window.location.hostname}/api/graphql/`
+      ? `wss://${window.location.hostname}/wss/graphql`
       : 'ws://localhost:4000/graphql',
 }
