@@ -15,12 +15,13 @@
 | 13.5. | 8     | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
 | 16.5. | 6     | dt images, get+post images, images to postgre                                                                                                 |
 | 18.5. | 8     | c-code for https, lakedata view fixed, fixes to yearview&timeseries, fix stats if 0 datapoints, full image view, automatic frst year          |
-| 19.5. |       | swtiches implemented, c-code for sending switch status, graphql subscription, getCommand route and c-code to retrieve it, refactoring         |
-| total | 99    |                                                                                                                                               |
+| 19.5. | 8     | switches implemented, c-code for sending switch status, graphql subscription, getCommand route and c-code to retrieve it, refactoring         |
+| total | 107   |                                                                                                                                               |
 
 ## Product backlog
 
 - testataan läppärillä, tabletilla ja kännykällä
+- voiko sql scheemaa nopeuttaa countin osalta?
 - testit
 - android sovellus
 - käyttöohjeet
