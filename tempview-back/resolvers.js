@@ -419,7 +419,7 @@ const setSwitchStatus = async (root, args, context) => {
     throw new AuthenticationError('Not authorized')
   }
 
-  const sw = await Switch.findOne({ where: { id: args.id } })
+  const sw = await Switch.findOne({ where: { name: args.name } })
   sw.on = args.on
   await sw.save()
   return sw
