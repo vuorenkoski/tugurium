@@ -138,17 +138,18 @@ sudo systemctl enable tempview.service
 
 5. Apache2 config
 
-Make necessary configs to tempview-ssl.conf
+Make necessary configs to tempview-ssl.conf. After that:
 
 ```
 sudo cp tempview-ssl.conf /etc/apache2/sites-available/.
 sudo a2enmod proxy
+sudo a2enmod proxy_wstunnel
 sudo a2enmod rewrite
 sudo a2ensite tempview-ssl.conf
 sudo service apache2 restart
 ```
 
-6. Create .env file for backend
+6. Create .env file to tempview-back/.env
 
 SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
 
@@ -167,4 +168,4 @@ sudo service tempview start
 30 * * * * sh /home/pi/tempview/getFmiData.sh
 ```
 
-There is example c-code to read measurement from sensor and send it to backend (tempview-back/send_measurement.c).
+There is example codesnippets in c and python to send data from sensors, switches and camera (tempview-back/codeSnippetsForSending).

@@ -2,32 +2,16 @@
 Description=Tempview nodejs app
 
 [Service]
-# set the working directory to have consistent relative paths
 WorkingDirectory=/home/pi/tempview/tempview-back
-
-# start the server file (file is relative to WorkingDirectory here)
 ExecStart=/usr/bin/npm start
-
-# if process crashes, always try to restart
 Restart=always
-
-# let 500ms between the crash and the restart
 RestartSec=500ms
-
-# send log tot syslog here (it doesn't compete with other log config in the app itself)
 StandardOutput=syslog
 StandardError=syslog
-
-# nodejs process name in syslog
 SyslogIdentifier=nodejs
-
-# user and group starting the app
 User=www-data
 Group=www-data
-
-# set the environement (dev, prod…)
 Environment=NODE_ENV=production
 
 [Install]
-# start node at multi user system level (= sysVinit runlevel 3) 
 WantedBy=multi-user.target

@@ -15,7 +15,6 @@ const SwitchesView = () => {
   useSubscription(STATUS_CHANGED)
 
   const handleClick = async (sw) => {
-    console.log(sw)
     const variables = {
       command: !sw.command,
       setSwitchId: Number(sw.id),

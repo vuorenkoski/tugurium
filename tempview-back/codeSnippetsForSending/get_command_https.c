@@ -1,39 +1,43 @@
-// Code to send switch status to graphwl-api with https
+// Code to get switch command from graphwl-api with https
 // 
 // Install dependencies: sudo apt-get install libssl-dev
-// Compile: gcc -o send_status_https send_status_https.c -lssl -lcrypto
+// Compile: gcc -o get_command_https get_command_https.c -lssl -lcrypto
 
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
 #include <openssl/ssl.h>
+#include <ctype.h>
 
-const char *sw = "HLIG";
+const char *sw = "CRHE";
 const char *hostname = "tempview.vuorenkoski.fi";
-const char *token = "xxxx";
+const char *token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlbnNvciIsImlkIjoxLCJpYXQiOjE2NTEwNDY0OTN9.942e6l55Eh0y9nWwsdkS_s-q_6-EXeoGnDdsKp6vXho";
 const int port = 443;
 int debug = 0;
 
-// open http connection and send mutation
-void send_status(int);
+// open http connection and send query
+int get_command();
 
 // Create tcp socket
 int create_socket();
 
-// send mutation with sll connection
-void send_data(int, SSL *);
+// send query with sll connection
+int get_data(SSL *);
 
 void main() {
-  send_status(0);
+    int value;
+    value = get_command();
+    printf("%i\n",value);
 }
 
-void send_status(int value) {
+int get_command() {
   X509 *cert = NULL;
   const SSL_METHOD *method;
   SSL_CTX *ctx;
   SSL *ssl;
   int server = 0;
+  int value;
 
   OpenSSL_add_all_algorithms();
   SSL_load_error_strings();
@@ -62,11 +66,12 @@ void send_status(int value) {
   if (cert == NULL && debug)
     printf("Error: Could not get a certificate from: %s.\n", hostname);
 
-  send_data(value, ssl);
+  value = get_data(ssl);
 
   SSL_free(ssl);
   close(server);
   SSL_CTX_free(ctx);
+  return value;
 }
 
 int create_socket() {
@@ -94,16 +99,18 @@ int create_socket() {
   return sockfd;
 }
 
-void send_data(int value, SSL *ssl) {
+int get_data(SSL *ssl) {
   char *message_fmt = "POST /api/graphql HTTP/1.0\r\nContent-Type: application/json\r\nContent-Length: %i\r\nAuthorization: BEARER %s\r\n\r\n%s";
-  char *content_fmt = "{ \"query\": \"%s\", \"variables\": { \"name\": \"%s\", \"on\": %s }}\r\n";
-  char *query = "mutation ($name: String!, $on: Boolean!) {setSwitchStatus(name: $name, on: $on) {on}}";
+  char *content_fmt = "{ \"query\": \"%s\", \"variables\": { \"name\": \"%s\"}}\r\n";
+  char *query = "query ($name: String!) {getSwitchCommand(name: $name)}";
   struct hostent *server;
   struct sockaddr_in serv_addr;
   int sockfd, bytes, sent, received, total;
   char message[1024], content[1024],response[4096];
-  if (value==0) sprintf(content, content_fmt, query, sw, "false");
-    else sprintf(content, content_fmt, query, sw, "true");
+  int value;
+  char *str, *strend;
+
+  sprintf(content, content_fmt, query, sw);
   sprintf(message, message_fmt, strlen(content), token, content);
 
   if (debug) printf("sending data\n%s", message);
@@ -133,4 +140,14 @@ void send_data(int value, SSL *ssl) {
       received+=bytes;
   } while (received < total);
   if (debug) printf("Response:\n%s\n",response);
+
+  // crude strin manipulation to find correct infromation...
+  str = strstr(response, "getSwitchCommand");
+  str = strstr(str, ":")+1;
+  strend = strstr(str, "}");
+  strend[0] = '\0';
+  for(int i = 0; str[i]; i++) str[i] = tolower(str[i]);
+  if (debug) printf("----\nResponse: %s\n", str);
+
+  return strstr(str,"true")!=0;
 }
