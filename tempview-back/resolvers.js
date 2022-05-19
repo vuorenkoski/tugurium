@@ -416,6 +416,14 @@ const setSwitchCommand = async (root, args, context) => {
   return sw
 }
 
+const getSwitchCommand = async (root, args, context) => {
+  if (context.token !== SENSOR_TOKEN) {
+    throw new AuthenticationError('Not authorized')
+  }
+  const sw = await Switch.findOne({ where: { name: args.name } })
+  return sw.dataValues.command
+}
+
 const setSwitchStatus = async (root, args, context) => {
   if (context.token !== SENSOR_TOKEN) {
     throw new AuthenticationError('Not authorized')
@@ -442,6 +450,7 @@ const resolvers = {
     allImages,
     allSwitches,
     getFirstTimestamp,
+    getSwitchCommand,
   },
   Mutation: {
     addMeasurement,

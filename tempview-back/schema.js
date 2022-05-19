@@ -74,6 +74,7 @@ const typeDefs = gql`
     ): [Sensor]
     currentSensorData: [Measurement]
     getFirstTimestamp: Int!
+    getSwitchCommand(name: String!): Boolean
   }
 
   type Token {
@@ -110,7 +111,6 @@ const typeDefs = gql`
       id: Int!
     ): Switch
     deleteSwitch(id: Int!): Switch
-    setSwitch(id: Int!, on: Boolean): Switch
     setSwitchCommand(id: Int!, command: Boolean): Switch
     setSwitchStatus(name: String!, on: Boolean!): Switch
   }
