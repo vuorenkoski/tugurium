@@ -112,7 +112,11 @@ const typeDefs = gql`
     deleteSwitch(id: Int!): Switch
     setSwitch(id: Int!, on: Boolean): Switch
     setSwitchCommand(id: Int!, command: Boolean): Switch
-    setSwitchStatus(name: String!, on: Boolean): Switch
+    setSwitchStatus(name: String!, on: Boolean!): Switch
+  }
+
+  type Subscription {
+    statusChanged: Switch!
   }
 `
 

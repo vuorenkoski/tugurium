@@ -1,6 +1,6 @@
 import { Table, Row, Col, Button } from 'react-bootstrap'
-import { useQuery, useMutation } from '@apollo/client'
-import { ALL_SWITCHES, SET_SWITCH_COMMAND } from '../queries'
+import { useQuery, useMutation, useSubscription } from '@apollo/client'
+import { ALL_SWITCHES, SET_SWITCH_COMMAND, STATUS_CHANGED } from '../queries'
 import { convertDate } from '../util/conversions'
 
 const SwitchesView = () => {
@@ -11,6 +11,8 @@ const SwitchesView = () => {
   const [setSwitch] = useMutation(SET_SWITCH_COMMAND, {
     refetchQueries: [{ query: ALL_SWITCHES }],
   })
+
+  useSubscription(STATUS_CHANGED)
 
   const handleClick = async (sw) => {
     console.log(sw)

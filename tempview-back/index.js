@@ -3,9 +3,11 @@ const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const http = require('http')
-var cors = require('cors')
-
+const cors = require('cors')
 const { Sequelize } = require('sequelize')
+const { execute, subscribe } = require('graphql')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+
 const { connectToDatabase } = require('./util/db')
 const { User, Image } = require('./models')
 
@@ -109,10 +111,33 @@ const start = async () => {
 
   const schema = makeExecutableSchema({ typeDefs, resolvers })
 
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+    },
+    {
+      server: httpServer,
+      path: '',
+    }
+  )
+
   const server = new ApolloServer({
     schema,
     context: checkToken,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close()
+            },
+          }
+        },
+      },
+    ],
   })
 
   await server.start()

@@ -1,6 +1,7 @@
 // Fetches most recent obaservation data from FMI open data API
+//
 // Röykkä fmisid=101149 (temperature, snow depth and 1h rain)
-// Maasoja fmisid= (wind speed)
+// Maasoja fmisid=100976 (wind speed)
 
 const { Sensor, Measurement } = require('./models')
 
@@ -20,6 +21,7 @@ const optionsMaasoja = {
   path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=100976&parameters=ws_10min&timestep=60',
 }
 
+// define sensornames in database
 const nameConversion = {
   r_1h: 'FRVI',
   temperature: 'FTVI',

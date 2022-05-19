@@ -7,9 +7,13 @@ import {
   HttpLink,
   InMemoryCache,
   ApolloProvider,
+  split,
 } from '@apollo/client'
 
-const { BACKEND_URL } = require('./util/config')
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/client/link/ws'
+
+const { BACKEND_URL, WEBSOCKET_URL } = require('./util/config')
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('tempview-user-token')
@@ -21,13 +25,32 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+const httpLink = new HttpLink({
+  uri: BACKEND_URL + '/graphql',
+})
+
+const wsLink = new WebSocketLink({
+  uri: WEBSOCKET_URL,
+  options: {
+    reconnect: true,
+  },
+})
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  authLink.concat(httpLink)
+)
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: authLink.concat(
-    new HttpLink({
-      uri: BACKEND_URL + '/graphql',
-    })
-  ),
+  link: splitLink,
 })
 
 ReactDOM.render(

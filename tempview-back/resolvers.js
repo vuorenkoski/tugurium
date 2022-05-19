@@ -3,6 +3,8 @@ const { Op, QueryTypes } = require('sequelize')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
 
 const { sequelize } = require('./util/db')
 const { Sensor, Measurement, User, Image, Switch } = require('./models')
@@ -421,7 +423,9 @@ const setSwitchStatus = async (root, args, context) => {
 
   const sw = await Switch.findOne({ where: { name: args.name } })
   sw.on = args.on
+  sw.command = args.on
   await sw.save()
+  pubsub.publish('STATUS_CHANGED', { statusChanged: sw })
   return sw
 }
 
@@ -455,6 +459,11 @@ const resolvers = {
     deleteSwitch,
     setSwitchCommand,
     setSwitchStatus,
+  },
+  Subscription: {
+    statusChanged: {
+      subscribe: () => pubsub.asyncIterator(['STATUS_CHANGED']),
+    },
   },
 }
 

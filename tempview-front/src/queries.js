@@ -290,3 +290,15 @@ export const SET_SWITCH_COMMAND = gql`
     }
   }
 `
+
+export const STATUS_CHANGED = gql`
+  subscription {
+    statusChanged {
+      id
+      description
+      command
+      on
+      updatedAt
+    }
+  }
+`

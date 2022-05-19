@@ -15,7 +15,7 @@
 | 13.5. | 8     | monthly data view (this was a battle...), automatic x10 or /10 scale to timeseries -view, to apollo-express-server, image loading, varia-view |
 | 16.5. | 6     | dt images, get+post images, images to postgre                                                                                                 |
 | 18.5. | 8     | c-code for https, lakedata view fixed, fixes to yearview&timeseries, fix stats if 0 datapoints, full image view, automatic frst year          |
-| 19.5. |       | swtiches implemented,                                                                                                                         |
+| 19.5. |       | swtiches implemented, c-code for sending switch status, graphql subscription                                                                  |
 | total | 99    |                                                                                                                                               |
 
 ## Product backlog
