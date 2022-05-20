@@ -158,16 +158,29 @@ const sensorStats = async (root, args, context) => {
     throw new AuthenticationError('Not authorized')
   }
 
+  // THIS WAS VERY SLOW, ABOUT 15 seconds in RPI2
+  //
+  // const sensors = await sequelize.query(
+  //   `SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor.id AS "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname",
+  //   sensor.sensor_unit AS "sensor.sensorUnit", sensor.agrmethod AS "sensor.agrmethod"
+  //   FROM measurements AS measurement
+  //   FULL JOIN sensors AS sensor ON measurement.sensor_id = sensor.id GROUP BY sensor.id `,
+  //   {
+  //     type: QueryTypes.SELECT,
+  //     nest: true,
+  //   }
+  // )
+
   const sensors = await sequelize.query(
-    `SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor.id AS "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname", 
-    sensor.sensor_unit AS "sensor.sensorUnit", sensor.agrmethod AS "sensor.agrmethod" 
-    FROM measurements AS measurement 
-    FULL JOIN sensors AS sensor ON measurement.sensor_id = sensor.id GROUP BY sensor.id `,
+    `SELECT count, "firstTimestamp", sensor.id as "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname"
+    FROM (SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor_id FROM measurements  
+    GROUP BY sensor_id) AS measurement INNER JOIN sensors AS sensor ON sensor.id=measurement.sensor_id`,
     {
       type: QueryTypes.SELECT,
       nest: true,
     }
   )
+
   return sensors
 }
 
