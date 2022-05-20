@@ -44,65 +44,57 @@ const App = () => {
     sensorList = sensors.data.allSensors
   }
 
-  const linkStyle = {
-    textDecoration: 'none',
-    color: 'white',
-  }
-
   return (
     <div className="container">
       <Router>
-        <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
+        <Navbar
+          collapseOnSelect
+          expand="lg"
+          variant="dark"
+          bg="dark"
+          className="p-3"
+        >
           <NavbarBrand className="text-white">TEMPVIEW</NavbarBrand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="#" as="span">
-                <Link to="/" style={linkStyle}>
+                <Link to="/" className="menuitem">
                   Mittaukset nyt
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/timeseries" style={linkStyle}>
+                <Link to="/timeseries" className="menuitem">
                   Aikasarjat
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/annual" style={linkStyle}>
+                <Link to="/annual" className="menuitem">
                   Vuosivertailu
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/images" style={linkStyle}>
+                <Link to="/images" className="menuitem">
                   Kamerat
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/switches" style={linkStyle}>
+                <Link to="/switches" className="menuitem">
                   Kytkimet
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/statistics" style={linkStyle}>
+                <Link to="/statistics" className="menuitem">
                   Tilastoja
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/settings" style={linkStyle}>
+                <Link to="/settings" className="menuitem">
                   Asetukset
                 </Link>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <button
-                  style={{
-                    color: 'white',
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    font: 'inherit',
-                  }}
-                  onClick={logout}
-                >
+                <button className="menuitem" onClick={logout}>
                   logout
                 </button>
               </Nav.Link>

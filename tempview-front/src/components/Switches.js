@@ -95,10 +95,14 @@ const Switches = () => {
   }
 
   return (
-    <Row className="p-4 pb-0">
-      <h2>Kytkimet</h2>
-      <Col className="col-8">
-        <Row>
+    <div>
+      <Row className="p-4 pb-1">
+        <Col>
+          <h2>Kytkimet</h2>
+        </Col>
+      </Row>
+      <Row className="p-4 pt-1 pb-1">
+        <Col className="col-auto">
           <Table striped>
             <tbody>
               <tr>
@@ -120,13 +124,7 @@ const Switches = () => {
                     <td>{a.id}</td>
                     <td>
                       <Button
-                        style={{
-                          color: 'red',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="removeButton"
                         onClick={() => handleDeleteSwitch(a.id)}
                       >
                         poista
@@ -134,13 +132,7 @@ const Switches = () => {
                     </td>
                     <td>
                       <Button
-                        style={{
-                          color: 'blue',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="updateButton"
                         onClick={() => handleUpdateSwitch(a.id)}
                       >
                         päivitä
@@ -150,64 +142,71 @@ const Switches = () => {
                 ))}
             </tbody>
           </Table>
+        </Col>
+      </Row>
+      {!displaySwitchForm && (
+        <Row className="p-4 pt-1 pb-1">
+          <Col>
+            <Button onClick={() => handleNewSwitch()}>Lisää uusi</Button>
+          </Col>
         </Row>
+      )}
 
-        {displaySwitchForm && (
-          <div>
-            <Row className="align-items-end">
-              <Col className="col-2">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Nimi</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={name}
-                      onChange={({ target }) => setName(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-3">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Kuvaus</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={description}
-                      onChange={({ target }) => setDescription(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-3">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Komentotiedosto</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={commandFile}
-                      onChange={({ target }) => setCommandFile(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={handleSubmitSwitch}>päivitä/lisää</Button>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={closeSwitchForm}>peruuta</Button>
-              </Col>
-            </Row>
-          </div>
-        )}
-        {!displaySwitchForm && (
-          <Button onClick={() => handleNewSwitch()}>Lisää uusi</Button>
-        )}
-        <Row className="p-4" style={{ color: 'red' }}>
-          {errorMessage}
-        </Row>
-      </Col>
-    </Row>
+      {displaySwitchForm && (
+        <div>
+          <Row className="p-4 pt-1 pb-1">
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Nimi</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={name}
+                    onChange={({ target }) => setName(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Kuvaus</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={description}
+                    onChange={({ target }) => setDescription(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Komentotiedosto</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={commandFile}
+                    onChange={({ target }) => setCommandFile(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
+          <Row className="p-4 pt-1 pb-1">
+            <Col className="col-auto">
+              <Button onClick={handleSubmitSwitch}>päivitä/lisää</Button>
+            </Col>
+            <Col className="col-auto">
+              <Button onClick={closeSwitchForm}>peruuta</Button>
+            </Col>
+          </Row>
+        </div>
+      )}
+
+      <Row className="p-4">
+        <Col className="errorMessage">{errorMessage}</Col>
+      </Row>
+    </div>
   )
 }
 

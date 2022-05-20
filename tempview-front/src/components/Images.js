@@ -86,10 +86,14 @@ const Images = () => {
   }
 
   return (
-    <Row className="p-4 pb-0">
-      <h2>Kamerat</h2>
-      <Col className="col-8">
-        <Row>
+    <div>
+      <Row className="p-4 pb-1">
+        <Col>
+          <h2>Kamerat</h2>
+        </Col>
+      </Row>
+      <Row className="p-4 pt-1 pb-1">
+        <Col className="col-auto">
           <Table striped>
             <tbody>
               <tr>
@@ -109,13 +113,7 @@ const Images = () => {
                     <td>{a.id}</td>
                     <td>
                       <Button
-                        style={{
-                          color: 'red',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="removeButton"
                         onClick={() => handleDeleteImage(a.id)}
                       >
                         poista
@@ -123,13 +121,7 @@ const Images = () => {
                     </td>
                     <td>
                       <Button
-                        style={{
-                          color: 'blue',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="updateButton"
                         onClick={() => handleUpdateImage(a.id)}
                       >
                         päivitä
@@ -139,52 +131,55 @@ const Images = () => {
                 ))}
             </tbody>
           </Table>
-        </Row>
+        </Col>
+      </Row>
 
-        {displayImageForm && (
-          <div>
-            <Row className="align-items-end">
-              <Col className="col-2">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Nimi</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={name}
-                      onChange={({ target }) => setName(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-4">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Kuvaus</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={description}
-                      onChange={({ target }) => setDescription(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={handleSubmitImage}>päivitä/lisää</Button>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={closeImageForm}>peruuta</Button>
-              </Col>
-            </Row>
-          </div>
-        )}
-        {!displayImageForm && (
-          <Button onClick={() => handleNewImage()}>Lisää uusi</Button>
-        )}
-        <Row className="p-4" style={{ color: 'red' }}>
-          {errorMessage}
+      {!displayImageForm && (
+        <Row className="p-4 pt-1 pb-1">
+          <Col>
+            <Button onClick={() => handleNewImage()}>Lisää uusi</Button>
+          </Col>
         </Row>
-      </Col>
-    </Row>
+      )}
+
+      {displayImageForm && (
+        <Row className="p-4 pt-1 pb-1 align-items-end">
+          <Col className="col-auto">
+            <Form>
+              <Form.Group>
+                <Form.Label>Nimi</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={name}
+                  onChange={({ target }) => setName(target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col className="col-auto">
+            <Form>
+              <Form.Group>
+                <Form.Label>Kuvaus</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={description}
+                  onChange={({ target }) => setDescription(target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col className="col-auto">
+            <Button onClick={handleSubmitImage}>päivitä/lisää</Button>
+          </Col>
+          <Col className="col-auto">
+            <Button onClick={closeImageForm}>peruuta</Button>
+          </Col>
+        </Row>
+      )}
+      <Row className="p-4">
+        <Col className="errorMessage">{errorMessage}</Col>
+      </Row>
+    </div>
   )
 }
 

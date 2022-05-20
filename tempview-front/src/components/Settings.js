@@ -1,4 +1,4 @@
-import { Row } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import { useQuery } from '@apollo/client'
 import Sensors from './Sensors'
 import Users from './Users'
@@ -16,12 +16,20 @@ const Settings = () => {
       <Sensors />
       <Images />
       <Switches />
-      <Row className="p-4 pb-0">
-        <h2>Sensorien/kameroiden/kytkimien token</h2>
+      <Row className="p-4 pb-1">
+        <Col>
+          <h2>Sensorien/kameroiden/kytkimien token</h2>
+        </Col>
+      </Row>
+      <Row className="p-4 pt-1">
         {sensorToken.data && (
-          <p style={{ fontFamily: 'monospace' }}>
-            {sensorToken.data.sensorToken.value}
-          </p>
+          <Col className="col-auto">
+            <div className="tokenText">
+              {sensorToken.data.sensorToken.value.match(/.{1,40}/g).map((s) => (
+                <div key={s}>{s}</div>
+              ))}
+            </div>
+          </Col>
         )}
       </Row>
     </div>

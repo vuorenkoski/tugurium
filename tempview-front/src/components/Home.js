@@ -11,13 +11,15 @@ const Home = () => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Viimeisimmät lämpötilat</h2>
+        <Col>
+          <h2>Viimeisimmät lämpötilat</h2>
+        </Col>
       </Row>
 
       <Row className="p-4">
         {!sensors.data && <p>Lataa tietoja...</p>}
 
-        <Col className="col-6">
+        <Col className="col-auto">
           {sensors.data && (
             <Table striped>
               <tbody>

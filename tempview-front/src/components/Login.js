@@ -31,10 +31,10 @@ const Login = ({ setToken }) => {
   return (
     <div>
       <Row className="p-4">
-        <Col className="col-4">
+        <Col className="col-auto">
           <h2>Login</h2>
           <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3" controlId="formBasicText">
+            <Form.Group className="mb-3">
               <Form.Label>Käyttäjänimi</Form.Label>
               <Form.Control
                 type="text"
@@ -44,7 +44,7 @@ const Login = ({ setToken }) => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Group className="mb-3">
               <Form.Label>Salasana</Form.Label>
               <Form.Control
                 type="password"

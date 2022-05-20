@@ -25,13 +25,15 @@ const SwitchesView = () => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Kytkimet</h2>
+        <Col>
+          <h2>Kytkimet</h2>
+        </Col>
       </Row>
 
       <Row className="p-4">
         {!switches.data && <p>Lataa tietoja...</p>}
 
-        <Col className="col-6">
+        <Col className="col-auto">
           {switches.data && (
             <Table striped>
               <tbody>

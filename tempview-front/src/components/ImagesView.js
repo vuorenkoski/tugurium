@@ -50,12 +50,15 @@ const ImagesView = () => {
   return (
     <div>
       {showImage && <ShowImage image={showImage} setShowImage={setShowImage} />}
-
       <Row className="p-4">
-        <h2>Kuvat</h2>
+        <Col>
+          <h2>Kamerat</h2>
+        </Col>
+      </Row>
+      <Row>
         {images &&
           images.map((im) => (
-            <Col key={im.name} className="col-6">
+            <Col key={im.name} className="col-auto p-4">
               {im.data && (
                 <img
                   src={im.data}

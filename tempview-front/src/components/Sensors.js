@@ -103,10 +103,14 @@ const Sensors = () => {
   }
 
   return (
-    <Row className="p-4 pb-0">
-      <h2>Sensorit</h2>
-      <Col className="col-8">
-        <Row>
+    <div>
+      <Row className="p-4 pb-1">
+        <Col>
+          <h2>Sensorit</h2>
+        </Col>
+      </Row>
+      <Row className="p-4 pt-1 pb-1">
+        <Col className="col-auto">
           <Table striped>
             <tbody>
               <tr>
@@ -128,13 +132,7 @@ const Sensors = () => {
                     <td>{a.id}</td>
                     <td>
                       <Button
-                        style={{
-                          color: 'red',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="removeButton"
                         onClick={() => handeDeleteSensor(a.id)}
                       >
                         poista
@@ -142,13 +140,7 @@ const Sensors = () => {
                     </td>
                     <td>
                       <Button
-                        style={{
-                          color: 'blue',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="updateButton"
                         onClick={() => handleUpdateSensor(a.id)}
                       >
                         päivitä
@@ -158,78 +150,83 @@ const Sensors = () => {
                 ))}
             </tbody>
           </Table>
-        </Row>
+        </Col>
+      </Row>
 
-        {displaySensorForm && (
-          <div>
-            <Row className="align-items-end">
-              <Col className="col-2">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Nimi</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={sensorName}
-                      onChange={({ target }) => setSensorName(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-4">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Kuvaus</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={sensorFullname}
-                      onChange={({ target }) => setSensorFullname(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-2">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Mittayksikkö</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={sensorUnit}
-                      onChange={({ target }) => setSensorUnit(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-2">
-                <Form.Select
-                  onChange={handleAgrChange.bind(this)}
-                  defaultValue={agrmethod}
-                >
-                  {AGGREGATE_METHODS.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
-              </Col>
-            </Row>
-            <Row className="p-2">
-              <Col className="text-end">
-                <Button onClick={closeSensorForm}>peruuta</Button>
-              </Col>
-            </Row>
-          </div>
-        )}
-        {!displaySensorForm && (
-          <Button onClick={() => handleNewSensor()}>Lisää uusi</Button>
-        )}
-        <Row className="p-4" style={{ color: 'red' }}>
-          {errorMessage}
+      {!displaySensorForm && (
+        <Row className="p-4 pt-1 pb-1">
+          <Col>
+            <Button onClick={() => handleNewSensor()}>Lisää uusi</Button>
+          </Col>
         </Row>
-      </Col>
-    </Row>
+      )}
+
+      {displaySensorForm && (
+        <div>
+          <Row className="p-4 pt-1 pb-1">
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Nimi</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={sensorName}
+                    onChange={({ target }) => setSensorName(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Kuvaus</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={sensorFullname}
+                    onChange={({ target }) => setSensorFullname(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col className="col-auto p-2">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Mittayksikkö</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={sensorUnit}
+                    onChange={({ target }) => setSensorUnit(target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+            <Col className="col-auto p-2">
+              <Form.Select
+                onChange={handleAgrChange.bind(this)}
+                defaultValue={agrmethod}
+              >
+                {AGGREGATE_METHODS.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col>
+          </Row>
+          <Row className="p-4 pt-1 pb-1">
+            <Col className="col-auto">
+              <Button onClick={handleSubmitSensor}>päivitä/lisää</Button>
+            </Col>
+            <Col className="col-auto">
+              <Button onClick={closeSensorForm}>peruuta</Button>
+            </Col>
+          </Row>
+        </div>
+      )}
+      <Row className="p-4">
+        <Col className="errorMessage">{errorMessage}</Col>
+      </Row>
+    </div>
   )
 }
 

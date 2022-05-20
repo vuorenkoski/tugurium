@@ -16,11 +16,11 @@
 | 16.5. | 6     | dt images, get+post images, images to postgre                                                                                                 |
 | 18.5. | 8     | c-code for https, lakedata view fixed, fixes to yearview&timeseries, fix stats if 0 datapoints, full image view, automatic frst year          |
 | 19.5. | 8     | switches implemented, c-code for sending switch status, graphql subscription, getCommand route and c-code to retrieve it, refactoring         |
+| 20.5. |       | Comprehensive bootstrap structure refactoring, working in different screen sizes, css-file                                                    |
 | total | 107   |                                                                                                                                               |
 
 ## Product backlog
 
-- testataan läppärillä, tabletilla ja kännykällä
 - voiko sql scheemaa nopeuttaa countin osalta?
 - testit
 - android sovellus

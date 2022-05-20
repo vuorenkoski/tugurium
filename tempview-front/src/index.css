@@ -1,0 +1,52 @@
+.menuitem {
+  text-decoration-line: none;
+  color: lightgray;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.menuitem:hover {
+  text-decoration-line: none;
+  color: white;
+}
+
+.removeButton {
+  color: darkred;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.removeButton:hover {
+  color: black;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.updateButton {
+  color: darkblue;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.updateButton:hover {
+  color: black;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+}
+
+.tokenText {
+  font-family: monospace;
+}
+
+.errorMessage {
+  color: red;
+}

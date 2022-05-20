@@ -54,10 +54,14 @@ const Users = () => {
   }
 
   return (
-    <Row className="p-4 pb-0">
-      <h2>Käyttäjät</h2>
-      <Col className="col-8">
-        <Row>
+    <div>
+      <Row className="p-4 pb-1">
+        <Col>
+          <h2>Käyttäjät</h2>
+        </Col>
+      </Row>
+      <Row className="p-4 pt-1 pb-1">
+        <Col className="col-auto">
           <Table striped>
             <tbody>
               <tr>
@@ -74,13 +78,7 @@ const Users = () => {
                     <td>{a.id}</td>
                     <td>
                       <button
-                        style={{
-                          color: 'red',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          font: 'inherit',
-                        }}
+                        className="removeButton"
                         onClick={() => handeDeleteUser(a.id)}
                       >
                         poista
@@ -90,52 +88,55 @@ const Users = () => {
                 ))}
             </tbody>
           </Table>
-        </Row>
+        </Col>
+      </Row>
 
-        {displayUserForm && (
-          <div>
-            <Row className="align-items-end">
-              <Col className="col-2">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Käyttäjänimi</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={username}
-                      onChange={({ target }) => setUsername(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-4">
-                <Form>
-                  <Form.Group>
-                    <Form.Label>Salasana</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={password}
-                      onChange={({ target }) => setPasssword(target.value)}
-                    />
-                  </Form.Group>
-                </Form>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={handleSubmitUser}>lisää</Button>
-              </Col>
-              <Col className="col-2">
-                <Button onClick={closeUserForm}>peruuta</Button>
-              </Col>
-            </Row>
-          </div>
-        )}
-        {!displayUserForm && (
-          <Button onClick={() => handeCreateUser()}>Lisää uusi</Button>
-        )}
-        <Row className="p-4" style={{ color: 'red' }}>
-          {errorMessage}
+      {!displayUserForm && (
+        <Row className="p-4 pt-1 pb-1">
+          <Col>
+            <Button onClick={() => handeCreateUser()}>Lisää uusi</Button>
+          </Col>
         </Row>
-      </Col>
-    </Row>
+      )}
+
+      {displayUserForm && (
+        <Row className="p-4 pt-1 pb-1 align-items-end">
+          <Col className="col-auto">
+            <Form>
+              <Form.Group>
+                <Form.Label>Käyttäjänimi</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col className="col-auto">
+            <Form>
+              <Form.Group>
+                <Form.Label>Salasana</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={password}
+                  onChange={({ target }) => setPasssword(target.value)}
+                />
+              </Form.Group>
+            </Form>
+          </Col>
+          <Col className="col-auto">
+            <Button onClick={handleSubmitUser}>lisää</Button>
+          </Col>
+          <Col className="col-auto">
+            <Button onClick={closeUserForm}>peruuta</Button>
+          </Col>
+        </Row>
+      )}
+      <Row className="p-4">
+        <Col className="errorMessage">{errorMessage}</Col>
+      </Row>
+    </div>
   )
 }
 

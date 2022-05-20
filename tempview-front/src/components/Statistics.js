@@ -71,15 +71,20 @@ const Statistics = () => {
   return (
     <div>
       <Row className="p-4">
-        <h2>Tilastoja</h2>
+        <Col>
+          <h2>Tilastoja</h2>
+        </Col>
       </Row>
 
-      <Row className="p-4">
-        <h3>Sensorien datapisteiden määrät ja alkupäivä</h3>
-        {!sensors.data && <p>Ladataan...</p>}
+      <Row className="p-4 pb-2 pt-0">
+        <h4>Sensorien datapisteiden määrät ja alkupäivä</h4>
+      </Row>
 
-        <Col className="col-6">
-          {sensors.data && (
+      <Row className="p-4 pt-0">
+        {!sensors.data && <Col>Ladataan...</Col>}
+
+        {sensors.data && (
+          <Col className="col-auto">
             <Table striped>
               <tbody>
                 <tr>
@@ -101,108 +106,113 @@ const Statistics = () => {
                       sensors.data.sensorStats.reduce((p, c) => p + c.count, 0)
                     )}
                   </td>
+                  <td></td>
                 </tr>
               </tbody>
             </Table>
-          )}
+          </Col>
+        )}
+      </Row>
+      <Row className="p-4 pt-2 pb-2">
+        <Col>
+          <h4>Sensorin datapisteiden määrät vuorokaudessa</h4>
         </Col>
       </Row>
-      <Row className="p-4">
-        <h3>Sensorin datapisteiden määrät vuorokaudessa</h3>
-        {!sensors.data && <p>Ladataan...</p>}
+      <Row className="p-4 pt-0">
+        {!sensors.data && <Col>Ladataan...</Col>}
         {sensors.data && (
-          <Row className="p-2">
-            <Col className="col-3">
-              <Form>
-                <Form.Select
-                  onChange={handleSensorChange.bind(this)}
-                  defaultValue="empty"
-                >
-                  <option disabled value="empty">
-                    -- valitse --
+          <Col className="col-auto">
+            <Form>
+              <Form.Select
+                onChange={handleSensorChange.bind(this)}
+                defaultValue="empty"
+              >
+                <option disabled value="empty">
+                  -- valitse --
+                </option>
+                {sensors.data.sensorStats.map((s) => (
+                  <option key={s.sensor.sensorName} value={s.sensor.sensorName}>
+                    {s.sensor.sensorFullname}
                   </option>
-                  {sensors.data.sensorStats.map((s) => (
-                    <option
-                      key={s.sensor.sensorName}
-                      value={s.sensor.sensorName}
-                    >
-                      {s.sensor.sensorFullname}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form>
-            </Col>
-          </Row>
+                ))}
+              </Form.Select>
+            </Form>
+          </Col>
         )}
+      </Row>
+
+      <Row>
         {measurements && measurements.length > 0 && (
           <div>
-            <VictoryChart
-              width={900}
-              height={300}
-              theme={VictoryTheme.material}
-              domain={{
-                y: [0, measurements.reduce((p, c) => Math.max(p, c.y), 0)],
-              }}
-              scale={{ x: 'time' }}
-              containerComponent={
-                <VictoryZoomContainer
-                  responsive={false}
-                  zoomDimension="x"
-                  zoomDomain={zoomDomain}
-                  onZoomDomainChange={handleZoom.bind(this)}
+            <Col className="col-auto">
+              <VictoryChart
+                width={1200}
+                height={400}
+                theme={VictoryTheme.material}
+                domain={{
+                  y: [0, measurements.reduce((p, c) => Math.max(p, c.y), 0)],
+                }}
+                scale={{ x: 'time' }}
+                containerComponent={
+                  <VictoryZoomContainer
+                    zoomDimension="x"
+                    zoomDomain={zoomDomain}
+                    onZoomDomainChange={handleZoom.bind(this)}
+                  />
+                }
+              >
+                <VictoryAxis
+                  dependentAxis
+                  crossAxis={false}
+                  label="lukumäärä"
+                  style={{
+                    axisLabel: { fontSize: 20, padding: 30 },
+                    tickLabels: { fontSize: 20, padding: 0 },
+                  }}
                 />
-              }
-            >
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                label="lukumäärä"
-                style={{
-                  axisLabel: { fontSize: 20, padding: 35 },
-                  tickLabels: { fontSize: 15, padding: 0 },
-                }}
-              />
-              <VictoryAxis
-                offsetY={50}
-                tickCount={10}
-                label="Aika"
-                style={{
-                  axisLabel: { fontSize: 20, padding: 30 },
-                  tickLabels: { fontSize: 15, padding: 5 },
-                }}
-              />
-              <VictoryLine data={measurements} interpolation="monotoneX" />
-            </VictoryChart>
-            <VictoryChart
-              width={900}
-              height={90}
-              scale={{ x: 'time' }}
-              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-              containerComponent={
-                <VictoryBrushContainer
-                  responsive={false}
-                  brushDimension="x"
-                  brushDomain={selectedDomain}
-                  onBrushDomainChange={handleBrush.bind(this)}
+                <VictoryAxis
+                  offsetY={50}
+                  tickCount={10}
+                  label="Aika"
+                  style={{
+                    axisLabel: { fontSize: 20, padding: 30 },
+                    tickLabels: { fontSize: 20, padding: 5 },
+                  }}
                 />
-              }
-            >
-              <VictoryAxis
-                dependentAxis
-                domain={[0, 100]}
-                standalone={false}
-                style={{
-                  axis: { stroke: 'transparent' },
-                  ticks: { stroke: 'transparent' },
-                  tickLabels: { fill: 'transparent' },
-                }}
-              />
-              <VictoryLine
-                data={measurements}
-                interpolation="monotoneX"
-                style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
-              />
-            </VictoryChart>
+                <VictoryLine data={measurements} interpolation="monotoneX" />
+              </VictoryChart>
+            </Col>
+            <Col className="col-auto ">
+              <VictoryChart
+                width={1200}
+                height={120}
+                scale={{ x: 'time' }}
+                padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                containerComponent={
+                  <VictoryBrushContainer
+                    brushDimension="x"
+                    brushDomain={selectedDomain}
+                    onBrushDomainChange={handleBrush.bind(this)}
+                  />
+                }
+              >
+                <VictoryAxis
+                  dependentAxis
+                  domain={[0, 100]}
+                  standalone={false}
+                  style={{
+                    axis: { stroke: 'transparent' },
+                    ticks: { stroke: 'transparent' },
+                    tickLabels: { fill: 'transparent' },
+                  }}
+                />
+                <VictoryLine
+                  data={measurements}
+                  interpolation="monotoneX"
+                  style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
+                />
+              </VictoryChart>
+            </Col>
           </div>
         )}
         {measurements && measurements.length === 0 && (

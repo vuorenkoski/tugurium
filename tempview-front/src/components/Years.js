@@ -118,7 +118,6 @@ const groupByYear = (measurements, firstTimestamp) => {
   }
   // include only years with data
   graphData = graphData.filter((d) => d.measurements.length > 0)
-  // setYears(data.daily.graphData.map((d) => d.year))
   return { min, max, graphData }
 }
 
@@ -163,7 +162,8 @@ const Years = () => {
   }, [firstTimestamp, sensorData])
 
   const handleSensorChange = (e) => {
-    setSelectedSensor(e.target.id)
+    setSelectedSensor(e.target.value)
+    setSelectedDomain({})
     setZoomDomain({})
     setData(null)
   }
@@ -191,168 +191,207 @@ const Years = () => {
   return (
     <div>
       <Row className="p-4 pb-0">
-        <h2>Vuosien välinen vertailu (päivän keskiarvo)</h2>
+        <Col>
+          <h2>Vuosien välinen vertailu (päivän keskiarvo)</h2>
+        </Col>
       </Row>
-      <Row className="p-4">
-        <Col className="col-3">
-          <Form>
-            <Row className="p-2">
-              <h3>Sensorit</h3>
-              {sensors.data &&
-                sensors.data.allSensors.map((s) => (
-                  <div key={s.sensorName}>
+      <Row className="p-4 pt-0 pb-0">
+        <Form>
+          <Col>
+            <Row>
+              <Col className="col-auto border rounded m-3 p-3">
+                <Row className="align-items-center">
+                  <Col className="col-auto">
+                    <h4>Sensori</h4>
+                  </Col>
+                  <Col className="col-auto">
+                    <Form.Select
+                      onChange={handleSensorChange.bind(this)}
+                      defaultValue="empty"
+                    >
+                      <option disabled value="empty">
+                        -- valitse --
+                      </option>
+                      {sensors.data &&
+                        sensors.data.allSensors.map((s) => (
+                          <option key={s.sensorName} value={s.sensorName}>
+                            {s.sensorFullname}
+                          </option>
+                        ))}
+                    </Form.Select>
+                  </Col>
+                </Row>
+              </Col>
+              <Col className="col-auto border rounded m-3 p-3">
+                <Row>
+                  <Col>
+                    <h4>Datapisteiden yhdistäminen</h4>
+                  </Col>
+                </Row>
+                <Row className="pt-1">
+                  <Col className="col-auto p-1">
+                    <Form.Check
+                      defaultChecked
+                      type={'radio'}
+                      id={'day'}
+                      label={'Päivä'}
+                      name={'aggregatePeriod'}
+                      defaultValue={'daily'}
+                      onChange={handlePeriodChange.bind(this)}
+                    />
                     <Form.Check
                       type={'radio'}
-                      id={s.sensorName}
-                      label={s.sensorFullname}
-                      name={'sensor'}
-                      defaultValue={false}
-                      onChange={handleSensorChange.bind(this)}
+                      id={'month'}
+                      label={'Kuukausi'}
+                      name={'aggregatePeriod'}
+                      defaultValue={'monthly'}
+                      onChange={handlePeriodChange.bind(this)}
                     />
-                  </div>
-                ))}
+                  </Col>
+                </Row>
+              </Col>
             </Row>
-            <Row className="p-2">
-              <h3>Vuodet</h3>
-              {data &&
-                data.daily.graphData.map((d) => (
-                  <div key={d.year}>
-                    <Form.Check
-                      type={'checkbox'}
-                      id={d.year}
-                      label={d.year}
-                      defaultValue={false}
-                      onChange={handleYearChange.bind(this)}
-                    />
-                  </div>
-                ))}
+            <Row>
+              <Col className="border rounded m-3 p-3">
+                <Row>
+                  <Col>
+                    <h4>Vuodet</h4>
+                  </Col>
+                </Row>
+                <Row className="pt-1">
+                  {data &&
+                    data.daily.graphData.map((d) => (
+                      <Col key={d.year} className="col-auto pr-3">
+                        <Form.Check
+                          type={'checkbox'}
+                          id={d.year}
+                          label={d.year}
+                          defaultValue={false}
+                          onChange={handleYearChange.bind(this)}
+                        />
+                      </Col>
+                    ))}
+                </Row>
+              </Col>
             </Row>
-            <Row className="p-2">
-              <h4>Datapisteiden yhdistäminen</h4>
-              <Form.Check
-                defaultChecked
-                type={'radio'}
-                id={'day'}
-                label={'Päivä'}
-                name={'aggregatePeriod'}
-                defaultValue={'daily'}
-                onChange={handlePeriodChange.bind(this)}
-              />
-              <Form.Check
-                type={'radio'}
-                id={'month'}
-                label={'Kuukausi'}
-                name={'aggregatePeriod'}
-                defaultValue={'monthly'}
-                onChange={handlePeriodChange.bind(this)}
-              />
-            </Row>
-          </Form>
-        </Col>
-        {data && selectedYears.length > 0 && (
-          <Col className="col-9">
-            <VictoryChart
-              width={900}
-              height={600}
-              theme={VictoryTheme.material}
-              domain={{
-                y: [data[period].min, data[period].max],
-              }}
-              scale={{ x: 'time' }}
-              containerComponent={
-                <VictoryZoomContainer
-                  responsive={false}
-                  zoomDimension="x"
-                  zoomDomain={zoomDomain}
-                  onZoomDomainChange={handleZoom.bind(this)}
-                />
-              }
-            >
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                label={data.unit}
-                style={{
-                  axisLabel: { fontSize: 20, padding: 30 },
-                  tickLabels: { fontSize: 15, padding: 5 },
-                }}
-              />
-              <VictoryAxis
-                offsetY={50}
-                tickCount={10}
-                label="Aika"
-                style={{
-                  axisLabel: { fontSize: 20, padding: 30 },
-                  tickLabels: { fontSize: 15, padding: 5 },
-                }}
-              />
-              <VictoryLegend
-                x={700}
-                y={0}
-                orientation="vertical"
-                style={{
-                  border: { stroke: 'black' },
-                  title: { fontSize: 20 },
-                }}
-                data={data.daily.graphData
-                  .filter((d) => selectedYears.includes(d.year))
-                  .map((d, i) => ({
-                    name: d.year,
-                    symbol: { fill: COLORS[i], type: 'square' },
-                  }))}
-              />
-
-              {data[period].graphData
-                .filter((d) => selectedYears.includes(d.year))
-                .map((d, i) => (
-                  <VictoryLine
-                    key={d.year}
-                    data={d.measurements}
-                    interpolation="monotoneX"
-                    name={d.year}
-                    x={'x'}
-                    y={'y'}
-                    style={{ data: { stroke: COLORS[i] } }}
-                  />
-                ))}
-            </VictoryChart>
-            <VictoryChart
-              width={900}
-              height={90}
-              scale={{ x: 'time' }}
-              padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
-              containerComponent={
-                <VictoryBrushContainer
-                  responsive={false}
-                  brushDimension="x"
-                  brushDomain={selectedDomain}
-                  onBrushDomainChange={handleBrush.bind(this)}
-                />
-              }
-            >
-              <VictoryAxis
-                dependentAxis
-                standalone={false}
-                style={{
-                  axis: { stroke: 'transparent' },
-                  ticks: { stroke: 'transparent' },
-                  tickLabels: { fill: 'transparent' },
-                }}
-              />
-              {data[period].graphData
-                .filter((d) => selectedYears.includes(d.year))
-                .map((d) => (
-                  <VictoryLine
-                    key={d.year}
-                    data={d.measurements}
-                    interpolation="monotoneX"
-                    x={'x'}
-                    y={'y'}
-                    style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
-                  />
-                ))}
-            </VictoryChart>
           </Col>
+        </Form>
+      </Row>
+
+      <Row className="p-4 pt-0 border rounded m-3">
+        {data && selectedYears.length > 0 && (
+          <div>
+            <Col className="col-auto ">
+              <VictoryChart
+                theme={VictoryTheme.material}
+                width={1200}
+                height={500}
+                domain={{
+                  y: [data[period].min, data[period].max],
+                }}
+                scale={{ x: 'time' }}
+                containerComponent={
+                  <VictoryZoomContainer
+                    zoomDimension="x"
+                    zoomDomain={zoomDomain}
+                    onZoomDomainChange={handleZoom.bind(this)}
+                  />
+                }
+              >
+                <VictoryAxis
+                  dependentAxis
+                  crossAxis={false}
+                  label={data.unit}
+                  style={{
+                    axisLabel: { fontSize: 20, padding: 30 },
+                    tickLabels: { fontSize: 20, padding: 0 },
+                  }}
+                />
+                <VictoryAxis
+                  offsetY={50}
+                  orientation="bottom"
+                  tickCount={10}
+                  label="Aika"
+                  style={{
+                    axisLabel: { fontSize: 20, padding: 30 },
+                    tickLabels: { fontSize: 20, padding: 0 },
+                  }}
+                />
+                <VictoryLegend
+                  orientation="horizontal"
+                  itemsPerRow={5}
+                  gutter={30}
+                  x={20}
+                  y={0}
+                  margin={50}
+                  style={{
+                    border: { stroke: 'none' },
+                    labels: { fontSize: 20 },
+                  }}
+                  data={data.daily.graphData
+                    .filter((d) => selectedYears.includes(d.year))
+                    .map((d, i) => ({
+                      name: d.year,
+                      symbol: { fill: COLORS[i], type: 'square' },
+                    }))}
+                />
+
+                {data[period].graphData
+                  .filter((d) => selectedYears.includes(d.year))
+                  .map((d, i) => (
+                    <VictoryLine
+                      key={d.year}
+                      data={d.measurements}
+                      interpolation="monotoneX"
+                      name={d.year}
+                      x={'x'}
+                      y={'y'}
+                      style={{ data: { stroke: COLORS[i], strokeWidth: 1 } }}
+                    />
+                  ))}
+              </VictoryChart>
+            </Col>
+            <Col className="col-auto ">
+              <VictoryChart
+                width={1200}
+                height={120}
+                scale={{ x: 'time' }}
+                padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                containerComponent={
+                  <VictoryBrushContainer
+                    brushDimension="x"
+                    brushDomain={selectedDomain}
+                    onBrushDomainChange={handleBrush.bind(this)}
+                  />
+                }
+              >
+                <VictoryAxis
+                  dependentAxis
+                  domain={{
+                    y: [data[period].min, data[period].max],
+                  }}
+                  standalone={false}
+                  style={{
+                    axis: { stroke: 'transparent' },
+                    ticks: { stroke: 'transparent' },
+                    tickLabels: { fill: 'transparent' },
+                  }}
+                />
+                {data[period].graphData
+                  .filter((d) => selectedYears.includes(d.year))
+                  .map((d) => (
+                    <VictoryLine
+                      key={d.year}
+                      data={d.measurements}
+                      interpolation="monotoneX"
+                      x={'x'}
+                      y={'y'}
+                      style={{ data: { stroke: 'black', strokeWidth: 1 } }}
+                    />
+                  ))}
+              </VictoryChart>
+            </Col>
+          </div>
         )}
         {!sensorData.data && selectedSensor && (
           <Col className="col-9">
