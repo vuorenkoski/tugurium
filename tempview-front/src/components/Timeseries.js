@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import {
   VictoryChart,
   VictoryLine,
@@ -30,11 +30,10 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
-const processData = (recData, setData, setAxisLabel) => {
-  let graphData = null
-  let units = ''
-  if (recData.sensorData.length > 0) {
-    graphData = recData.sensorData
+const processData = (data) => {
+  let graphData = []
+  if (data.sensorData.length > 0) {
+    graphData = data.sensorData
       .filter((d) => d.measurements.length > 0)
       .map((d) => {
         let scaleFn = (x) => x
@@ -49,8 +48,8 @@ const processData = (recData, setData, setAxisLabel) => {
           scaleTxt = ' x10'
         }
         return {
-          sensorFullname: d.sensorFullname + scaleTxt,
-          unit: d.sensorUnit,
+          sensorFullname: `${d.sensorFullname} (${d.sensorUnit}${scaleTxt})`,
+          sensorName: d.sensorName,
           min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
           max: scaleFn(max),
           measurements: d.measurements.map((m) => ({
@@ -59,14 +58,8 @@ const processData = (recData, setData, setAxisLabel) => {
           })),
         }
       })
-    const unitList = graphData.reduce(
-      (p, c) => (p.includes(c.unit) ? p : p.concat(c.unit)),
-      []
-    )
-    units = unitList.reduce((p, c) => p.concat(c + ', '), '').slice(0, -2)
   }
-  setAxisLabel(units)
-  setData(graphData)
+  return graphData
 }
 
 const Timeseries = () => {
@@ -76,46 +69,62 @@ const Timeseries = () => {
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
   const [selectedDomain, setSelectedDomain] = useState({})
-  const [data, setData] = useState(null)
-  const [axisLabel, setAxisLabel] = useState(null)
+  const [data, setData] = useState([])
 
   useQuery(GET_FIRST_TIMESTAMP, {
     onCompleted: (data) => createYearSeries(data, setYears),
   })
-
-  useQuery(SENSOR_DATA, {
-    variables: {
-      sensorName: selectedSensors,
-      average: period,
-      minDate: yearToEpoch(year),
-      maxDate: yearToEpoch(year + 1),
-    },
-    onCompleted: (recData) => processData(recData, setData, setAxisLabel),
-  })
+  const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA)
 
   const sensors = useQuery(ALL_SENSORS)
 
   const handleSensorChange = (e) => {
     if (e.target.checked) {
       setSelectedSensors(selectedSensors.concat(e.target.id))
+      getSensorData({
+        variables: {
+          sensorName: e.target.id,
+          average: period,
+          minDate: yearToEpoch(year),
+          maxDate: yearToEpoch(year + 1),
+        },
+        onCompleted: (response) => setData(data.concat(processData(response))),
+      })
     } else {
       setSelectedSensors(selectedSensors.filter((i) => i !== e.target.id))
+      setData(data.filter((d) => d.sensorName !== e.target.id))
     }
-    setData(null)
   }
 
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value)
+    getSensorData({
+      variables: {
+        sensorName: selectedSensors,
+        average: e.target.value,
+        minDate: yearToEpoch(year),
+        maxDate: yearToEpoch(year + 1),
+      },
+      onCompleted: (response) => setData(processData(response)),
+    })
     setSelectedDomain({})
     setZoomDomain({})
-    setData(null)
   }
 
   const handleYearChange = (e) => {
+    const value = Number(e.target.value)
+    setYear(value)
+    getSensorData({
+      variables: {
+        sensorName: selectedSensors,
+        average: period,
+        minDate: yearToEpoch(value),
+        maxDate: yearToEpoch(value + 1),
+      },
+      onCompleted: (response) => setData(processData(response)),
+    })
     setSelectedDomain({})
     setZoomDomain({})
-    setYear(Number(e.target.value))
-    setData(null)
   }
 
   const handleZoom = (domain) => {
@@ -137,29 +146,6 @@ const Timeseries = () => {
         <Form>
           <Col>
             <Row>
-              <Col className="border rounded m-3 p-3">
-                <Row>
-                  <Col>
-                    <h4>Sensorit</h4>
-                  </Col>
-                </Row>
-                <Row className="pt-1">
-                  {sensors.data &&
-                    sensors.data.allSensors.map((s) => (
-                      <Col key={s.sensorName} className="col-auto pr-3">
-                        <Form.Check
-                          type={'checkbox'}
-                          id={s.sensorName}
-                          label={s.sensorFullname}
-                          defaultValue={false}
-                          onChange={handleSensorChange.bind(this)}
-                        />
-                      </Col>
-                    ))}
-                </Row>
-              </Col>
-            </Row>
-            <Row>
               <Col className="col-auto border rounded m-3 p-3">
                 <Row>
                   <Col>
@@ -171,7 +157,7 @@ const Timeseries = () => {
                     <Form.Check
                       type={'radio'}
                       id={'none'}
-                      label={'Kaikki'}
+                      label={'Ei yhdistetä (hidas)  '}
                       name={'aggregatePeriod'}
                       defaultValue={'NO'}
                       onChange={handlePeriodChange.bind(this)}
@@ -217,10 +203,38 @@ const Timeseries = () => {
                 </Row>
               </Col>
             </Row>
+            <Row>
+              <Col className="border rounded m-3 p-3">
+                <Row>
+                  <Col>
+                    <h4>Sensorit</h4>
+                  </Col>
+                </Row>
+                <Row className="pt-1">
+                  {sensors.data &&
+                    sensors.data.allSensors.map((s) => (
+                      <Col key={s.sensorName} className="col-auto pr-3">
+                        <Form.Check
+                          type={'checkbox'}
+                          id={s.sensorName}
+                          label={s.sensorFullname}
+                          defaultValue={false}
+                          onChangeCapture={handleSensorChange.bind(this)}
+                        />
+                      </Col>
+                    ))}
+                </Row>
+              </Col>
+            </Row>
           </Col>
         </Form>
       </Row>
-
+      <Row className="p-4 pt-0 pb-0">
+        <Col>
+          {loading && <div>Ladataan dataa palvelimelta...</div>}
+          {!loading && <div> &nbsp;</div>}
+        </Col>
+      </Row>
       <Row className="p-4 pt-0 border rounded m-3">
         {data && data.length > 0 && (
           <div>
@@ -247,7 +261,6 @@ const Timeseries = () => {
                 <VictoryAxis
                   dependentAxis
                   crossAxis={false}
-                  label={axisLabel}
                   style={{
                     axisLabel: { fontSize: 20, padding: 30 },
                     tickLabels: { fontSize: 20, padding: 0 },
@@ -333,11 +346,6 @@ const Timeseries = () => {
               </VictoryChart>
             </Col>
           </div>
-        )}
-        {!data && selectedSensors.length > 0 && (
-          <Col className="col-9">
-            <p>Lataa tietoja...</p>
-          </Col>
         )}
       </Row>
     </div>
