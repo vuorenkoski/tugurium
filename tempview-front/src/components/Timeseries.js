@@ -16,18 +16,50 @@ const { COLORS } = require('../util/config')
 
 const currentYear = new Date().getFullYear()
 
-const createYearSeries = (data, setYears) => {
-  const yearSeries = Array(
-    currentYear - new Date(data.getFirstTimestamp * 1000).getFullYear() + 1
-  )
-    .fill()
-    .map((_, i) => currentYear - i)
-  setYears(yearSeries)
+// const createYearSeries = (data, setYears) => {
+//   const yearSeries = Array(
+//     currentYear - new Date(data.getFirstTimestamp * 1000).getFullYear() + 1
+//   )
+//     .fill()
+//     .map((_, i) => currentYear - i)
+//   setYears(yearSeries)
+//   console.log(createYearSeries2(data))
+// }
+
+const createYearSeries = (data) => {
+  const yearSeries = []
+  const currentEpoch = Math.floor(new Date().valueOf() / 1000)
+  yearSeries.push({
+    label: 'Viimeinen viikko',
+    minEpoch: currentEpoch - 60 * 60 * 24 * 7,
+    maxEpoch: currentEpoch,
+  })
+  yearSeries.push({
+    label: 'viimeiset 2kk',
+    minEpoch: currentEpoch - 60 * 60 * 24 * 30 * 2,
+    maxEpoch: currentEpoch,
+  })
+  yearSeries.push({
+    label: 'viimeiset 6kk',
+    minEpoch: currentEpoch - 60 * 60 * 24 * 30 * 6,
+    maxEpoch: currentEpoch,
+  })
+  let y = new Date().getFullYear()
+  const firstYear = new Date(data.getFirstTimestamp * 1000).getFullYear()
+  while (y >= firstYear) {
+    yearSeries.push({
+      label: y.toString(),
+      minEpoch: yearToEpoch(y),
+      maxEpoch: yearToEpoch(y + 1),
+    })
+    y--
+  }
+  return yearSeries
 }
 
 const yearToEpoch = (year) => {
   const date = new Date(year, 0, 1)
-  return date.valueOf() / 1000
+  return Math.floor(date.valueOf() / 1000)
 }
 
 const scaleUp = (x) => x * 10
@@ -69,15 +101,20 @@ const processData = (data) => {
 
 const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
-  const [years, setYears] = useState([currentYear])
+  const [years, setYears] = useState([])
   const [period, setPeriod] = useState('HOUR')
-  const [year, setYear] = useState(currentYear)
+  const [year, setYear] = useState(null)
   const [zoomDomain, setZoomDomain] = useState({})
   const [data, setData] = useState([])
 
   useQuery(GET_FIRST_TIMESTAMP, {
-    onCompleted: (data) => createYearSeries(data, setYears),
+    onCompleted: (data) => {
+      const series = createYearSeries(data)
+      setYears(series)
+      setYear(series[0])
+    },
   })
+
   const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA)
 
   const sensors = useQuery(ALL_SENSORS)
@@ -89,8 +126,8 @@ const Timeseries = () => {
         variables: {
           sensorName: e.target.id,
           average: period,
-          minDate: yearToEpoch(year),
-          maxDate: yearToEpoch(year + 1),
+          minDate: year.minEpoch,
+          maxDate: year.maxEpoch,
         },
         onCompleted: (response) => {
           const processedData = processData(response)
@@ -112,8 +149,8 @@ const Timeseries = () => {
         variables: {
           sensorName: sensor,
           average: e.target.value,
-          minDate: yearToEpoch(year),
-          maxDate: yearToEpoch(year + 1),
+          minDate: year.minEpoch,
+          maxDate: year.maxEpoch,
         },
       })
       const processedData = processData(resp.data)
@@ -124,7 +161,7 @@ const Timeseries = () => {
   }
 
   const handleYearChange = async (e) => {
-    const value = Number(e.target.value)
+    const value = years[Number(e.target.value)]
     setYear(value)
     const graphData = []
     for (let i in selectedSensors) {
@@ -133,8 +170,8 @@ const Timeseries = () => {
         variables: {
           sensorName: sensor,
           average: period,
-          minDate: yearToEpoch(value),
-          maxDate: yearToEpoch(value + 1),
+          minDate: value.minEpoch,
+          maxDate: value.maxEpoch,
         },
       })
       const processedData = processData(resp.data)
@@ -147,7 +184,7 @@ const Timeseries = () => {
   const handleZoom = (domain) => {
     setZoomDomain(domain)
   }
-
+  console.log(year)
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -202,15 +239,16 @@ const Timeseries = () => {
               <Col className="col-auto border rounded m-3 p-3">
                 <Row className="align-items-center">
                   <Col className="col-auto">
-                    <h4>Vuosi</h4>
+                    <h4>Ajanjakso</h4>
                   </Col>
                   <Col className="col-auto">
                     <Form.Select onChange={handleYearChange.bind(this)}>
-                      {years.map((y) => (
-                        <option key={y} value={y}>
-                          {y}
-                        </option>
-                      ))}
+                      {years &&
+                        years.map((y, i) => (
+                          <option key={y.label} value={i}>
+                            {y.label}
+                          </option>
+                        ))}
                     </Form.Select>
                   </Col>
                 </Row>
