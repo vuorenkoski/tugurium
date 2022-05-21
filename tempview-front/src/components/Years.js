@@ -134,7 +134,6 @@ const processData = (sensorData, setData, firstTimestamp) => {
 const Years = () => {
   const [selectedSensor, setSelectedSensor] = useState('')
   const [zoomDomain, setZoomDomain] = useState({})
-  const [selectedDomain, setSelectedDomain] = useState({})
   const [selectedYears, setSelectedYears] = useState([])
   const [data, setData] = useState(null)
   const [period, setPeriod] = useState('daily')
@@ -162,16 +161,11 @@ const Years = () => {
 
   const handleSensorChange = (e) => {
     setSelectedSensor(e.target.value)
-    setSelectedDomain({})
     setZoomDomain({})
     setData(null)
   }
 
   const handleZoom = (domain) => {
-    setSelectedDomain(domain)
-  }
-
-  const handleBrush = (domain) => {
     setZoomDomain(domain)
   }
 
@@ -310,7 +304,6 @@ const Years = () => {
                   offsetY={50}
                   orientation="bottom"
                   tickCount={10}
-                  label="Aika"
                   style={{
                     axisLabel: { fontSize: 20, padding: 30 },
                     tickLabels: { fontSize: 20, padding: 0 },
@@ -350,17 +343,20 @@ const Years = () => {
                   ))}
               </VictoryChart>
             </Col>
+
             <Col className="col-auto ">
               <VictoryChart
                 width={1200}
-                height={120}
+                height={170}
                 scale={{ x: 'time' }}
-                padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                domain={{
+                  y: [data[period].min, data[period].max],
+                }}
                 containerComponent={
                   <VictoryBrushContainer
                     brushDimension="x"
-                    brushDomain={selectedDomain}
-                    onBrushDomainChange={handleBrush.bind(this)}
+                    brushDomain={zoomDomain}
+                    onBrushDomainChange={handleZoom.bind(this)}
                   />
                 }
               >

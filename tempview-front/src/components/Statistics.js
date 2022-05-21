@@ -43,7 +43,6 @@ const processData = (data, setMeasurements) => {
 const Statistics = () => {
   const [selectedSensor, setSelectedSensor] = useState(null)
   const [zoomDomain, setZoomDomain] = useState({})
-  const [selectedDomain, setSelectedDomain] = useState({})
   const [measurements, setMeasurements] = useState(null)
 
   const sensors = useQuery(SENSOR_STATS)
@@ -61,10 +60,6 @@ const Statistics = () => {
   }
 
   const handleZoom = (domain) => {
-    setSelectedDomain(domain)
-  }
-
-  const handleBrush = (domain) => {
     setZoomDomain(domain)
   }
 
@@ -173,32 +168,37 @@ const Statistics = () => {
                 <VictoryAxis
                   offsetY={50}
                   tickCount={10}
-                  label="Aika"
                   style={{
                     axisLabel: { fontSize: 20, padding: 30 },
                     tickLabels: { fontSize: 20, padding: 5 },
                   }}
                 />
-                <VictoryLine data={measurements} interpolation="monotoneX" />
+                <VictoryLine
+                  data={measurements}
+                  interpolation="monotoneX"
+                  style={{ data: { stroke: 'black', strokeWidth: 1 } }}
+                />
               </VictoryChart>
             </Col>
+
             <Col className="col-auto ">
               <VictoryChart
                 width={1200}
-                height={120}
+                height={170}
                 scale={{ x: 'time' }}
-                padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                domain={{
+                  y: [0, measurements.reduce((p, c) => Math.max(p, c.y), 0)],
+                }}
                 containerComponent={
                   <VictoryBrushContainer
                     brushDimension="x"
-                    brushDomain={selectedDomain}
-                    onBrushDomainChange={handleBrush.bind(this)}
+                    brushDomain={zoomDomain}
+                    onBrushDomainChange={handleZoom.bind(this)}
                   />
                 }
               >
                 <VictoryAxis
                   dependentAxis
-                  domain={[0, 100]}
                   standalone={false}
                   style={{
                     axis: { stroke: 'transparent' },
@@ -209,7 +209,7 @@ const Statistics = () => {
                 <VictoryLine
                   data={measurements}
                   interpolation="monotoneX"
-                  style={{ data: { stroke: '#c43a31', strokeWidth: 1 } }}
+                  style={{ data: { stroke: 'black', strokeWidth: 1 } }}
                 />
               </VictoryChart>
             </Col>

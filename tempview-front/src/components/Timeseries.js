@@ -55,7 +55,7 @@ const processData = (data) => {
       scaleTxt = ' x10'
     }
     const resp = {
-      sensorFullname: `${data.sensorData.sensorFullname} (${data.sensorData.sensorUnit}${scaleTxt})`,
+      legendLabel: `${data.sensorData.sensorFullname} (${data.sensorData.sensorUnit}${scaleTxt})`,
       sensorName: data.sensorData.sensorName,
       min,
       max: scaleFn(max),
@@ -70,11 +70,9 @@ const processData = (data) => {
 const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
   const [years, setYears] = useState([currentYear])
-  const [message, setMessage] = useState('')
   const [period, setPeriod] = useState('HOUR')
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
-  const [selectedDomain, setSelectedDomain] = useState({})
   const [data, setData] = useState([])
 
   useQuery(GET_FIRST_TIMESTAMP, {
@@ -122,13 +120,11 @@ const Timeseries = () => {
       if (processedData) graphData.push(processedData)
     }
     setData(graphData)
-    setSelectedDomain({})
     setZoomDomain({})
   }
 
   const handleYearChange = async (e) => {
     const value = Number(e.target.value)
-    setMessage('vuosi ' + e.target.value)
     setYear(value)
     const graphData = []
     for (let i in selectedSensors) {
@@ -145,18 +141,14 @@ const Timeseries = () => {
       if (processedData) graphData.push(processedData)
     }
     setData(graphData)
-    setSelectedDomain({})
     setZoomDomain({})
   }
 
   const handleZoom = (domain) => {
-    setSelectedDomain(domain)
-  }
-
-  const handleBrush = (domain) => {
     setZoomDomain(domain)
   }
 
+  console.log('zom', zoomDomain)
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -292,7 +284,6 @@ const Timeseries = () => {
                   offsetY={50}
                   orientation="bottom"
                   tickCount={10}
-                  label="Aika"
                   style={{
                     axisLabel: { fontSize: 20, padding: 30 },
                     tickLabels: { fontSize: 20, padding: 0 },
@@ -310,7 +301,7 @@ const Timeseries = () => {
                     labels: { fontSize: 20 },
                   }}
                   data={data.map((d, i) => ({
-                    name: d.sensorFullname,
+                    name: d.legendLabel,
                     symbol: { fill: COLORS[i], type: 'square' },
                   }))}
                 />
@@ -320,7 +311,6 @@ const Timeseries = () => {
                     key={d.sensorName}
                     data={d.measurements}
                     interpolation="monotoneX"
-                    name={d.sensorFullname}
                     x={(m) => m.timestamp * 1000}
                     y={(m) => d.scaleFn(Number(m.value))}
                     style={{ data: { stroke: COLORS[i], strokeWidth: 1 } }}
@@ -328,26 +318,28 @@ const Timeseries = () => {
                 ))}
               </VictoryChart>
             </Col>
+
             <Col className="col-auto ">
               <VictoryChart
                 width={1200}
-                height={120}
+                height={170}
                 scale={{ x: 'time' }}
-                padding={{ top: 0, left: 50, right: 50, bottom: 30 }}
+                domain={{
+                  y: [
+                    data.reduce((p, c) => Math.min(p, c.min), 0),
+                    data.reduce((p, c) => Math.max(p, c.max), 0),
+                  ],
+                }}
                 containerComponent={
                   <VictoryBrushContainer
                     brushDimension="x"
-                    brushDomain={selectedDomain}
-                    onBrushDomainChange={handleBrush.bind(this)}
+                    brushDomain={zoomDomain}
+                    onBrushDomainChange={handleZoom.bind(this)}
                   />
                 }
               >
                 <VictoryAxis
                   dependentAxis
-                  domain={[
-                    data.reduce((p, c) => Math.min(p, c.min), 0),
-                    data.reduce((p, c) => Math.max(p, c.max), 0),
-                  ]}
                   standalone={false}
                   style={{
                     axis: { stroke: 'transparent' },
