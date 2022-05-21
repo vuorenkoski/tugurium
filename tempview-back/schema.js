@@ -119,6 +119,7 @@ const typeDefs = gql`
 
   type Subscription {
     statusChanged: Switch!
+    newMeasurement: Sensor!
   }
 `
 

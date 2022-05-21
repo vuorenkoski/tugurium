@@ -304,3 +304,17 @@ export const STATUS_CHANGED = gql`
     }
   }
 `
+
+export const NEW_MEASUREMENT = gql`
+  subscription {
+    newMeasurement {
+      id
+      sensorName
+      sensorFullname
+      sensorUnit
+      agrmethod
+      lastValue
+      lastTimestamp
+    }
+  }
+`

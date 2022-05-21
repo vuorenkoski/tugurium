@@ -132,6 +132,8 @@ const addMeasurement = async (root, args, context) => {
     sensor.lastValue = value
     sensor.lastTimestamp = Math.floor(Date.now() / 1000)
     await sensor.save()
+    pubsub.publish('NEW_MEASUREMENT', { newMeasurement: sensor })
+
     return measurement
   } else {
     throw new UserInputError('Bad formatted measurement', {
@@ -486,6 +488,9 @@ const resolvers = {
   Subscription: {
     statusChanged: {
       subscribe: () => pubsub.asyncIterator(['STATUS_CHANGED']),
+    },
+    newMeasurement: {
+      subscribe: () => pubsub.asyncIterator(['NEW_MEASUREMENT']),
     },
   },
 }

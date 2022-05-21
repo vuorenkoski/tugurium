@@ -1,13 +1,15 @@
 import { Table, Row, Col } from 'react-bootstrap'
-import { useQuery } from '@apollo/client'
-import { ALL_SENSORS } from '../queries'
+import { useQuery, useSubscription } from '@apollo/client'
+import { ALL_SENSORS, NEW_MEASUREMENT } from '../queries'
 import { convertDate, convertTemp } from '../util/conversions'
 
 const Home = () => {
   const sensors = useQuery(ALL_SENSORS, {
     fetchPolicy: 'network-only',
   })
-  console.log(sensors)
+
+  useSubscription(NEW_MEASUREMENT)
+
   return (
     <div>
       <Row className="p-4">
