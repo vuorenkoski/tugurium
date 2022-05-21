@@ -78,6 +78,8 @@ export const ALL_SENSORS = gql`
       sensorFullname
       sensorUnit
       agrmethod
+      lastValue
+      lastTimestamp
     }
   }
 `

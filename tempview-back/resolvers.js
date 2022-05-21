@@ -129,6 +129,9 @@ const addMeasurement = async (root, args, context) => {
       value,
       timestamp: Math.floor(Date.now() / 1000),
     })
+    sensor.lastValue = value
+    sensor.lastTimestamp = Math.floor(Date.now() / 1000)
+    await sensor.save()
     return measurement
   } else {
     throw new UserInputError('Bad formatted measurement', {

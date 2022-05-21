@@ -1,4 +1,7 @@
 const convertDate = (epoch) => {
+  if (!epoch) {
+    return '- - - - -'
+  }
   const date = new Date(epoch * 1000)
   return (
     date.getDate() +
@@ -19,12 +22,21 @@ const convertDateToDate = (epoch) => {
   return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear()
 }
 
-const convertTemp = (temp) => {
-  let plus = '+'
-  if (temp < 0) {
-    plus = ''
+const convertTemp = (temp, unit) => {
+  if (temp === null) {
+    return '- - - - -'
   }
-  return plus + Number(temp).toFixed(1)
+  if (unit === 'kpl') {
+    return `${parseInt(temp)} ${unit}`
+  }
+  if (unit === 'c') {
+    let plus = '+'
+    if (temp < 0) {
+      plus = ''
+    }
+    return plus + temp.toFixed(1)
+  }
+  return `${temp.toFixed(1)} ${unit}`
 }
 
 const convertNumber = (number) => {

@@ -311,7 +311,7 @@ const Timeseries = () => {
                     data={d.measurements}
                     interpolation="monotoneX"
                     x={(m) => m.timestamp * 1000}
-                    y={(m) => d.scaleFn(Number(m.value))}
+                    y={(m) => d.scaleFn(m.value)}
                     style={{ data: { stroke: COLORS[i], strokeWidth: 1 } }}
                   />
                 ))}
@@ -352,7 +352,7 @@ const Timeseries = () => {
                     data={d.measurements}
                     interpolation="monotoneX"
                     x={(m) => m.timestamp * 1000}
-                    y={(m) => d.scaleFn(Number(m.value))}
+                    y={(m) => d.scaleFn(m.value)}
                     style={{ data: { stroke: 'black', strokeWidth: 1 } }}
                   />
                 ))}

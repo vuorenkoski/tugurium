@@ -34,6 +34,14 @@ Sensor.init(
         isIn: [['SUM', 'AVG']],
       },
     },
+    lastValue: {
+      type: DataTypes.DECIMAL,
+      allowNull: true,
+    },
+    lastTimestamp: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     sequelize,

@@ -1,13 +1,13 @@
 import { Table, Row, Col } from 'react-bootstrap'
 import { useQuery } from '@apollo/client'
-import { CURRENT_SENSOR_DATA } from '../queries'
+import { ALL_SENSORS } from '../queries'
 import { convertDate, convertTemp } from '../util/conversions'
 
 const Home = () => {
-  const sensors = useQuery(CURRENT_SENSOR_DATA, {
+  const sensors = useQuery(ALL_SENSORS, {
     fetchPolicy: 'network-only',
   })
-
+  console.log(sensors)
   return (
     <div>
       <Row className="p-4">
@@ -28,13 +28,11 @@ const Home = () => {
                   <th>Lämpötila</th>
                   <th>Aikaleima</th>
                 </tr>
-                {sensors.data.currentSensorData.map((a, i) => (
-                  <tr key={i}>
-                    <td>{a.sensor.sensorFullname}</td>
-                    <td>
-                      {convertTemp(a.value)} {a.sensor.sensorUnit}
-                    </td>
-                    <td>{convertDate(a.timestamp)}</td>
+                {sensors.data.allSensors.map((s) => (
+                  <tr key={s.sensorName}>
+                    <td>{s.sensorFullname}</td>
+                    <td>{convertTemp(s.lastValue, s.sensorUnit)}</td>
+                    <td>{convertDate(s.lastTimestamp)}</td>
                   </tr>
                 ))}
               </tbody>

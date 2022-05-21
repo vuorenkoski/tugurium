@@ -40,7 +40,7 @@ const monthlyDataFromDaily = (dailyData) => {
     let result = []
     if (d.measurements.length > 0) {
       const data = d.measurements.map((m) => ({
-        value: Number(m.y),
+        value: m.y,
         timestamp: m.x,
         monthYear: new Date(m.x).getMonth() + new Date(m.x).getFullYear() * 12,
       }))
@@ -92,7 +92,7 @@ const groupByYear = (measurements, firstTimestamp) => {
     const date = new Date(measurements[i].timestamp * 1000)
     const year = date.getFullYear()
     date.setFullYear(currentYear)
-    const value = Number(measurements[i].value)
+    const value = measurements[i].value
 
     graphData[year - parseInt(years[0])].measurements.push({
       y: value,

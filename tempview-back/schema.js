@@ -13,6 +13,8 @@ const typeDefs = gql`
     sensorFullname: String!
     sensorUnit: String!
     agrmethod: String!
+    lastValue: Float
+    lastTimestamp: Int
     measurements: [Measurement]
   }
 
@@ -42,7 +44,7 @@ const typeDefs = gql`
   type Measurement {
     id: ID!
     sensor: Sensor!
-    value: String!
+    value: Float!
     timestamp: Int!
   }
 
