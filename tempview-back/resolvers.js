@@ -1,5 +1,5 @@
 const { UserInputError, AuthenticationError } = require('apollo-server')
-const { Op, QueryTypes } = require('sequelize')
+const { QueryTypes } = require('sequelize')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -23,38 +23,35 @@ const sensorData = async (root, args, context) => {
     period = 24 * 60 * 60
   }
 
-  const sensors = await Sensor.findAll({
-    where: { sensorName: { [Op.in]: args.sensorName } },
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
     raw: true,
   })
 
-  let data = []
-  for (let i in sensors) {
-    let minReq = ''
-    let maxReq = ''
-    if (args.minDate) {
-      minReq = `AND timestamp>=${args.minDate} `
-    }
-    if (args.maxDate) {
-      maxReq = `AND timestamp<${args.maxDate} `
-    }
+  let minReq = ''
+  let maxReq = ''
+  if (args.minDate) {
+    minReq = `AND timestamp>=${args.minDate} `
+  }
+  if (args.maxDate) {
+    maxReq = `AND timestamp<${args.maxDate} `
+  }
 
-    let measurements = await sequelize.query(
-      `SELECT ${sensors[i].agrmethod}(value) as value, timestamp / ${period} as timestamp 
-       FROM measurements WHERE sensor_id='${sensors[i].id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
-      { nest: true, type: QueryTypes.SELECT }
-    )
-    measurements = measurements.map((m) => ({
-      value: m.value,
-      timestamp: m.timestamp * period,
-    }))
-    data.push({
-      sensorFullname: sensors[i].sensorFullname,
-      sensorName: sensors[i].sensorName,
-      sensorUnit: sensors[i].sensorUnit,
-      agrmethod: sensors[i].agrmethod,
-      measurements: measurements,
-    })
+  let measurements = await sequelize.query(
+    `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp 
+       FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
+    { nest: true, type: QueryTypes.SELECT }
+  )
+  measurements = measurements.map((m) => ({
+    value: m.value,
+    timestamp: m.timestamp * period,
+  }))
+  const data = {
+    sensorFullname: sensor.sensorFullname,
+    sensorName: sensor.sensorName,
+    sensorUnit: sensor.sensorUnit,
+    agrmethod: sensor.agrmethod,
+    measurements: measurements,
   }
   return data
 }
@@ -63,7 +60,8 @@ const currentSensorData = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
   }
-
+  // Previous version, nut much slower
+  //
   // const measurements = await sequelize.query(
   //   `SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName",
   //        sensors.sensor_fullname AS "sensor.sensorFullname", sensors.sensor_unit AS "sensor.sensorUnit" FROM measurements AS a

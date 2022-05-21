@@ -48,7 +48,7 @@ export const GET_FIRST_TIMESTAMP = gql`
 
 export const SENSOR_DATA = gql`
   query SensorData(
-    $sensorName: [String]
+    $sensorName: String!
     $average: Average
     $minDate: Int
     $maxDate: Int

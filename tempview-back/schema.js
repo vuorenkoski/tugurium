@@ -67,11 +67,11 @@ const typeDefs = gql`
     sensorDetails(sensorName: String!): Sensor!
     datapoints(sensorName: String): [Datapoints]
     sensorData(
-      sensorName: [String]
+      sensorName: String!
       average: Average
       minDate: Int
       maxDate: Int
-    ): [Sensor]
+    ): Sensor
     currentSensorData: [Measurement]
     getFirstTimestamp: Int!
     getSwitchCommand(name: String!): Boolean

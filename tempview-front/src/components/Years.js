@@ -122,11 +122,10 @@ const groupByYear = (measurements, firstTimestamp) => {
 }
 
 const processData = (sensorData, setData, firstTimestamp) => {
-  if (sensorData.length > 0) {
-    const measurements = sensorData[0].measurements
-    const daily = groupByYear(measurements, firstTimestamp)
+  if (sensorData) {
+    const daily = groupByYear(sensorData.measurements, firstTimestamp)
     const monthly = monthlyDataFromDaily(daily)
-    const unit = sensorData[0].sensorUnit
+    const unit = sensorData.sensorUnit
     const result = { monthly, daily, unit }
     setData(result)
   }

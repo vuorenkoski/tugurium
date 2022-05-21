@@ -30,41 +30,47 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
+const scaleUp = (x) => x * 10
+const scaleDown = (x) => x / 10
+const noScale = (x) => x
+
 const processData = (data) => {
-  let graphData = []
-  if (data.sensorData.length > 0) {
-    graphData = data.sensorData
-      .filter((d) => d.measurements.length > 0)
-      .map((d) => {
-        let scaleFn = (x) => x
-        let scaleTxt = ''
-        const max = d.measurements.reduce((p, c) => Math.max(p, c.value), 0)
-        if (max > 70) {
-          scaleFn = (x) => x / 10
-          scaleTxt = ' /10'
-        }
-        if (max < 4 && max > 0) {
-          scaleFn = (x) => x * 10
-          scaleTxt = ' x10'
-        }
-        return {
-          sensorFullname: `${d.sensorFullname} (${d.sensorUnit}${scaleTxt})`,
-          sensorName: d.sensorName,
-          min: d.measurements.reduce((p, c) => Math.min(p, c.value), 0),
-          max: scaleFn(max),
-          measurements: d.measurements.map((m) => ({
-            y: scaleFn(Number(m.value)),
-            x: new Date(m.timestamp * 1000),
-          })),
-        }
-      })
+  if (data.sensorData && data.sensorData.measurements.length > 0) {
+    let scaleTxt = ''
+    let scaleFn = noScale
+    const min = data.sensorData.measurements.reduce(
+      (p, c) => Math.min(p, c.value),
+      0
+    )
+    const max = data.sensorData.measurements.reduce(
+      (p, c) => Math.max(p, c.value),
+      0
+    )
+    if (max > 70) {
+      scaleFn = scaleDown
+      scaleTxt = ' /10'
+    }
+    if (max < 4 && max > 0) {
+      scaleFn = scaleUp
+      scaleTxt = ' x10'
+    }
+    const resp = {
+      sensorFullname: `${data.sensorData.sensorFullname} (${data.sensorData.sensorUnit}${scaleTxt})`,
+      sensorName: data.sensorData.sensorName,
+      min,
+      max: scaleFn(max),
+      scaleFn,
+      measurements: data.sensorData.measurements,
+    }
+    return resp
   }
-  return graphData
+  return null
 }
 
 const Timeseries = () => {
   const [selectedSensors, setSelectedSensors] = useState([])
   const [years, setYears] = useState([currentYear])
+  const [message, setMessage] = useState('')
   const [period, setPeriod] = useState('HOUR')
   const [year, setYear] = useState(currentYear)
   const [zoomDomain, setZoomDomain] = useState({})
@@ -88,7 +94,10 @@ const Timeseries = () => {
           minDate: yearToEpoch(year),
           maxDate: yearToEpoch(year + 1),
         },
-        onCompleted: (response) => setData(data.concat(processData(response))),
+        onCompleted: (response) => {
+          const processedData = processData(response)
+          if (processedData) setData(data.concat(processedData))
+        },
       })
     } else {
       setSelectedSensors(selectedSensors.filter((i) => i !== e.target.id))
@@ -96,33 +105,46 @@ const Timeseries = () => {
     }
   }
 
-  const handlePeriodChange = (e) => {
+  const handlePeriodChange = async (e) => {
     setPeriod(e.target.value)
-    getSensorData({
-      variables: {
-        sensorName: selectedSensors,
-        average: e.target.value,
-        minDate: yearToEpoch(year),
-        maxDate: yearToEpoch(year + 1),
-      },
-      onCompleted: (response) => setData(processData(response)),
-    })
+    const graphData = []
+    for (let i in selectedSensors) {
+      const sensor = selectedSensors[i]
+      const resp = await getSensorData({
+        variables: {
+          sensorName: sensor,
+          average: e.target.value,
+          minDate: yearToEpoch(year),
+          maxDate: yearToEpoch(year + 1),
+        },
+      })
+      const processedData = processData(resp.data)
+      if (processedData) graphData.push(processedData)
+    }
+    setData(graphData)
     setSelectedDomain({})
     setZoomDomain({})
   }
 
-  const handleYearChange = (e) => {
+  const handleYearChange = async (e) => {
     const value = Number(e.target.value)
+    setMessage('vuosi ' + e.target.value)
     setYear(value)
-    getSensorData({
-      variables: {
-        sensorName: selectedSensors,
-        average: period,
-        minDate: yearToEpoch(value),
-        maxDate: yearToEpoch(value + 1),
-      },
-      onCompleted: (response) => setData(processData(response)),
-    })
+    const graphData = []
+    for (let i in selectedSensors) {
+      const sensor = selectedSensors[i]
+      const resp = await getSensorData({
+        variables: {
+          sensorName: sensor,
+          average: period,
+          minDate: yearToEpoch(value),
+          maxDate: yearToEpoch(value + 1),
+        },
+      })
+      const processedData = processData(resp.data)
+      if (processedData) graphData.push(processedData)
+    }
+    setData(graphData)
     setSelectedDomain({})
     setZoomDomain({})
   }
@@ -295,12 +317,12 @@ const Timeseries = () => {
 
                 {data.map((d, i) => (
                   <VictoryLine
-                    key={i}
+                    key={d.sensorName}
                     data={d.measurements}
                     interpolation="monotoneX"
                     name={d.sensorFullname}
-                    x={'x'}
-                    y={'y'}
+                    x={(m) => m.timestamp * 1000}
+                    y={(m) => d.scaleFn(Number(m.value))}
                     style={{ data: { stroke: COLORS[i], strokeWidth: 1 } }}
                   />
                 ))}
@@ -338,8 +360,8 @@ const Timeseries = () => {
                     key={d.sensorFullname}
                     data={d.measurements}
                     interpolation="monotoneX"
-                    x={'x'}
-                    y={'y'}
+                    x={(m) => m.timestamp * 1000}
+                    y={(m) => d.scaleFn(Number(m.value))}
                     style={{ data: { stroke: 'black', strokeWidth: 1 } }}
                   />
                 ))}
