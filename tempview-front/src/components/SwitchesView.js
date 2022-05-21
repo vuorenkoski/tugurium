@@ -31,7 +31,7 @@ const SwitchesView = () => {
       </Row>
 
       <Row className="p-4">
-        {!switches.data && <p>Lataa tietoja...</p>}
+        {!switches.data && <Col>Lataa tietoja...</Col>}
 
         <Col className="col-auto">
           {switches.data && (

@@ -108,11 +108,13 @@ const Statistics = () => {
           </Col>
         )}
       </Row>
+
       <Row className="p-4 pt-2 pb-2">
         <Col>
           <h4>Sensorin datapisteiden määrät vuorokaudessa</h4>
         </Col>
       </Row>
+
       <Row className="p-4 pt-0">
         {!sensors.data && <Col>Ladataan...</Col>}
         {sensors.data && (
@@ -136,7 +138,7 @@ const Statistics = () => {
         )}
       </Row>
 
-      <Row>
+      <Row className="p-4">
         {measurements && measurements.length > 0 && (
           <div>
             <Col className="col-auto">

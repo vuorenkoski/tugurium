@@ -148,7 +148,6 @@ const Timeseries = () => {
     setZoomDomain(domain)
   }
 
-  console.log('zom', zoomDomain)
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -308,7 +307,7 @@ const Timeseries = () => {
 
                 {data.map((d, i) => (
                   <VictoryLine
-                    key={d.sensorName}
+                    key={i}
                     data={d.measurements}
                     interpolation="monotoneX"
                     x={(m) => m.timestamp * 1000}
@@ -349,7 +348,7 @@ const Timeseries = () => {
                 />
                 {data.map((d) => (
                   <VictoryLine
-                    key={d.sensorFullname}
+                    key={d.sensorName}
                     data={d.measurements}
                     interpolation="monotoneX"
                     x={(m) => m.timestamp * 1000}

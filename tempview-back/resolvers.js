@@ -23,11 +23,6 @@ const sensorData = async (root, args, context) => {
     period = 24 * 60 * 60
   }
 
-  const sensor = await Sensor.findOne({
-    where: { sensorName: args.sensorName },
-    raw: true,
-  })
-
   let minReq = ''
   let maxReq = ''
   if (args.minDate) {
@@ -36,6 +31,11 @@ const sensorData = async (root, args, context) => {
   if (args.maxDate) {
     maxReq = `AND timestamp<${args.maxDate} `
   }
+
+  const sensor = await Sensor.findOne({
+    where: { sensorName: args.sensorName },
+    raw: true,
+  })
 
   let measurements = await sequelize.query(
     `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp 
@@ -60,7 +60,7 @@ const currentSensorData = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
   }
-  // Previous version, nut much slower
+  // Previous version, not much slower
   //
   // const measurements = await sequelize.query(
   //   `SELECT a.sensor_id AS "sensor.id", a.value, a.timestamp, sensors.sensor_name AS "sensor.sensorName",

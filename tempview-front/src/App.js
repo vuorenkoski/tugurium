@@ -11,7 +11,12 @@ import SwitchesView from './components/SwitchesView'
 import ImagesView from './components/ImagesView'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+} from 'react-router-dom'
 
 const App = () => {
   const sensors = useQuery(ALL_SENSORS)
@@ -59,39 +64,74 @@ const App = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="#" as="span">
-                <Link to="/" className="menuitem">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Lämpötilat nyt
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/timeseries" className="menuitem">
+                <NavLink
+                  to="/timeseries"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Aikasarjat
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/annual" className="menuitem">
+                <NavLink
+                  to="/annual"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Vuosivertailu
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/images" className="menuitem">
+                <NavLink
+                  to="/images"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Kamerat
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/switches" className="menuitem">
+                <NavLink
+                  to="/switches"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Kytkimet
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/statistics" className="menuitem">
+                <NavLink
+                  to="/statistics"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Tilastoja
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
-                <Link to="/settings" className="menuitem">
+                <NavLink
+                  to="/settings"
+                  className={({ isActive }) =>
+                    isActive ? 'activeMenuitem' : 'menuitem'
+                  }
+                >
                   Asetukset
-                </Link>
+                </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
                 <button className="menuitem" onClick={logout}>

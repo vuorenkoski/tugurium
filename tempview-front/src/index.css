@@ -11,6 +11,19 @@
   color: white;
 }
 
+.activeMenuitem {
+  text-decoration-line: underline;
+  color: white;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.activeMenuitem:hover {
+  text-decoration-line: underline;
+  color: white;
+}
+
 .removeButton {
   color: darkred;
   background: none;
