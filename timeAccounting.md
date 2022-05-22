@@ -24,7 +24,6 @@
 
 ## Product backlog
 
-- asetuksissa avg vinossa
 - testit
 - android sovellus
 - käyttöohjeet

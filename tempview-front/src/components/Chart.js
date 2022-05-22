@@ -39,7 +39,7 @@ const Chart = ({ data, zoomDomain, setZoomDomain, yDomain }) => {
                     onZoomDomainChange={handleZoom.bind(this)}
                     labels={({ datum }) =>
                       `value: ${datum.value.toFixed(1)}\n${convertDate(
-                        datum.timestamp * 1000
+                        datum.timestamp
                       )}`
                     }
                   />

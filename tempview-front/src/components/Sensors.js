@@ -163,7 +163,7 @@ const Sensors = () => {
 
       {displaySensorForm && (
         <div>
-          <Row className="p-4 pt-1 pb-1">
+          <Row className="p-4 pt-1 pb-1 align-item-bottom">
             <Col className="col-auto p-2">
               <Form>
                 <Form.Group>
@@ -201,16 +201,21 @@ const Sensors = () => {
               </Form>
             </Col>
             <Col className="col-auto p-2">
-              <Form.Select
-                onChange={handleAgrChange.bind(this)}
-                defaultValue={agrmethod}
-              >
-                {AGGREGATE_METHODS.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </Form.Select>
+              <Form>
+                <Form.Group>
+                  <Form.Label>Yhdistämismetodi</Form.Label>
+                  <Form.Select
+                    onChange={handleAgrChange.bind(this)}
+                    defaultValue={agrmethod}
+                  >
+                    {AGGREGATE_METHODS.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Form>
             </Col>
           </Row>
           <Row className="p-4 pt-1 pb-1">

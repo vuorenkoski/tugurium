@@ -59,11 +59,12 @@ const monthlyDataFromDaily = (dailyData) => {
 
           result.push({
             value: value,
-            timestamp: new Date(
-              Math.floor((i + minEpoch) / 12),
-              (i + minEpoch) % 12,
-              1
-            ),
+            timestamp:
+              new Date(
+                Math.floor((i + minEpoch) / 12),
+                (i + minEpoch) % 12,
+                1
+              ) / 1000,
           })
         }
       })
