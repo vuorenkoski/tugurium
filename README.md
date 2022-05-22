@@ -80,7 +80,6 @@ sudo -u postgres psql
 postgres=# create database tempviewdb;
 postgres=# create user tempviewuser with encrypted password 'secret';
 postgres=# grant all privileges on database tempviewdb to tempviewuser;
-postgres=# alter user tempviewuser createdb; --allow user to create a test database
 postgres=# \q
 ```
 
@@ -114,7 +113,9 @@ Production server will be run Raspberry Pi 2 in address https://tempview.vuorenk
 
 Frontend: https://tempview.vuorenkoski.fi/
 
-Backend: https://tempview.vuorenkoski.fi/graphql
+Backend: https://tempview.vuorenkoski.fi/api/graphql
+
+Backend image: https://tempview.vuorenkoski.fi/api/image
 
 ### Setting up production environment
 

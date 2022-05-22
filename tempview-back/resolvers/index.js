@@ -1,6 +1,3 @@
-const { PubSub } = require('graphql-subscriptions')
-const pubsub = new PubSub()
-
 const { allImages, deleteImage, newImage, updateImage } = require('./image')
 
 const {
@@ -11,6 +8,7 @@ const {
   setSwitchCommand,
   setSwitchStatus,
   updateSwitch,
+  statusChanged,
 } = require('./switch')
 
 const {
@@ -18,6 +16,7 @@ const {
   addMeasurement,
   datapoints,
   sensorData,
+  newMeasurement,
 } = require('./measurement')
 
 const {
@@ -66,12 +65,8 @@ const resolvers = {
     setSwitchStatus,
   },
   Subscription: {
-    statusChanged: {
-      subscribe: () => pubsub.asyncIterator(['STATUS_CHANGED']),
-    },
-    newMeasurement: {
-      subscribe: () => pubsub.asyncIterator(['NEW_MEASUREMENT']),
-    },
+    statusChanged,
+    newMeasurement,
   },
 }
 

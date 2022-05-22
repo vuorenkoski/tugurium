@@ -122,9 +122,14 @@ const getFirstTimestamp = async (root, args, context) => {
   return timestamp[0].timestamp
 }
 
+const newMeasurement = {
+  subscribe: () => pubsub.asyncIterator(['NEW_MEASUREMENT']),
+}
+
 module.exports = {
   getFirstTimestamp,
   addMeasurement,
   datapoints,
   sensorData,
+  newMeasurement,
 }

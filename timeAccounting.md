@@ -18,13 +18,12 @@
 | 19.5. | 8     | switches implemented, c-code for sending switch status, graphql subscription, getCommand route and c-code to retrieve it, refactoring         |
 | 20.5. | 6     | Comprehensive bootstrap structure refactoring, working in different screen sizes, css-file, faster sql-script for stats                       |
 | 21.5. | 7     | Several performance improvements for timeseries-view, viewchart tuning, faster solution to current temps, other time intervals than years     |
-| 22.5. |       | tooltips for chart and chart as own component, resolvers refactored to seperate files,                                                        |
-
-| total | 120 | |
+| 22.5. | 3     | tooltips for chart, chart as own component, resolvers refactored to seperate files, small fixes                                               |
+| total | 123   |                                                                                                                                               |
 
 ## Product backlog
 
-- testit
 - android sovellus
+- testit
 - käyttöohjeet
 - showcase to heroku

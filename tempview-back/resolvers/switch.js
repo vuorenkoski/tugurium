@@ -96,6 +96,10 @@ const setSwitchStatus = async (root, args, context) => {
   return sw
 }
 
+const statusChanged = {
+  subscribe: () => pubsub.asyncIterator(['STATUS_CHANGED']),
+}
+
 module.exports = {
   allSwitches,
   deleteSwitch,
@@ -104,4 +108,5 @@ module.exports = {
   setSwitchCommand,
   updateSwitch,
   setSwitchStatus,
+  statusChanged,
 }
