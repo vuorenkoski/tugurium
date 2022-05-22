@@ -49,14 +49,14 @@ const Chart = ({ data, zoomDomain, setZoomDomain, yDomain }) => {
                   dependentAxis
                   crossAxis={false}
                   style={{
-                    axisLabel: { fontSize: 20, padding: 30 },
-                    tickLabels: { fontSize: 20, padding: 0 },
+                    tickLabels: { fontSize: 20 },
                   }}
                 />
                 <VictoryAxis
                   offsetY={50}
                   orientation="bottom"
                   tickCount={10}
+                  fixLabelOverlap={true}
                   style={{
                     axisLabel: { fontSize: 20, padding: 30 },
                     tickLabels: { fontSize: 20, padding: 0 },

@@ -163,15 +163,15 @@ const Statistics = () => {
                   crossAxis={false}
                   label="lukumäärä"
                   style={{
-                    axisLabel: { fontSize: 20, padding: 30 },
-                    tickLabels: { fontSize: 20, padding: 0 },
+                    tickLabels: { fontSize: 20 },
                   }}
                 />
                 <VictoryAxis
                   offsetY={50}
                   tickCount={10}
+                  fixLabelOverlap={true}
                   style={{
-                    axisLabel: { fontSize: 20, padding: 30 },
+                    axisLabel: { fontSize: 20 },
                     tickLabels: { fontSize: 20, padding: 5 },
                   }}
                 />
