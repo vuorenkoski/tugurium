@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import {
-  VictoryChart,
-  VictoryLine,
-  VictoryBrushContainer,
-  VictoryZoomContainer,
-  VictoryAxis,
-  VictoryTheme,
-  VictoryLegend,
-} from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 import { SENSOR_DATA, ALL_SENSORS, GET_FIRST_TIMESTAMP } from '../queries'
-const { COLORS } = require('../util/config')
+import Chart from './Chart'
 
 const currentYear = new Date().getFullYear()
 
@@ -30,6 +21,8 @@ const yearToEpoch = (year) => {
   return date.valueOf() / 1000
 }
 
+const noScale = (x) => x
+
 const monthlyDataFromDaily = (dailyData) => {
   const currentMonthYear = new Date().getMonth() + new Date().getFullYear() * 12
   let graphData = []
@@ -40,9 +33,11 @@ const monthlyDataFromDaily = (dailyData) => {
     let result = []
     if (d.measurements.length > 0) {
       const data = d.measurements.map((m) => ({
-        value: m.y,
-        timestamp: m.x,
-        monthYear: new Date(m.x).getMonth() + new Date(m.x).getFullYear() * 12,
+        value: m.value,
+        timestamp: m.timestamp,
+        monthYear:
+          new Date(m.timestamp * 1000).getMonth() +
+          new Date(m.timestamp * 1000).getFullYear() * 12,
       }))
       const minEpoch = data.reduce(
         (p, c) => Math.min(p, c.monthYear),
@@ -63,8 +58,8 @@ const monthlyDataFromDaily = (dailyData) => {
           max = Math.max(max, value)
 
           result.push({
-            y: value,
-            x: new Date(
+            value: value,
+            timestamp: new Date(
               Math.floor((i + minEpoch) / 12),
               (i + minEpoch) % 12,
               1
@@ -73,7 +68,11 @@ const monthlyDataFromDaily = (dailyData) => {
         }
       })
     }
-    graphData.push({ year: d.year, measurements: result })
+    graphData.push({
+      legendLabel: d.legendLabel,
+      measurements: result,
+      scaleFn: noScale,
+    })
   })
   return { min, max, graphData }
 }
@@ -87,7 +86,11 @@ const groupByYear = (measurements, firstTimestamp) => {
 
   // Create series for every year
   const years = createYearSeries(firstTimestamp)
-  graphData = years.map((y) => ({ year: y, measurements: [] }))
+  graphData = years.map((y) => ({
+    legendLabel: y,
+    measurements: [],
+    scaleFn: noScale,
+  }))
   for (let i = 0; i < measurements.length; i++) {
     const date = new Date(measurements[i].timestamp * 1000)
     const year = date.getFullYear()
@@ -95,8 +98,8 @@ const groupByYear = (measurements, firstTimestamp) => {
     const value = measurements[i].value
 
     graphData[year - parseInt(years[0])].measurements.push({
-      y: value,
-      x: date,
+      value: value,
+      timestamp: date / 1000,
     })
 
     const epoch = measurements[i].timestamp - yearToEpoch(year)
@@ -111,8 +114,8 @@ const groupByYear = (measurements, firstTimestamp) => {
     // we do not take account the last year of leap year
     if (Number(key) < 365 * 24 * 60 * 60) {
       graphData[avgIndex].measurements.push({
-        y: sum[key] / count[key],
-        x: (Number(key) + yearToEpoch(currentYear)) * 1000,
+        value: sum[key] / count[key],
+        timestamp: Number(key) + yearToEpoch(currentYear),
       })
     }
   }
@@ -165,10 +168,6 @@ const Years = () => {
     setData(null)
   }
 
-  const handleZoom = (domain) => {
-    setZoomDomain(domain)
-  }
-
   const handleYearChange = (e) => {
     if (e.target.checked) {
       setSelectedYears(selectedYears.concat(e.target.id))
@@ -180,7 +179,6 @@ const Years = () => {
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value)
   }
-
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -254,11 +252,11 @@ const Years = () => {
                 <Row className="pt-1">
                   {data &&
                     data.daily.graphData.map((d) => (
-                      <Col key={d.year} className="col-auto pr-3">
+                      <Col key={d.legendLabel} className="col-auto pr-3">
                         <Form.Check
                           type={'checkbox'}
-                          id={d.year}
-                          label={d.year}
+                          id={d.legendLabel}
+                          label={d.legendLabel}
                           defaultValue={false}
                           onChange={handleYearChange.bind(this)}
                         />
@@ -270,130 +268,23 @@ const Years = () => {
           </Col>
         </Form>
       </Row>
-
-      <Row className="p-4 pt-0 border rounded m-3">
-        {data && selectedYears.length > 0 && (
-          <div>
-            <Col className="col-auto ">
-              <VictoryChart
-                theme={VictoryTheme.material}
-                width={1200}
-                height={500}
-                domain={{
-                  y: [data[period].min, data[period].max],
-                }}
-                scale={{ x: 'time' }}
-                containerComponent={
-                  <VictoryZoomContainer
-                    zoomDimension="x"
-                    zoomDomain={zoomDomain}
-                    onZoomDomainChange={handleZoom.bind(this)}
-                  />
-                }
-              >
-                <VictoryAxis
-                  dependentAxis
-                  crossAxis={false}
-                  label={data.unit}
-                  style={{
-                    axisLabel: { fontSize: 20, padding: 30 },
-                    tickLabels: { fontSize: 20, padding: 0 },
-                  }}
-                />
-                <VictoryAxis
-                  offsetY={50}
-                  orientation="bottom"
-                  tickCount={10}
-                  style={{
-                    axisLabel: { fontSize: 20, padding: 30 },
-                    tickLabels: { fontSize: 20, padding: 0 },
-                  }}
-                />
-                <VictoryLegend
-                  orientation="horizontal"
-                  itemsPerRow={5}
-                  gutter={30}
-                  x={20}
-                  y={0}
-                  margin={50}
-                  style={{
-                    border: { stroke: 'none' },
-                    labels: { fontSize: 20 },
-                  }}
-                  data={data.daily.graphData
-                    .filter((d) => selectedYears.includes(d.year))
-                    .map((d, i) => ({
-                      name: d.year,
-                      symbol: { fill: COLORS[i], type: 'square' },
-                    }))}
-                />
-
-                {data[period].graphData
-                  .filter((d) => selectedYears.includes(d.year))
-                  .map((d, i) => (
-                    <VictoryLine
-                      key={d.year}
-                      data={d.measurements}
-                      interpolation="monotoneX"
-                      name={d.year}
-                      x={'x'}
-                      y={'y'}
-                      style={{ data: { stroke: COLORS[i], strokeWidth: 1 } }}
-                    />
-                  ))}
-              </VictoryChart>
-            </Col>
-
-            <Col className="col-auto ">
-              <VictoryChart
-                width={1200}
-                height={170}
-                scale={{ x: 'time' }}
-                domain={{
-                  y: [data[period].min, data[period].max],
-                }}
-                containerComponent={
-                  <VictoryBrushContainer
-                    brushDimension="x"
-                    brushDomain={zoomDomain}
-                    onBrushDomainChange={handleZoom.bind(this)}
-                  />
-                }
-              >
-                <VictoryAxis
-                  dependentAxis
-                  domain={{
-                    y: [data[period].min, data[period].max],
-                  }}
-                  standalone={false}
-                  style={{
-                    axis: { stroke: 'transparent' },
-                    ticks: { stroke: 'transparent' },
-                    tickLabels: { fill: 'transparent' },
-                  }}
-                />
-                {data[period].graphData
-                  .filter((d) => selectedYears.includes(d.year))
-                  .map((d) => (
-                    <VictoryLine
-                      key={d.year}
-                      data={d.measurements}
-                      interpolation="monotoneX"
-                      x={'x'}
-                      y={'y'}
-                      style={{ data: { stroke: 'black', strokeWidth: 1 } }}
-                    />
-                  ))}
-              </VictoryChart>
-            </Col>
-          </div>
-        )}
-        {!sensorData.data && selectedSensor && (
+      {data && data[period] && selectedYears.length > 0 && (
+        <Chart
+          data={data[period].graphData.filter((d) =>
+            selectedYears.includes(d.legendLabel)
+          )}
+          zoomDomain={zoomDomain}
+          setZoomDomain={setZoomDomain}
+          yDomain={[data[period].min, data[period].max]}
+        />
+      )}
+      {!sensorData.data && selectedSensor && (
+        <Row className="p-4">
           <Col className="col-9">
             <p>Lataa tietoja...</p>
           </Col>
-        )}
-      </Row>
+        </Row>
+      )}
     </div>
   )
 }
