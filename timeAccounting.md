@@ -26,6 +26,8 @@
 
 - invalid prop type... kun viimeinen viikko
 - ajanjakso, boksi alle
+- suomalaiset aikamääreet charttiin?
+- interactive chart?
 - testit
 - android sovellus
 - käyttöohjeet

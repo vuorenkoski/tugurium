@@ -8,23 +8,15 @@ import {
   VictoryAxis,
   VictoryTheme,
   VictoryLegend,
+  VictoryVoronoiContainer,
+  createContainer,
 } from 'victory'
 import { Row, Col, Form } from 'react-bootstrap'
 
 import { ALL_SENSORS, GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../queries'
+import { convertDate } from '../util/conversions'
 const { COLORS } = require('../util/config')
-
-const currentYear = new Date().getFullYear()
-
-// const createYearSeries = (data, setYears) => {
-//   const yearSeries = Array(
-//     currentYear - new Date(data.getFirstTimestamp * 1000).getFullYear() + 1
-//   )
-//     .fill()
-//     .map((_, i) => currentYear - i)
-//   setYears(yearSeries)
-//   console.log(createYearSeries2(data))
-// }
+const VictoryZoomVoronoiContainer = createContainer('zoom', 'voronoi')
 
 const createYearSeries = (data) => {
   const yearSeries = []
@@ -67,7 +59,7 @@ const scaleDown = (x) => x / 10
 const noScale = (x) => x
 
 const processData = (data) => {
-  if (data.sensorData && data.sensorData.measurements.length > 0) {
+  if (data.sensorData && data.sensorData.measurements.length > 1) {
     let scaleTxt = ''
     let scaleFn = noScale
     const min = data.sensorData.measurements.reduce(
@@ -184,7 +176,7 @@ const Timeseries = () => {
   const handleZoom = (domain) => {
     setZoomDomain(domain)
   }
-  console.log(year)
+
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -241,6 +233,8 @@ const Timeseries = () => {
                   <Col className="col-auto">
                     <h4>Ajanjakso</h4>
                   </Col>
+                </Row>
+                <Row className="align-items-center">
                   <Col className="col-auto">
                     <Form.Select onChange={handleYearChange.bind(this)}>
                       {years &&
@@ -302,10 +296,15 @@ const Timeseries = () => {
                 }}
                 scale={{ x: 'time' }}
                 containerComponent={
-                  <VictoryZoomContainer
+                  <VictoryZoomVoronoiContainer
                     zoomDimension="x"
                     zoomDomain={zoomDomain}
                     onZoomDomainChange={handleZoom.bind(this)}
+                    labels={({ datum }) =>
+                      `value: ${datum.value.toFixed(1)}\n${convertDate(
+                        datum.timestamp * 1000
+                      )}`
+                    }
                   />
                 }
               >
