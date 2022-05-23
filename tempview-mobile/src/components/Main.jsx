@@ -72,7 +72,7 @@ const Main = () => {
             <AppBarTab text="Asetukset" page="/settings" />
             <View style={styles.flexItem}>
               <Pressable onPress={logout}>
-                <Text style={styles.text}>Logout</Text>
+                <Text style={styles.navText}>Logout</Text>
               </Pressable>
             </View>
           </ScrollView>
