@@ -1,7 +1,7 @@
-import Text from "./Text";
+import Text from './Text'
 
 const Timeseries = () => {
-  return <Text>AIKASARJAT</Text>;
-};
+  return <Text>AIKASARJAT</Text>
+}
 
-export default Timeseries;
+export default Timeseries

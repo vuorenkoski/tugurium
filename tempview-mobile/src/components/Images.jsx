@@ -1,7 +1,7 @@
-import Text from "./Text";
+import Text from './Text'
 
 const Images = () => {
-  return <Text>KAMERAT</Text>;
-};
+  return <Text>KAMERAT</Text>
+}
 
-export default Images;
+export default Images

@@ -1,8 +1,7 @@
-import Text from "./Text";
-import useGetUser from "../hooks/useGetUser";
+import Text from './Text'
 
 const Current = () => {
-  return <Text> lämpötilat nyt</Text>;
-};
+  return <Text> lämpötilat nyt</Text>
+}
 
-export default Current;
+export default Current

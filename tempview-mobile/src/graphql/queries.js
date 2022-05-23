@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client'
 
 export const SENSOR_STATS = gql`
   query SensorStats {
@@ -11,7 +11,7 @@ export const SENSOR_STATS = gql`
       count
     }
   }
-`;
+`
 
 export const DATAPOINTS = gql`
   query Datapoints($sensorName: String) {
@@ -20,7 +20,7 @@ export const DATAPOINTS = gql`
       timestamp
     }
   }
-`;
+`
 
 export const ALL_USERS = gql`
   query AllUsers {
@@ -30,7 +30,7 @@ export const ALL_USERS = gql`
       admin
     }
   }
-`;
+`
 
 export const SENSOR_TOKEN = gql`
   query SensorToken {
@@ -38,13 +38,13 @@ export const SENSOR_TOKEN = gql`
       value
     }
   }
-`;
+`
 
 export const GET_FIRST_TIMESTAMP = gql`
   query Query {
     getFirstTimestamp
   }
-`;
+`
 
 export const SENSOR_DATA = gql`
   query SensorData(
@@ -68,7 +68,7 @@ export const SENSOR_DATA = gql`
       }
     }
   }
-`;
+`
 
 export const ALL_SENSORS = gql`
   query AllSensors {
@@ -82,7 +82,7 @@ export const ALL_SENSORS = gql`
       lastTimestamp
     }
   }
-`;
+`
 
 export const DELETE_SENSOR = gql`
   mutation Mutation($deleteSensorId: Int!) {
@@ -90,7 +90,7 @@ export const DELETE_SENSOR = gql`
       sensorName
     }
   }
-`;
+`
 
 export const UPDATE_SENSOR = gql`
   mutation UpdateSensor(
@@ -114,7 +114,7 @@ export const UPDATE_SENSOR = gql`
       agrmethod
     }
   }
-`;
+`
 
 export const NEW_SENSOR = gql`
   mutation NewSensor(
@@ -135,7 +135,7 @@ export const NEW_SENSOR = gql`
       agrmethod
     }
   }
-`;
+`
 
 export const CREATE_USER = gql`
   mutation CreateUser($username: String!, $password: String!) {
@@ -143,7 +143,7 @@ export const CREATE_USER = gql`
       username
     }
   }
-`;
+`
 
 export const DELETE_USER = gql`
   mutation Mutation($deleteUserId: Int!) {
@@ -151,7 +151,7 @@ export const DELETE_USER = gql`
       username
     }
   }
-`;
+`
 
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
@@ -159,7 +159,7 @@ export const LOGIN = gql`
       value
     }
   }
-`;
+`
 
 export const GET_USER = gql`
   query GetUser {
@@ -169,7 +169,7 @@ export const GET_USER = gql`
       admin
     }
   }
-`;
+`
 
 export const CURRENT_SENSOR_DATA = gql`
   query Query {
@@ -182,7 +182,7 @@ export const CURRENT_SENSOR_DATA = gql`
       }
     }
   }
-`;
+`
 // Images
 
 export const ALL_IMAGES = gql`
@@ -194,7 +194,7 @@ export const ALL_IMAGES = gql`
       updatedAt
     }
   }
-`;
+`
 
 export const DELETE_IMAGE = gql`
   mutation Mutation($deleteImageId: Int!) {
@@ -202,7 +202,7 @@ export const DELETE_IMAGE = gql`
       name
     }
   }
-`;
+`
 
 export const UPDATE_IMAGE = gql`
   mutation UpdateImage(
@@ -216,7 +216,7 @@ export const UPDATE_IMAGE = gql`
       description
     }
   }
-`;
+`
 
 export const NEW_IMAGE = gql`
   mutation NewImage($name: String!, $description: String!) {
@@ -226,7 +226,7 @@ export const NEW_IMAGE = gql`
       description
     }
   }
-`;
+`
 
 // Switches
 
@@ -242,7 +242,7 @@ export const ALL_SWITCHES = gql`
       updatedAt
     }
   }
-`;
+`
 
 export const DELETE_SWITCH = gql`
   mutation Mutation($deleteSwitchId: Int!) {
@@ -250,7 +250,7 @@ export const DELETE_SWITCH = gql`
       name
     }
   }
-`;
+`
 
 export const UPDATE_SWITCH = gql`
   mutation UpdateSwitch(
@@ -271,7 +271,7 @@ export const UPDATE_SWITCH = gql`
       commandFile
     }
   }
-`;
+`
 
 export const NEW_SWITCH = gql`
   mutation NewSwitch(
@@ -290,7 +290,7 @@ export const NEW_SWITCH = gql`
       commandFile
     }
   }
-`;
+`
 
 export const SET_SWITCH_COMMAND = gql`
   mutation SetSwitchCommand($command: Boolean!, $setSwitchId: Int!) {
@@ -301,7 +301,7 @@ export const SET_SWITCH_COMMAND = gql`
       command
     }
   }
-`;
+`
 
 export const STATUS_CHANGED = gql`
   subscription {
@@ -313,7 +313,7 @@ export const STATUS_CHANGED = gql`
       updatedAt
     }
   }
-`;
+`
 
 export const NEW_MEASUREMENT = gql`
   subscription {
@@ -327,4 +327,4 @@ export const NEW_MEASUREMENT = gql`
       lastTimestamp
     }
   }
-`;
+`

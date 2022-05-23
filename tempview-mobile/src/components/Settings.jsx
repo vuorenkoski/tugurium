@@ -1,7 +1,7 @@
-import Text from "./Text";
+import Text from './Text'
 
 const Settings = () => {
-  return <Text>ASETUKSET</Text>;
-};
+  return <Text>ASETUKSET</Text>
+}
 
-export default Settings;
+export default Settings
