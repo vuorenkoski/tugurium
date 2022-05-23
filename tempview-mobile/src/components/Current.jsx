@@ -52,8 +52,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const SensorItem = (props) => {
-  const item = props.item
+const SensorItem = ({ item }) => {
   return (
     <View testID="repositoryItem" style={styles.content}>
       <View style={styles.column}>

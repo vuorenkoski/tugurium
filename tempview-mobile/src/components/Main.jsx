@@ -5,6 +5,7 @@ import Login from './Login'
 import Settings from './Settings'
 import Current from './Current'
 import Images from './Images'
+import Switches from './Switches'
 import Timeseries from './Timeseries'
 import theme from '../theme'
 
@@ -17,6 +18,11 @@ import useGetUser from '../hooks/useGetUser'
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.mainBackground,
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  loginContainer: {
+    backgroundColor: 'white',
     flexGrow: 1,
     flexShrink: 1,
   },
@@ -69,6 +75,7 @@ const Main = () => {
             <AppBarTab text="Lämpötilat" page="/" />
             <AppBarTab text="Aikasarjat" page="/timeseries" />
             <AppBarTab text="Kamerat" page="/images" />
+            <AppBarTab text="Kytkimet" page="/switches" />
             <AppBarTab text="Asetukset" page="/settings" />
             <View style={styles.flexItem}>
               <Pressable onPress={logout}>
@@ -81,6 +88,7 @@ const Main = () => {
           <Route path="/" element={<Current />} exact />
           <Route path="/settings" element={<Settings />} exact />
           <Route path="/images" element={<Images />} exact />
+          <Route path="/switches" element={<Switches />} exact />
           <Route path="/timeseries" element={<Timeseries />} exact />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -88,7 +96,7 @@ const Main = () => {
     )
   }
   return (
-    <View style={styles.container}>
+    <View style={styles.loginContainer}>
       <Text style={styles.logoText}>TEMPVIEW</Text>
       <Login />
     </View>

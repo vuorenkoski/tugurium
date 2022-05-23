@@ -27,6 +27,7 @@
 - linter semicolons and quotes
 - expo-constans
 - queries refactoring, ennen 10.11.
+- lisää mobileen backendin osoitteen syöttö
 - poista promise-hook
 - testit
 - käyttöohjeet
