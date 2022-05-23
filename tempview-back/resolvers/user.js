@@ -70,9 +70,17 @@ const deleteUser = async (root, args, context) => {
   return user
 }
 
+const getUser = async (root, args, context) => {
+  if (!context.currentUser) {
+    return null
+  }
+  return context.currentUser
+}
+
 module.exports = {
   allUsers,
   createUser,
   deleteUser,
   login,
+  getUser,
 }

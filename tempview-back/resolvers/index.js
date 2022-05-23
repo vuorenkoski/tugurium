@@ -30,7 +30,7 @@ const {
   currentSensorData,
 } = require('./sensor')
 
-const { allUsers, createUser, deleteUser, login } = require('./user')
+const { allUsers, createUser, deleteUser, login, getUser } = require('./user')
 
 const resolvers = {
   Query: {
@@ -46,6 +46,7 @@ const resolvers = {
     allSwitches,
     getFirstTimestamp,
     getSwitchCommand,
+    getUser,
   },
   Mutation: {
     addMeasurement,

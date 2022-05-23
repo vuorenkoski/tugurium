@@ -19,11 +19,15 @@
 | 20.5. | 6     | Comprehensive bootstrap structure refactoring, working in different screen sizes, css-file, faster sql-script for stats                       |
 | 21.5. | 7     | Several performance improvements for timeseries-view, viewchart tuning, faster solution to current temps, other time intervals than years     |
 | 22.5. | 3     | tooltips for chart, chart as own component, resolvers refactored to seperate files, small fixes                                               |
+| 23.5. |       | tempview mobile: walking skeleton, login,                                                                                                     |
 | total | 123   |                                                                                                                                               |
 
 ## Product backlog
 
-- android sovellus
+- linter semicolons and quotes
+- expo-constans
+- queries refactoring, ennen 10.11.
+- poista promise-hook
 - testit
 - käyttöohjeet
 - showcase to heroku

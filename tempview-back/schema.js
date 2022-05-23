@@ -77,6 +77,7 @@ const typeDefs = gql`
     currentSensorData: [Measurement]
     getFirstTimestamp: Int!
     getSwitchCommand(name: String!): Boolean
+    getUser: User
   }
 
   type Token {
