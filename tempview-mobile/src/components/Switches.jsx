@@ -1,11 +1,12 @@
 import Text from './Text'
-import { FlatList, View, StyleSheet, Pressable } from 'react-native'
+import { FlatList, View, StyleSheet } from 'react-native'
 import { useQuery, useSubscription, useMutation } from '@apollo/client'
+import SwitchSelector from 'react-native-switch-selector'
 import {
   ALL_SWITCHES,
   STATUS_CHANGED,
   SET_SWITCH_COMMAND,
-} from '../graphql/queries'
+} from '../graphql/switch'
 import { convertDate } from '../utils/conversions'
 
 const styles = StyleSheet.create({
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   itemStatusButtonOn: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
     padding: 10,
     color: 'white',
@@ -71,12 +72,12 @@ const styles = StyleSheet.create({
     width: 80,
   },
   itemStatusButtonOff: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
     padding: 10,
     color: 'white',
     borderRadius: 5,
-    backgroundColor: 'grey',
+    backgroundColor: 'silver',
     textAlign: 'center',
     width: 80,
   },
@@ -87,6 +88,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 0,
   },
+  selectorStyle: {
+    width: 120,
+  },
 })
 
 const Item = ({ item }) => {
@@ -94,16 +98,17 @@ const Item = ({ item }) => {
     refetchQueries: [{ query: ALL_SWITCHES }],
   })
 
-  const handleClick = async (sw) => {
+  const handleClick = async (sw, value) => {
     const variables = {
-      command: !sw.command,
+      command: value,
       setSwitchId: Number(sw.id),
     }
+    sw.command = value
     await setSwitch({ variables })
   }
 
   return (
-    <View testID="repositoryItem" style={styles.content}>
+    <View style={styles.content}>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.itemData}>
@@ -122,26 +127,30 @@ const Item = ({ item }) => {
             <Text style={styles.itemText}>tila:</Text>
           </View>
           <View style={styles.itemData}>
-            <Text style={styles.itemStatus}>
+            <Text
+              style={
+                item.on ? styles.itemStatusButtonOn : styles.itemStatusButtonOff
+              }
+            >
               {item.on ? <>ON</> : <>OFF</>}
             </Text>
           </View>
 
+          <View style={styles.itemData}></View>
           <View style={styles.itemData}>
-            <Text style={styles.itemText}>käsky:</Text>
-          </View>
-          <View style={styles.itemData}>
-            <Pressable onPress={() => handleClick(item)}>
-              <Text
-                style={
-                  item.command
-                    ? styles.itemStatusButtonOn
-                    : styles.itemStatusButtonOff
-                }
-              >
-                {item.command ? <>ON </> : <>OFF</>}
-              </Text>
-            </Pressable>
+            <SwitchSelector
+              style={styles.selectorStyle}
+              options={[
+                { label: 'OFF', value: false },
+                { label: 'ON', value: true },
+              ]}
+              initial={item.command ? 1 : 0}
+              onPress={(value) => handleClick(item, value)}
+              backgroundColor={'silver'}
+              buttonColor={'blue'}
+              fontSize={20}
+              textColor={'white'}
+            />
           </View>
         </View>
       </View>
