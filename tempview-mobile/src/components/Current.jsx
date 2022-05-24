@@ -86,6 +86,7 @@ const ItemListFooter = () => <View style={styles.footer} />
 const Current = () => {
   const sensors = useQuery(ALL_SENSORS, {
     fetchPolicy: 'network-only',
+    onError: (e) => console.log(e),
   })
 
   useSubscription(NEW_MEASUREMENT)

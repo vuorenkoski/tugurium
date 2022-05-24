@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const SensorItem = ({ item }) => {
+const Item = ({ item }) => {
   const [setSwitch] = useMutation(SET_SWITCH_COMMAND, {
     refetchQueries: [{ query: ALL_SWITCHES }],
   })
@@ -156,6 +156,7 @@ const ItemListFooter = () => <View style={styles.footer} />
 const Switches = () => {
   const switches = useQuery(ALL_SWITCHES, {
     fetchPolicy: 'network-only',
+    onError: (e) => console.log(e),
   })
 
   useSubscription(STATUS_CHANGED)
@@ -168,7 +169,7 @@ const Switches = () => {
           ItemSeparatorComponent={ItemSeparator}
           ListHeaderComponent={ItemSeparator}
           ListFooterComponent={ItemListFooter}
-          renderItem={({ item }) => <SensorItem item={item} />}
+          renderItem={({ item }) => <Item item={item} />}
         />
       </View>
     )

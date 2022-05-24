@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class AuthStorage {
-  constructor(namespace = 'auth') {
+  constructor(namespace = 'tempview-app') {
     this.namespace = namespace
   }
 

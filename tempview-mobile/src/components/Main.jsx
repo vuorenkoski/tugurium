@@ -14,6 +14,7 @@ import Constants from 'expo-constants'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
 import useGetUser from '../hooks/useGetUser'
+import { VERSION } from '../utils/config'
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +43,14 @@ const styles = StyleSheet.create({
     fontSize: 44,
     fontWeight: '700',
     textAlign: 'center',
-    paddingTop: 100,
+    paddingTop: 150,
+    paddingBottom: 0,
+  },
+  normalText: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'center',
+    paddingTop: 0,
     paddingBottom: 40,
   },
 })
@@ -98,6 +106,7 @@ const Main = () => {
   return (
     <View style={styles.loginContainer}>
       <Text style={styles.logoText}>TEMPVIEW</Text>
+      <Text style={styles.normalText}>versio {VERSION}</Text>
       <Login />
     </View>
   )

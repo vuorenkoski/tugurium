@@ -1,30 +1,9 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { relayStylePagination } from '@apollo/client/utilities'
 
 const httpLink = createHttpLink({
   //uri: 'http://192.168.1.136:4000/graphql',
   uri: 'https://tempview.vuorenkoski.fi/api/graphql/',
-})
-
-const cache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        repositories: relayStylePagination(),
-      },
-    },
-    Repository: {
-      fields: {
-        reviews: relayStylePagination(),
-      },
-    },
-    User: {
-      fields: {
-        reviews: relayStylePagination(),
-      },
-    },
-  },
 })
 
 const createApolloClient = (authStorage) => {
@@ -46,7 +25,7 @@ const createApolloClient = (authStorage) => {
   })
   return new ApolloClient({
     link: authLink.concat(httpLink),
-    cache,
+    cache: new InMemoryCache(),
   })
 }
 

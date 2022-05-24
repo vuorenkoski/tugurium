@@ -12,6 +12,7 @@ const useLogin = () => {
     const variables = { username, password }
     const data = await mutate({
       variables,
+      onError: (e) => console.log(e),
     })
 
     await authStorage.setAccessToken(data.data.login.value)
