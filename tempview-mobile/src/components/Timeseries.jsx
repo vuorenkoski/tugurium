@@ -1,3 +1,5 @@
+import React from 'react'
+
 import Text from './Text'
 import { View, StyleSheet } from 'react-native'
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
@@ -335,13 +337,14 @@ const Timeseries = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.title2}>Sensori</Text>
+            <Text style={styles.title2}>Sensorit</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
             {sensors.data && (
               <MultiSelect
+                id={'sensorSelector'}
                 style={styles.selectorStyle}
                 data={sensors.data.allSensors}
                 labelField="sensorFullname"

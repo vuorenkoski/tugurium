@@ -1,5 +1,15 @@
-import { Route, Routes, Navigate, Link } from 'react-router-native'
-import { View, StyleSheet, Text, ScrollView, Pressable } from 'react-native'
+import { Route, Routes, Navigate } from 'react-router-native'
+import { View, StyleSheet, Text } from 'react-native'
+import {
+  MenuProvider,
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu'
+import { useNavigate } from 'react-router-native'
+
+import { Icon } from 'react-native-elements'
 
 import Login from './Login'
 import Settings from './Settings'
@@ -28,7 +38,8 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   navContainer: {
-    padding: 20,
+    padding: 10,
+    paddingBottom: 0,
     paddingTop: Constants.statusBarHeight,
     flexDirection: 'row',
     backgroundColor: 'black',
@@ -37,7 +48,18 @@ const styles = StyleSheet.create({
   flexItem: {
     padding: 10,
   },
-  navText: { color: 'white', fontSize: 20 },
+  navText: {
+    color: 'black',
+    fontSize: 20,
+    paddingTop: 18,
+    fontWeight: 'bold',
+  },
+  logo: {
+    color: 'white',
+    fontSize: 20,
+    paddingTop: 18,
+    fontWeight: 'bold',
+  },
   logoText: {
     color: 'blue',
     fontSize: 44,
@@ -55,52 +77,74 @@ const styles = StyleSheet.create({
   },
 })
 
-const AppBarTab = (props) => {
+const menuStyle = {
+  color: 'black',
+  fontSize: 20,
+  fontWeight: 'bold',
+  padding: 10,
+}
+
+const MenuItem = ({ navigate, page, text }) => {
   return (
-    <View style={styles.flexItem}>
-      <Link to={props.page}>
-        <Text style={styles.navText}>{props.text}</Text>
-      </Link>
-    </View>
+    <MenuOption onSelect={() => navigate(page, { exact: true })}>
+      <Text style={menuStyle}>{text}</Text>
+    </MenuOption>
   )
 }
 
-const Main = () => {
+const MenuElement = () => {
+  const navigate = useNavigate()
   const authStorage = useAuthStorage()
   const apolloClient = useApolloClient()
-  const { user } = useGetUser()
 
   const logout = () => {
     authStorage.removeAccessToken()
     apolloClient.resetStore()
   }
 
+  return (
+    <View>
+      <Menu>
+        <MenuTrigger>
+          <Icon reverse color="black" name="menu" />
+        </MenuTrigger>
+
+        <MenuOptions>
+          <MenuItem text="Lämpötilat" page="/" navigate={navigate} />
+          <MenuItem text="Aikasarjat" page="/timeseries" navigate={navigate} />
+          <MenuItem text="Kamerat" page="/images" navigate={navigate} />
+          <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
+          <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
+          <MenuOption onSelect={logout}>
+            <Text style={menuStyle}>Logout</Text>
+          </MenuOption>
+        </MenuOptions>
+      </Menu>
+    </View>
+  )
+}
+
+const Main = () => {
+  const { user } = useGetUser()
+
   if (user) {
     return (
-      <View style={styles.container}>
-        <View style={styles.navContainer}>
-          <ScrollView horizontal>
-            <AppBarTab text="Lämpötilat" page="/" />
-            <AppBarTab text="Aikasarjat" page="/timeseries" />
-            <AppBarTab text="Kamerat" page="/images" />
-            <AppBarTab text="Kytkimet" page="/switches" />
-            <AppBarTab text="Asetukset" page="/settings" />
-            <View style={styles.flexItem}>
-              <Pressable onPress={logout}>
-                <Text style={styles.navText}>Logout</Text>
-              </Pressable>
-            </View>
-          </ScrollView>
+      <MenuProvider>
+        <View style={styles.container}>
+          <View style={styles.navContainer}>
+            <MenuElement />
+            <Text style={styles.logo}>TEMPVIEW</Text>
+          </View>
+          <Routes>
+            <Route path="/" element={<Current />} exact />
+            <Route path="/settings" element={<Settings />} exact />
+            <Route path="/images" element={<Images />} exact />
+            <Route path="/switches" element={<Switches />} exact />
+            <Route path="/timeseries" element={<Timeseries />} exact />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </View>
-        <Routes>
-          <Route path="/" element={<Current />} exact />
-          <Route path="/settings" element={<Settings />} exact />
-          <Route path="/images" element={<Images />} exact />
-          <Route path="/switches" element={<Switches />} exact />
-          <Route path="/timeseries" element={<Timeseries />} exact />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </View>
+      </MenuProvider>
     )
   }
   return (
