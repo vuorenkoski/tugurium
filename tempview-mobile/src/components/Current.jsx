@@ -1,7 +1,7 @@
 import Text from './Text'
 import { FlatList, View, StyleSheet } from 'react-native'
 import { useQuery, useSubscription } from '@apollo/client'
-import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/queries'
+import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../utils/conversions'
 
 const styles = StyleSheet.create({
