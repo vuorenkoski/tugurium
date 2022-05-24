@@ -20,11 +20,14 @@
 | 21.5. | 7     | Several performance improvements for timeseries-view, viewchart tuning, faster solution to current temps, other time intervals than years     |
 | 22.5. | 3     | tooltips for chart, chart as own component, resolvers refactored to seperate files, small fixes                                               |
 | 23.5. | 9     | tempview mobile walking skeleton, login, current temps view, switch-view                                                                      |
-| 24.5. |       | web-scoket running, first APK buil,                                                                                                           |
+| 24.5. |       | web-socket running, first APK build, timeseries view,                                                                                         |
 | total | 132   |                                                                                                                                               |
 
 ## Product backlog
 
+- years-view
+- images -view
+- settings -view
 - expo-constans
 - queries refactoring, ennen 10.11.
 - lisää mobileen backendin osoitteen syöttö

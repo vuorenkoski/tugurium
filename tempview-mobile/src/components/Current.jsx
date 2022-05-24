@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
   flexContainer: {
     display: 'flex',
-    backgroundColor: 'grey',
+    backgroundColor: 'white',
   },
   content: {
     flexDirection: 'row',
@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     marginLeft: 30,
     marginRight: 30,
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
   },
   sensorData: {
     flexDirection: 'column',
@@ -50,11 +53,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 0,
   },
+  loading: {
+    fontSize: 18,
+    color: 'black',
+    padding: 20,
+    paddingTop: 40,
+  },
 })
 
 const SensorItem = ({ item }) => {
   return (
-    <View testID="repositoryItem" style={styles.content}>
+    <View style={styles.content}>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.sensorData}>
@@ -106,7 +115,7 @@ const Current = () => {
   }
   return (
     <View style={styles.flexContainer}>
-      <Text>ladataa</Text>
+      <Text style={styles.loading}>Ladataan dataa palvelimelta...</Text>
     </View>
   )
 }

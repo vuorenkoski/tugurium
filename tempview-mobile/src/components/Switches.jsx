@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 
   flexContainer: {
     display: 'flex',
-    backgroundColor: 'grey',
+    backgroundColor: 'white',
   },
   content: {
     flexDirection: 'row',
@@ -29,6 +29,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     marginLeft: 30,
     marginRight: 30,
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
   },
   itemData: {
     flexDirection: 'column',
@@ -39,27 +42,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  itemValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   itemText: {
     fontSize: 18,
   },
   itemDate: {
     fontSize: 16,
     paddingBottom: 20,
-  },
-  itemStatus: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    padding: 8,
-    color: 'black',
-    borderRadius: 5,
-    borderColor: 'black',
-    textAlign: 'center',
-    borderWidth: 2,
-    width: 80,
   },
   itemStatusButtonOn: {
     fontSize: 24,
@@ -90,6 +78,12 @@ const styles = StyleSheet.create({
   },
   selectorStyle: {
     width: 120,
+  },
+  loading: {
+    fontSize: 18,
+    color: 'black',
+    padding: 20,
+    paddingTop: 40,
   },
 })
 
@@ -185,7 +179,7 @@ const Switches = () => {
   }
   return (
     <View style={styles.flexContainer}>
-      <Text>ladataan...</Text>
+      <Text style={styles.loading}>Ladataan dataa palvelimelta...</Text>
     </View>
   )
 }
