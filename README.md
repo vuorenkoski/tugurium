@@ -170,3 +170,11 @@ sudo service tempview start
 ```
 
 There is example codesnippets in c and python to send data from sensors, switches and camera (tempview-back/codeSnippetsForSending).
+
+## Mobile version
+
+Build:
+
+```
+eas build -p android --profile apk
+```

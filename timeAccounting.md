@@ -20,7 +20,7 @@
 | 21.5. | 7     | Several performance improvements for timeseries-view, viewchart tuning, faster solution to current temps, other time intervals than years     |
 | 22.5. | 3     | tooltips for chart, chart as own component, resolvers refactored to seperate files, small fixes                                               |
 | 23.5. | 9     | tempview mobile walking skeleton, login, current temps view, switch-view                                                                      |
-| 24.5. |       | web-scoket running,                                                                                                                           |
+| 24.5. |       | web-scoket running, first APK buil,                                                                                                           |
 | total | 132   |                                                                                                                                               |
 
 ## Product backlog
