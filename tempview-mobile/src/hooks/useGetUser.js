@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 
-import { GET_USER } from '../graphql/queries'
+import { GET_USER } from '../graphql/user'
 
 const useGetUser = () => {
   const { loading, data } = useQuery(GET_USER, {

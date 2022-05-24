@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client'
-import { LOGIN } from '../graphql/queries'
+import { LOGIN } from '../graphql/user'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
 
