@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from 'react-router-native'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
 import {
   MenuProvider,
   Menu,
@@ -22,8 +22,6 @@ import Timeseries from './Timeseries'
 import theme from '../theme'
 import Text from './Text'
 
-import Constants from 'expo-constants'
-
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
 import useGetUser from '../hooks/useGetUser'
@@ -38,7 +36,7 @@ const styles = StyleSheet.create({
   navContainer: {
     padding: 10,
     paddingBottom: 0,
-    paddingTop: Constants.statusBarHeight,
+    paddingTop: 0,
     flexDirection: 'row',
     backgroundColor: 'black',
     alignContent: 'space-around',
@@ -60,6 +58,12 @@ const styles = StyleSheet.create({
   versioText: {
     textAlign: 'center',
     paddingBottom: 40,
+  },
+  optionsWrapper: {
+    paddingLeft: 20,
+    borderWidth: 2,
+    padding: 10,
+    borderColor: theme.colors.secondary,
   },
 })
 
@@ -88,7 +92,11 @@ const MenuElement = () => {
           <Icon reverse color="black" name="menu" />
         </MenuTrigger>
 
-        <MenuOptions>
+        <MenuOptions
+          customStyles={{
+            optionsWrapper: styles.optionsWrapper,
+          }}
+        >
           <MenuItem text="Lämpötilat" page="/" navigate={navigate} />
           <MenuItem text="Aikasarjat" page="/timeseries" navigate={navigate} />
           <MenuItem text="Vuosivertailu" page="/years" navigate={navigate} />
@@ -97,7 +105,7 @@ const MenuElement = () => {
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
           <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
           <MenuOption onSelect={logout}>
-            <Text textType="menuItem">Logout</Text>
+            <Text textType="menuItem">Kirjaudu ulos</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
@@ -111,7 +119,8 @@ const Main = () => {
   if (user) {
     return (
       <MenuProvider>
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar animated={true} hidden={false} />
           <View style={styles.navContainer}>
             <MenuElement />
             <Text style={styles.logo}>TEMPVIEW</Text>
@@ -126,16 +135,19 @@ const Main = () => {
             <Route path="/statistics" element={<Statistics />} exact />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </View>
+        </SafeAreaView>
       </MenuProvider>
     )
   }
   return (
-    <View style={styles.container}>
-      <Text style={styles.logoText}>TEMPVIEW</Text>
-      <Text style={styles.versioText}>versio {VERSION}</Text>
-      <Login />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar animated={true} hidden={false} />
+      <View style={styles.container}>
+        <Text style={styles.logoText}>TEMPVIEW</Text>
+        <Text style={styles.versioText}>versio {VERSION}</Text>
+        <Login />
+      </View>
+    </SafeAreaView>
   )
 }
 
