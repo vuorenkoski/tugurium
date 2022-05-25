@@ -1,4 +1,3 @@
-import Text from './Text'
 import { FlatList, View, StyleSheet } from 'react-native'
 import { useQuery, useSubscription, useMutation } from '@apollo/client'
 import SwitchSelector from 'react-native-switch-selector'
@@ -7,11 +6,14 @@ import {
   STATUS_CHANGED,
   SET_SWITCH_COMMAND,
 } from '../graphql/switch'
+
+import Text from './Text'
+import theme from '../theme'
 import { convertDate } from '../utils/conversions'
 
 const styles = StyleSheet.create({
   separator: {
-    height: 10,
+    height: 30,
   },
   footer: {
     height: 150,
@@ -21,51 +23,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: 'white',
   },
-  content: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 30,
-    marginRight: 30,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  itemData: {
+  columnCenter: {
     flexDirection: 'column',
     paddingRight: 10,
     justifyContent: 'center',
   },
-  itemName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  itemText: {
-    fontSize: 18,
-  },
-  itemDate: {
-    fontSize: 16,
-    paddingBottom: 20,
-  },
-  itemStatusButtonOn: {
+  itemStatusButton: {
     fontSize: 24,
     fontWeight: 'bold',
-    padding: 10,
+    padding: 5,
     color: 'white',
     borderRadius: 5,
-    backgroundColor: 'blue',
-    textAlign: 'center',
-    width: 80,
-  },
-  itemStatusButtonOff: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    padding: 10,
-    color: 'white',
-    borderRadius: 5,
-    backgroundColor: 'silver',
     textAlign: 'center',
     width: 80,
   },
@@ -78,12 +46,6 @@ const styles = StyleSheet.create({
   },
   selectorStyle: {
     width: 120,
-  },
-  loading: {
-    fontSize: 18,
-    color: 'black',
-    padding: 20,
-    paddingTop: 40,
   },
 })
 
@@ -102,36 +64,37 @@ const Item = ({ item }) => {
   }
 
   return (
-    <View style={styles.content}>
+    <View style={theme.itemBox}>
       <View style={styles.column}>
         <View style={styles.row}>
-          <View style={styles.itemData}>
-            <Text style={styles.itemName}>{item.description}</Text>
+          <View style={styles.column}>
+            <Text textType="primaryValue">{item.description}</Text>
           </View>
         </View>
         <View style={styles.row}>
-          <View style={styles.itemData}>
-            <Text style={styles.itemDate}>
+          <View style={styles.column}>
+            <Text textType="secondaryValue" style={{ paddingBottom: 10 }}>
               {convertDate(Number(item.updatedAt) / 1000)}
             </Text>
           </View>
         </View>
         <View style={styles.row}>
-          <View style={styles.itemData}>
-            <Text style={styles.itemText}>tila:</Text>
+          <View style={styles.columnCenter}>
+            <Text textType="secondaryValue">tila:</Text>
           </View>
-          <View style={styles.itemData}>
+          <View style={styles.columnCenter}>
             <Text
-              style={
-                item.on ? styles.itemStatusButtonOn : styles.itemStatusButtonOff
-              }
+              style={{
+                ...styles.itemStatusButton,
+                backgroundColor: item.on
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
             >
               {item.on ? <>ON</> : <>OFF</>}
             </Text>
           </View>
-
-          <View style={styles.itemData}></View>
-          <View style={styles.itemData}>
+          <View style={styles.columnCenter}>
             <SwitchSelector
               style={styles.selectorStyle}
               options={[
@@ -140,8 +103,8 @@ const Item = ({ item }) => {
               ]}
               initial={item.command ? 1 : 0}
               onPress={(value) => handleClick(item, value)}
-              backgroundColor={'silver'}
-              buttonColor={'blue'}
+              backgroundColor={theme.colors.secondary}
+              buttonColor={theme.colors.primary}
               fontSize={20}
               textColor={'white'}
             />
@@ -162,24 +125,53 @@ const Switches = () => {
     onError: (e) => console.log(e),
   })
 
-  useSubscription(STATUS_CHANGED)
+  useSubscription(STATUS_CHANGED, { onError: (e) => console.log(e) })
 
-  if (switches.data && switches.data.allSwitches) {
-    return (
-      <View style={styles.flexContainer}>
-        <FlatList
-          data={switches.data.allSwitches}
-          ItemSeparatorComponent={ItemSeparator}
-          ListHeaderComponent={ItemSeparator}
-          ListFooterComponent={ItemListFooter}
-          renderItem={({ item }) => <Item item={item} />}
-        />
-      </View>
-    )
-  }
+  // if (switches.data && switches.data.allSwitches) {
+  //   return (
+  //     <View style={styles.flexContainer}>
+  //       <FlatList
+  //         data={switches.data.allSwitches}
+  //         ItemSeparatorComponent={ItemSeparator}
+  //         ListHeaderComponent={ItemSeparator}
+  //         ListFooterComponent={ItemListFooter}
+  //         renderItem={({ item }) => <Item item={item} />}
+  //       />
+  //     </View>
+  //   )
+  // }
+  // return (
+  //   <View style={styles.flexContainer}>
+  //     <Text style={styles.loading}>Ladataan dataa palvelimelta...</Text>
+  //   </View>
+  // )
   return (
-    <View style={styles.flexContainer}>
-      <Text style={styles.loading}>Ladataan dataa palvelimelta...</Text>
+    <View style={theme.content}>
+      <View style={styles.column}>
+        <View style={styles.row}>
+          <View style={styles.column}>
+            <Text textType="heading1">Kytkimet</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          {switches.data && switches.data.allSwitches && (
+            <View style={styles.flexContainer}>
+              <FlatList
+                data={switches.data.allSwitches}
+                ItemSeparatorComponent={ItemSeparator}
+                ListHeaderComponent={ItemSeparator}
+                ListFooterComponent={ItemListFooter}
+                renderItem={({ item }) => <Item item={item} />}
+              />
+            </View>
+          )}
+          {(!switches.data || !switches.data.allSwitches) && (
+            <View style={styles.column}>
+              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+            </View>
+          )}
+        </View>
+      </View>
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from 'react-router-native'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import {
   MenuProvider,
   Menu,
@@ -18,6 +18,7 @@ import Images from './Images'
 import Switches from './Switches'
 import Timeseries from './Timeseries'
 import theme from '../theme'
+import Text from './Text'
 
 import Constants from 'expo-constants'
 
@@ -32,11 +33,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
   },
-  loginContainer: {
-    backgroundColor: 'white',
-    flexGrow: 1,
-    flexShrink: 1,
-  },
   navContainer: {
     padding: 10,
     paddingBottom: 0,
@@ -45,34 +41,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignContent: 'space-around',
   },
-  flexItem: {
-    padding: 10,
-  },
-  navText: {
-    color: 'black',
-    fontSize: 20,
-    paddingTop: 18,
-    fontWeight: 'bold',
-  },
   logo: {
-    color: 'white',
+    color: theme.colors.mainBackground,
     fontSize: 20,
     paddingTop: 18,
     fontWeight: 'bold',
   },
   logoText: {
-    color: 'blue',
+    color: theme.colors.primary,
     fontSize: 44,
-    fontWeight: '700',
+    fontWeight: 'bold',
     textAlign: 'center',
     paddingTop: 150,
     paddingBottom: 0,
   },
-  normalText: {
-    color: 'black',
-    fontSize: 16,
+  versioText: {
     textAlign: 'center',
-    paddingTop: 0,
     paddingBottom: 40,
   },
 })
@@ -148,9 +132,9 @@ const Main = () => {
     )
   }
   return (
-    <View style={styles.loginContainer}>
+    <View style={styles.container}>
       <Text style={styles.logoText}>TEMPVIEW</Text>
-      <Text style={styles.normalText}>versio {VERSION}</Text>
+      <Text style={styles.versioText}>versio {VERSION}</Text>
       <Login />
     </View>
   )

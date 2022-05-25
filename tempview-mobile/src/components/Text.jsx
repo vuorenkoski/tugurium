@@ -9,6 +9,24 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.main,
     fontWeight: theme.fontWeights.normal,
   },
+  heading1: {
+    fontSize: theme.fontSizes.heading1,
+    fontWeight: theme.fontWeights.bold,
+    paddingBottom: 5,
+  },
+  heading2: {
+    fontSize: theme.fontSizes.heading2,
+    fontWeight: theme.fontWeights.bold,
+    paddingTop: 15,
+    paddingBottom: 5,
+  },
+  primaryValue: {
+    fontSize: theme.fontSizes.primaryValue,
+    fontWeight: theme.fontWeights.bold,
+  },
+  secondaryValue: {
+    fontSize: theme.fontSizes.secondaryValue,
+  },
   colorTextSecondary: {
     color: theme.colors.textSecondary,
   },
@@ -21,11 +39,22 @@ const styles = StyleSheet.create({
   fontWeightBold: {
     fontWeight: theme.fontWeights.bold,
   },
+  loading: {
+    fontSize: theme.fontSizes.primaryValue,
+    color: theme.colors.primary,
+    padding: 20,
+    paddingTop: 40,
+  },
 })
 
-const Text = ({ color, fontSize, fontWeight, style, ...props }) => {
+const Text = ({ textType, color, fontSize, fontWeight, style, ...props }) => {
   const textStyle = [
     styles.text,
+    textType === 'heading1' && styles.heading1,
+    textType === 'heading2' && styles.heading2,
+    textType === 'primaryValue' && styles.primaryValue,
+    textType === 'secondaryValue' && styles.secondaryValue,
+    textType === 'loading' && styles.loading,
     color === 'textSecondary' && styles.colorTextSecondary,
     color === 'primary' && styles.colorPrimary,
     fontSize === 'subheading' && styles.fontSizeSubheading,

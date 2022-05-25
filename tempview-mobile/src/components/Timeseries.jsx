@@ -1,12 +1,11 @@
 import React from 'react'
-
-import Text from './Text'
 import { View, StyleSheet } from 'react-native'
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
-
 import { useState } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 
+import Text from './Text'
+import theme from '../theme'
 import Chart from './Chart'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
@@ -58,30 +57,9 @@ const styles = StyleSheet.create({
   footer: {
     height: 150,
   },
-  title1: {
-    fontWeight: 'bold',
-    fontSize: 24,
-    paddingBottom: 5,
-  },
-  title2: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    paddingTop: 20,
-    paddingBottom: 10,
-  },
-
   flexContainer: {
     display: 'flex',
     backgroundColor: 'grey',
-  },
-  content: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 0,
-    marginRight: 0,
   },
   itemData: {
     flexDirection: 'column',
@@ -99,10 +77,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   selectorStyle: {
-    width: 280,
+    width: 180,
   },
   dropdown: {
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
     marginTop: 20,
@@ -113,9 +91,9 @@ const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.6,
     shadowRadius: 1.41,
-    elevation: 2,
+    elevation: 20,
   },
   itemRow: {
     paddingVertical: 5,
@@ -129,7 +107,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectedStyle: {
-    backfaceVisibility: 'hidden',
     fontSize: 8,
     backgroundColor: 'white',
   },
@@ -194,11 +171,14 @@ const Timeseries = () => {
       setYears(series)
       setYear(series[0])
     },
+    onError: (e) => console.log(e),
   })
 
-  const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA)
+  const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA, {
+    onError: (e) => console.log(e),
+  })
 
-  const sensors = useQuery(ALL_SENSORS)
+  const sensors = useQuery(ALL_SENSORS, { onError: (e) => console.log(e) })
 
   const handleSensorChange = async (value) => {
     setSelectedSensors(value)
@@ -278,16 +258,16 @@ const Timeseries = () => {
   }
 
   return (
-    <View style={styles.content}>
+    <View style={theme.content}>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.title1}>Aikasarjat</Text>
+            <Text textType="heading1">Aikasarjat</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.title2}>Datapisteiden yhdistäminen</Text>
+            <Text textType="heading2">Datapisteiden yhdistäminen</Text>
           </View>
         </View>
         <View style={styles.row}>
@@ -314,7 +294,7 @@ const Timeseries = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.title2}>Ajanjakso</Text>
+            <Text textType="heading2">Ajanjakso</Text>
           </View>
         </View>
         <View style={styles.row}>
@@ -337,14 +317,14 @@ const Timeseries = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text style={styles.title2}>Sensorit</Text>
+            <Text textType="heading2">Sensorit</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
             {sensors.data && (
               <MultiSelect
-                id={'sensorSelector'}
+                id="sensorSelector"
                 style={styles.selectorStyle}
                 data={sensors.data.allSensors}
                 labelField="sensorFullname"
@@ -359,7 +339,7 @@ const Timeseries = () => {
                 selectedTextStyle={styles.selectedTextStyle}
                 maxSelect={4}
                 maxHeight={250}
-                activeColor={'silver'}
+                activeColor="silver"
                 renderSelectedItem={() => null}
               />
             )}
@@ -369,7 +349,7 @@ const Timeseries = () => {
         <View style={styles.graphView}>
           <View style={styles.column}>
             {loading && (
-              <Text style={styles.loading}>Ladataan dataa palvelimelta...</Text>
+              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
             )}
             {!loading && (
               <Chart
