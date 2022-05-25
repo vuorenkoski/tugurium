@@ -231,7 +231,6 @@ const Timeseries = () => {
     )
   }
 
-  console.log(sensorSelectorRef.current)
   return (
     <View style={theme.content}>
       <View style={styles.column}>
@@ -329,8 +328,6 @@ const Timeseries = () => {
                 flatListProps={{
                   ItemSeparatorComponent: ItemSeparator,
                 }}
-                onFocus={() => console.log('focus')}
-                onBlur={() => console.log('blur')}
               />
             )}
           </View>
