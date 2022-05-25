@@ -1,57 +1,20 @@
 import Text from './Text'
 import { View, StyleSheet } from 'react-native'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
-import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
 
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 import Chart from './Chart'
+import DropDownSelector from './DropDownSelector'
 import theme from '../theme'
 
 const styles = StyleSheet.create({
-  separator: {
-    height: 5,
-  },
   row: {
     flexDirection: 'row',
   },
   column: {
     flexDirection: 'column',
-  },
-  selectorStyle: {
-    width: 250,
-    borderColor: theme.colors.secondary,
-    borderRadius: 5,
-    borderWidth: 1,
-    paddingLeft: 15,
-  },
-  selectorContainerStyle: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.6,
-    shadowRadius: 1.41,
-    elevation: 20,
-    margin: 20,
-    marginTop: -60,
-    width: 200,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: theme.colors.secondary,
-  },
-  itemRow: {
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemStyle: {
-    fontSize: theme.fontSizes.body,
-    padding: 3,
   },
   graphView: {
     paddingTop: 20,
@@ -194,7 +157,6 @@ const Years = () => {
   const [selectedYears, setSelectedYears] = useState([])
   const [graphData, setGraphData] = useState(null)
   const [period, setPeriod] = useState('daily')
-  const yearSelectorRef = useRef()
 
   const firstTimestamp = useQuery(GET_FIRST_TIMESTAMP)
 
@@ -222,34 +184,6 @@ const Years = () => {
     setGraphData(null)
   }
 
-  const handleYearChange = (item) => {
-    yearSelectorRef.current.close()
-    setSelectedYears(item)
-  }
-
-  const handlePeriodChange = (item) => {
-    setPeriod(item.value)
-  }
-
-  const renderItem = (item) => {
-    return (
-      <View style={styles.itemRow}>
-        <Text style={styles.itemStyle}>{item.label}</Text>
-      </View>
-    )
-  }
-
-  const renderSensorItem = (item) => {
-    return (
-      <View style={styles.itemRow}>
-        <Text style={styles.itemStyle}>{item.sensorFullname}</Text>
-      </View>
-    )
-  }
-
-  const ItemSeparator = () => <View style={styles.separator} />
-
-  console.log(selectedYears)
   return (
     <View style={theme.content}>
       <View style={styles.column}>
@@ -265,26 +199,18 @@ const Years = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Dropdown
-              style={styles.selectorStyle}
-              selectedTextStyle={{ fontSize: theme.fontSizes.body }}
-              containerStyle={styles.selectorContainerStyle}
+            <DropDownSelector
+              selectorType="DropDown"
               data={[
                 { label: 'vuorokausi', value: 'daily' },
                 { label: 'kuukausi', value: 'monthly' },
               ]}
               labelField="label"
               valueField="value"
-              placeholder="Select item"
+              placeholder="valitse"
               value={period}
               onChange={(item) => {
-                handlePeriodChange(item)
-              }}
-              textError="Error"
-              activeColor={theme.colors.secondary}
-              renderItem={(item) => renderItem(item)}
-              flatListProps={{
-                ItemSeparatorComponent: ItemSeparator,
+                setPeriod(item.value)
               }}
             />
           </View>
@@ -296,10 +222,8 @@ const Years = () => {
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Dropdown
-              style={styles.selectorStyle}
-              selectedTextStyle={{ fontSize: theme.fontSizes.body }}
-              containerStyle={styles.selectorContainerStyle}
+            <DropDownSelector
+              selectorType="DropDown"
               data={sensors.data.allSensors}
               labelField="sensorFullname"
               valueField="sensorName"
@@ -307,13 +231,6 @@ const Years = () => {
               value={selectedSensor}
               onChange={(item) => {
                 handleSensorChange(item)
-              }}
-              textError="Error"
-              activeColor={theme.colors.secondary}
-              renderItem={(item) => renderSensorItem(item)}
-              autoScroll={false}
-              flatListProps={{
-                ItemSeparatorComponent: ItemSeparator,
               }}
             />
           </View>
@@ -326,11 +243,8 @@ const Years = () => {
         <View style={styles.row}>
           <View style={styles.column}>
             {graphData && (
-              <MultiSelect
-                ref={yearSelectorRef}
-                style={styles.selectorStyle}
-                selectedTextStyle={{ fontSize: theme.fontSizes.body }}
-                containerStyle={styles.selectorContainerStyle}
+              <DropDownSelector
+                selectorType="MultiSelect"
                 data={graphData.daily.graphData
                   .map((d) => ({
                     label: d.legendLabel,
@@ -340,16 +254,11 @@ const Years = () => {
                 valueField="label"
                 placeholder="valitse vuosi"
                 value={selectedYears}
-                onChange={handleYearChange.bind(this)}
-                renderItem={(item) => renderItem(item)}
+                onChange={(item) => {
+                  setSelectedYears(item)
+                }}
                 maxSelect={4}
                 maxHeight={250}
-                activeColor={theme.colors.secondary}
-                renderSelectedItem={() => null}
-                dropdownPosition={'bottom'}
-                flatListProps={{
-                  ItemSeparatorComponent: ItemSeparator,
-                }}
               />
             )}
           </View>

@@ -20,7 +20,11 @@ const styles = StyleSheet.create({
 const ItemBox = ({ ...props }) => {
   const textStyle = [styles.itemBox]
 
-  return <View style={textStyle} {...props} />
+  return (
+    <View style={textStyle} {...props}>
+      {props.children}
+    </View>
+  )
 }
 
 export default ItemBox
