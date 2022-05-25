@@ -37,18 +37,6 @@ const theme = {
     marginLeft: 0,
     marginRight: 0,
   },
-  itemBox: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 0,
-    marginRight: 30,
-    borderColor: 'silver',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
 }
 
 export default theme

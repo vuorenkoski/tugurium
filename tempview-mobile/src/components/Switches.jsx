@@ -8,6 +8,7 @@ import {
 } from '../graphql/switch'
 
 import Text from './Text'
+import ItemBox from './ItemBox'
 import theme from '../theme'
 import { convertDate } from '../utils/conversions'
 
@@ -64,7 +65,7 @@ const Item = ({ item }) => {
   }
 
   return (
-    <View style={theme.itemBox}>
+    <ItemBox>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.column}>
@@ -111,7 +112,7 @@ const Item = ({ item }) => {
           </View>
         </View>
       </View>
-    </View>
+    </ItemBox>
   )
 }
 

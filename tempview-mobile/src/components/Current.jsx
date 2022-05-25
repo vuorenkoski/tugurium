@@ -4,6 +4,7 @@ import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../utils/conversions'
 import theme from '../theme'
+import ItemBox from './ItemBox'
 
 const styles = StyleSheet.create({
   separator: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 
 const SensorItem = ({ item }) => {
   return (
-    <View style={theme.itemBox}>
+    <ItemBox>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.columnWithPadding}>
@@ -51,7 +52,7 @@ const SensorItem = ({ item }) => {
           </View>
         </View>
       </View>
-    </View>
+    </ItemBox>
   )
 }
 
