@@ -26,14 +26,13 @@
 
 ## Product backlog
 
-- selectorin automaattinen sulkeminen
 - years-view
 - images -view
 - settings -view
 - expo-constans
-- queries refactoring, ennen 10.11.
 - lisää mobileen backendin osoitteen syöttö
 - poista promise-hook
 - testit
+- front: queries refactoring, ennen 10.11.
 - käyttöohjeet
 - showcase to heroku

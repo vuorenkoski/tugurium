@@ -1,7 +1,6 @@
-import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 
 import Text from './Text'
@@ -9,6 +8,48 @@ import theme from '../theme'
 import Chart from './Chart'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
+
+const styles = StyleSheet.create({
+  separator: {
+    height: 5,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  column: {
+    flexDirection: 'column',
+  },
+  selectorStyle: {
+    width: 180,
+  },
+  selectorContainerStyle: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 1.41,
+    elevation: 20,
+    margin: 20,
+    marginTop: -60,
+    width: 200,
+  },
+  itemRow: {
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemStyle: {
+    fontSize: theme.fontSizes.body,
+    padding: 3,
+  },
+  graphView: {
+    paddingTop: 20,
+  },
+})
 
 const createYearSeries = (data) => {
   const yearSeries = []
@@ -50,80 +91,7 @@ const scaleUp = (x) => x * 10
 const scaleDown = (x) => x / 10
 const noScale = (x) => x
 
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-  },
-  footer: {
-    height: 150,
-  },
-  flexContainer: {
-    display: 'flex',
-    backgroundColor: 'grey',
-  },
-  itemData: {
-    flexDirection: 'column',
-    paddingRight: 10,
-    justifyContent: 'center',
-  },
-  itemDate: {
-    fontSize: 16,
-    paddingBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  column: {
-    flexDirection: 'column',
-  },
-  selectorStyle: {
-    width: 180,
-  },
-  dropdown: {
-    backgroundColor: 'red',
-    borderBottomColor: 'gray',
-    borderBottomWidth: 0.5,
-    marginTop: 20,
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.6,
-    shadowRadius: 1.41,
-    elevation: 20,
-  },
-  itemRow: {
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemText: {
-    flex: 1,
-    fontSize: 16,
-  },
-  selectedStyle: {
-    fontSize: 8,
-    backgroundColor: 'white',
-  },
-  selectedTextStyle: {
-    fontSize: 8,
-    color: 'black',
-  },
-  loading: {
-    fontSize: 18,
-    color: 'black',
-    padding: 20,
-    paddingTop: 40,
-  },
-  graphView: {
-    paddingTop: 20,
-  },
-})
+const ItemSeparator = () => <View style={styles.separator} />
 
 const processData = (data) => {
   if (data.sensorData && data.sensorData.measurements.length > 1) {
@@ -164,6 +132,7 @@ const Timeseries = () => {
   const [period, setPeriod] = useState('HOUR')
   const [year, setYear] = useState({ label: null })
   const [graphData, setGraphData] = useState([])
+  const sensorSelectorRef = useRef()
 
   useQuery(GET_FIRST_TIMESTAMP, {
     onCompleted: (data) => {
@@ -181,6 +150,7 @@ const Timeseries = () => {
   const sensors = useQuery(ALL_SENSORS, { onError: (e) => console.log(e) })
 
   const handleSensorChange = async (value) => {
+    sensorSelectorRef.current.close()
     setSelectedSensors(value)
     const newData = []
 
@@ -244,19 +214,20 @@ const Timeseries = () => {
   const renderSensorItem = (item) => {
     return (
       <View style={styles.itemRow}>
-        <Text style={styles.itemText}>{item.sensorFullname}</Text>
+        <Text style={styles.itemStyle}>{item.sensorFullname}</Text>
       </View>
     )
   }
 
-  const renderYearItem = (item) => {
+  const renderItem = (item) => {
     return (
       <View style={styles.itemRow}>
-        <Text style={styles.itemText}>{item.label}</Text>
+        <Text style={styles.itemStyle}>{item.label}</Text>
       </View>
     )
   }
 
+  console.log(sensorSelectorRef.current)
   return (
     <View style={theme.content}>
       <View style={styles.column}>
@@ -274,7 +245,7 @@ const Timeseries = () => {
           <View style={styles.column}>
             <Dropdown
               style={styles.selectorStyle}
-              containerStyle={styles.shadow}
+              containerStyle={styles.selectorContainerStyle}
               data={[
                 { label: 'ei yhdistämistä', value: 'NO' },
                 { label: 'tunti', value: 'HOUR' },
@@ -288,7 +259,11 @@ const Timeseries = () => {
                 handlePeriodChange(item)
               }}
               textError="Error"
-              renderItem={(item) => renderYearItem(item)}
+              activeColor={theme.colors.secondary}
+              renderItem={(item) => renderItem(item)}
+              flatListProps={{
+                ItemSeparatorComponent: ItemSeparator,
+              }}
             />
           </View>
         </View>
@@ -301,17 +276,22 @@ const Timeseries = () => {
           <View style={styles.column}>
             <Dropdown
               style={styles.selectorStyle}
-              containerStyle={styles.shadow}
+              containerStyle={styles.selectorContainerStyle}
               data={years}
               labelField="label"
               valueField="label"
-              placeholder="Select item"
+              placeholder="valitse"
               value={year.label}
               onChange={(item) => {
                 handleYearChange(item)
               }}
               textError="Error"
-              renderItem={(item) => renderYearItem(item)}
+              activeColor={theme.colors.secondary}
+              renderItem={(item) => renderItem(item)}
+              autoScroll={false}
+              flatListProps={{
+                ItemSeparatorComponent: ItemSeparator,
+              }}
             />
           </View>
         </View>
@@ -324,23 +304,27 @@ const Timeseries = () => {
           <View style={styles.column}>
             {sensors.data && (
               <MultiSelect
+                ref={sensorSelectorRef}
                 id="sensorSelector"
                 style={styles.selectorStyle}
+                containerStyle={styles.selectorContainerStyle}
                 data={sensors.data.allSensors}
                 labelField="sensorFullname"
                 valueField="sensorName"
                 placeholder="valitse sensorit"
                 value={selectedSensors}
-                onChange={(item) => {
-                  handleSensorChange(item)
-                }}
+                onChange={handleSensorChange.bind(this)}
                 renderItem={(item) => renderSensorItem(item)}
-                selectedStyle={styles.selectedStyle}
-                selectedTextStyle={styles.selectedTextStyle}
                 maxSelect={4}
                 maxHeight={250}
-                activeColor="silver"
+                activeColor={theme.colors.secondary}
                 renderSelectedItem={() => null}
+                dropdownPosition={'bottom'}
+                flatListProps={{
+                  ItemSeparatorComponent: ItemSeparator,
+                }}
+                onFocus={() => console.log('focus')}
+                onBlur={() => console.log('blur')}
               />
             )}
           </View>

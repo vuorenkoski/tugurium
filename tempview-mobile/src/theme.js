@@ -11,11 +11,11 @@ const theme = {
     update: 'green',
   },
   fontSizes: {
-    body: 14,
+    body: 16,
     heading1: 24,
+    heading2: 18,
     primaryValue: 18,
     secondaryValue: 16,
-    heading2: 16,
   },
   fonts: {
     main: Platform.select({

@@ -38,12 +38,6 @@ const styles = StyleSheet.create({
   column: {
     flexDirection: 'column',
   },
-  loading: {
-    fontSize: 18,
-    color: 'black',
-    padding: 20,
-    paddingTop: 40,
-  },
 })
 
 const SensorItem = ({ item }) => {
