@@ -68,19 +68,19 @@ const Item = ({ item }) => {
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text textType="primaryValue">{item.description}</Text>
+            <Text textType="primaryText">{item.description}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text textType="secondaryValue" style={{ paddingBottom: 10 }}>
+            <Text textType="secondaryText" style={{ paddingBottom: 10 }}>
               {convertDate(Number(item.updatedAt) / 1000)}
             </Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.columnCenter}>
-            <Text textType="secondaryValue">tila:</Text>
+            <Text textType="secondaryText">tila:</Text>
           </View>
           <View style={styles.columnCenter}>
             <Text

@@ -16,18 +16,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: 'white',
   },
-  item: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    padding: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 0,
-    marginRight: 30,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
   columnWithPadding: {
     flexDirection: 'column',
     paddingRight: 10,
@@ -42,22 +30,22 @@ const styles = StyleSheet.create({
 
 const SensorItem = ({ item }) => {
   return (
-    <View style={styles.item}>
+    <View style={theme.itemBox}>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.columnWithPadding}>
-            <Text textType="primaryValue">{item.sensorFullname}</Text>
+            <Text textType="primaryText">{item.sensorFullname}</Text>
           </View>
 
           <View style={styles.column}>
-            <Text textType="primaryValue">
+            <Text textType="primaryText">
               {convertTemp(item.lastValue, item.sensorUnit)}
             </Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text textType="secondaryValue">
+            <Text textType="secondaryText">
               {convertDate(item.lastTimestamp)}
             </Text>
           </View>

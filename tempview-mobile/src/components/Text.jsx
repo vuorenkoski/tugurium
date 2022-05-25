@@ -20,11 +20,15 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 5,
   },
-  primaryValue: {
+  menuItem: {
+    fontSize: theme.fontSizes.heading2,
+    paddingBottom: 10,
+  },
+  primaryText: {
     fontSize: theme.fontSizes.primaryValue,
     fontWeight: theme.fontWeights.bold,
   },
-  secondaryValue: {
+  secondaryText: {
     fontSize: theme.fontSizes.secondaryValue,
   },
   colorTextSecondary: {
@@ -52,8 +56,9 @@ const Text = ({ textType, color, fontSize, fontWeight, style, ...props }) => {
     styles.text,
     textType === 'heading1' && styles.heading1,
     textType === 'heading2' && styles.heading2,
-    textType === 'primaryValue' && styles.primaryValue,
-    textType === 'secondaryValue' && styles.secondaryValue,
+    textType === 'menuItem' && styles.menuItem,
+    textType === 'primaryText' && styles.primaryText,
+    textType === 'secondaryText' && styles.secondaryText,
     textType === 'loading' && styles.loading,
     color === 'textSecondary' && styles.colorTextSecondary,
     color === 'primary' && styles.colorPrimary,

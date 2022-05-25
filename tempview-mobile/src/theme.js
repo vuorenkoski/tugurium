@@ -45,7 +45,7 @@ const theme = {
     paddingBottom: 10,
     marginLeft: 0,
     marginRight: 30,
-    borderColor: 'black',
+    borderColor: 'silver',
     borderWidth: 1,
     borderRadius: 5,
   },

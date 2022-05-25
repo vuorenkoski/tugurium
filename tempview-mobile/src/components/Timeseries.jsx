@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
   },
   selectorStyle: {
     width: 180,
+    borderColor: theme.colors.secondary,
+    borderRadius: 5,
+    borderWidth: 1,
+    paddingLeft: 15,
   },
   selectorContainerStyle: {
     shadowColor: '#000',
@@ -245,6 +249,7 @@ const Timeseries = () => {
           <View style={styles.column}>
             <Dropdown
               style={styles.selectorStyle}
+              selectedTextStyle={{ fontSize: theme.fontSizes.body }}
               containerStyle={styles.selectorContainerStyle}
               data={[
                 { label: 'ei yhdistämistä', value: 'NO' },
@@ -276,6 +281,7 @@ const Timeseries = () => {
           <View style={styles.column}>
             <Dropdown
               style={styles.selectorStyle}
+              selectedTextStyle={{ fontSize: theme.fontSizes.body }}
               containerStyle={styles.selectorContainerStyle}
               data={years}
               labelField="label"
@@ -305,8 +311,8 @@ const Timeseries = () => {
             {sensors.data && (
               <MultiSelect
                 ref={sensorSelectorRef}
-                id="sensorSelector"
                 style={styles.selectorStyle}
+                selectedTextStyle={{ fontSize: theme.fontSizes.body }}
                 containerStyle={styles.selectorContainerStyle}
                 data={sensors.data.allSensors}
                 labelField="sensorFullname"

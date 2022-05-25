@@ -11,13 +11,13 @@ const styles = StyleSheet.create({
   },
 })
 
-const Images = () => {
+const Statistics = () => {
   return (
     <View style={theme.content}>
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.column}>
-            <Text textType="heading1">Kamerat</Text>
+            <Text textType="heading1">Tilastoja</Text>
           </View>
         </View>
       </View>
@@ -25,4 +25,4 @@ const Images = () => {
   )
 }
 
-export default Images
+export default Statistics

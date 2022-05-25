@@ -13,6 +13,8 @@ import { Icon } from 'react-native-elements'
 
 import Login from './Login'
 import Settings from './Settings'
+import Statistics from './Statistics'
+import Years from './Years'
 import Current from './Current'
 import Images from './Images'
 import Switches from './Switches'
@@ -61,17 +63,10 @@ const styles = StyleSheet.create({
   },
 })
 
-const menuStyle = {
-  color: 'black',
-  fontSize: 20,
-  fontWeight: 'bold',
-  padding: 10,
-}
-
 const MenuItem = ({ navigate, page, text }) => {
   return (
     <MenuOption onSelect={() => navigate(page, { exact: true })}>
-      <Text style={menuStyle}>{text}</Text>
+      <Text textType="menuItem">{text}</Text>
     </MenuOption>
   )
 }
@@ -96,11 +91,13 @@ const MenuElement = () => {
         <MenuOptions>
           <MenuItem text="Lämpötilat" page="/" navigate={navigate} />
           <MenuItem text="Aikasarjat" page="/timeseries" navigate={navigate} />
+          <MenuItem text="Vuosivertailu" page="/years" navigate={navigate} />
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
           <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
+          <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
           <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
           <MenuOption onSelect={logout}>
-            <Text style={menuStyle}>Logout</Text>
+            <Text textType="menuItem">Logout</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
@@ -123,8 +120,10 @@ const Main = () => {
             <Route path="/" element={<Current />} exact />
             <Route path="/settings" element={<Settings />} exact />
             <Route path="/images" element={<Images />} exact />
+            <Route path="/years" element={<Years />} exact />
             <Route path="/switches" element={<Switches />} exact />
             <Route path="/timeseries" element={<Timeseries />} exact />
+            <Route path="/statistics" element={<Statistics />} exact />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </View>

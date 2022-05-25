@@ -21,7 +21,7 @@
 | 22.5. | 3     | tooltips for chart, chart as own component, resolvers refactored to seperate files, small fixes                                               |
 | 23.5. | 9     | tempview mobile walking skeleton, login, current temps view, switch-view                                                                      |
 | 24.5. | 10    | web-socket running, first APK build, timeseries view, dropdown navigation                                                                     |
-| 25.5. |       | theme refactored,                                                                                                                             |
+| 25.5. |       | theme refactored, timeseries tuned,                                                                                                           |
 | total | 142   |                                                                                                                                               |
 
 ## Product backlog
