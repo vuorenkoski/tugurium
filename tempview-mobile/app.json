@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "tempview-mobile",
-    "slug": "tempview-mobile",
-    "version": "1.0.0",
-    "orientation": "portrait",
+    "name": "Tempview",
+    "slug": "Tempview",
+    "version": "0.2.2",
+    "description": "Home automation client",
+    "githubUrl": "https://github.com/vuorenkoski/tempview",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/newIcon2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

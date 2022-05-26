@@ -1,5 +1,6 @@
 import { Route, Routes, Navigate } from 'react-router-native'
-import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 import {
   MenuProvider,
   Menu,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   navContainer: {
     padding: 10,
     paddingBottom: 0,
-    paddingTop: 0,
+    paddingTop: 30,
     flexDirection: 'row',
     backgroundColor: 'black',
     alignContent: 'space-around',
@@ -119,35 +120,31 @@ const Main = () => {
   if (user) {
     return (
       <MenuProvider>
-        <SafeAreaView style={styles.container}>
-          <StatusBar animated={true} hidden={false} />
-          <View style={styles.navContainer}>
-            <MenuElement />
-            <Text style={styles.logo}>TEMPVIEW</Text>
-          </View>
-          <Routes>
-            <Route path="/" element={<Current />} exact />
-            <Route path="/settings" element={<Settings />} exact />
-            <Route path="/images" element={<Images />} exact />
-            <Route path="/years" element={<Years />} exact />
-            <Route path="/switches" element={<Switches />} exact />
-            <Route path="/timeseries" element={<Timeseries />} exact />
-            <Route path="/statistics" element={<Statistics />} exact />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </SafeAreaView>
+        <StatusBar style="dark" />
+        <View style={styles.navContainer}>
+          <MenuElement />
+          <Text style={styles.logo}>TEMPVIEW</Text>
+        </View>
+        <Routes>
+          <Route path="/" element={<Current />} exact />
+          <Route path="/settings" element={<Settings />} exact />
+          <Route path="/images" element={<Images />} exact />
+          <Route path="/years" element={<Years />} exact />
+          <Route path="/switches" element={<Switches />} exact />
+          <Route path="/timeseries" element={<Timeseries />} exact />
+          <Route path="/statistics" element={<Statistics />} exact />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </MenuProvider>
     )
   }
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar animated={true} hidden={false} />
-      <View style={styles.container}>
-        <Text style={styles.logoText}>TEMPVIEW</Text>
-        <Text style={styles.versioText}>versio {VERSION}</Text>
-        <Login />
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <Text style={styles.logoText}>TEMPVIEW</Text>
+      <Text style={styles.versioText}>versio {VERSION}</Text>
+      <Login />
+    </View>
   )
 }
 

@@ -15,9 +15,11 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignSelf: 'stretch',
   },
   column: {
     flexDirection: 'column',
+    alignSelf: 'stretch',
   },
 })
 

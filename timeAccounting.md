@@ -26,6 +26,8 @@
 
 ## Product backlog
 
+- oikea navbarin korkeus
+- errormessage to login
 - images -view
 - statistics -view
 - settings -view
