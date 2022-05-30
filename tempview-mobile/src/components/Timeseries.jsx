@@ -1,23 +1,35 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { useState } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 
 import Text from './Text'
-import theme from '../theme'
 import Chart from './Chart'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 import DropDownSelector from './DropDownSelector'
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-  },
-  column: {
+  content: {
     flexDirection: 'column',
   },
-  graphView: {
-    paddingTop: 20,
+  labelRow: {
+    flexDirection: 'row',
+  },
+  optionListRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  optionComponentStyle: {
+    flexDirection: 'column',
+    margin: 10,
+  },
+  graphRow: {
+    flexDirection: 'row',
+  },
+  graphContainer: {
+    width: 400,
+    height: 350,
+    paddingTop: 10,
   },
 })
 
@@ -178,100 +190,80 @@ const Timeseries = () => {
   }
 
   return (
-    <View style={theme.content}>
-      <View style={styles.column}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading1">Aikasarjat</Text>
-          </View>
+    <ScrollView style={styles.content}>
+      <View style={styles.labelRow}>
+        <Text textType="heading1">Aikasarjat</Text>
+      </View>
+      <View style={styles.optionListRow}>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Datapisteiden yhdistäminen</Text>
+          <DropDownSelector
+            selectorType="DropDown"
+            data={[
+              { label: 'ei yhdistämistä', value: 'NO' },
+              { label: 'tunti', value: 'HOUR' },
+              { label: 'vuorokausi', value: 'DAY' },
+            ]}
+            labelField="label"
+            valueField="value"
+            placeholder="Select item"
+            value={period}
+            onChange={(item) => {
+              handlePeriodChange(item)
+            }}
+          />
         </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Datapisteiden yhdistäminen</Text>
-          </View>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Ajanjakso</Text>
+          <DropDownSelector
+            selectorType="DropDown"
+            data={years}
+            labelField="label"
+            valueField="label"
+            placeholder="valitse"
+            value={year.label}
+            onChange={(item) => {
+              handleYearChange(item)
+            }}
+          />
         </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Sensorit</Text>
+          {sensors.data && (
             <DropDownSelector
-              selectorType="DropDown"
-              data={[
-                { label: 'ei yhdistämistä', value: 'NO' },
-                { label: 'tunti', value: 'HOUR' },
-                { label: 'vuorokausi', value: 'DAY' },
-              ]}
-              labelField="label"
-              valueField="value"
-              placeholder="Select item"
-              value={period}
+              selectorType="MultiSelect"
+              data={sensors.data.allSensors}
+              labelField="sensorFullname"
+              valueField="sensorName"
+              placeholder="valitse sensorit"
+              value={selectedSensors}
               onChange={(item) => {
-                handlePeriodChange(item)
+                handleSensorChange(item)
               }}
+              maxSelect={4}
+              maxHeight={250}
             />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Ajanjakso</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <DropDownSelector
-              selectorType="DropDown"
-              data={years}
-              labelField="label"
-              valueField="label"
-              placeholder="valitse"
-              value={year.label}
-              onChange={(item) => {
-                handleYearChange(item)
-              }}
-            />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Sensorit</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            {sensors.data && (
-              <DropDownSelector
-                selectorType="MultiSelect"
-                data={sensors.data.allSensors}
-                labelField="sensorFullname"
-                valueField="sensorName"
-                placeholder="valitse sensorit"
-                value={selectedSensors}
-                onChange={(item) => {
-                  handleSensorChange(item)
-                }}
-                maxSelect={4}
-                maxHeight={250}
-              />
-            )}
-          </View>
-        </View>
-
-        <View style={styles.graphView}>
-          <View style={styles.column}>
-            {loading && (
-              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-            )}
-            {!loading && (
-              <Chart
-                data={graphData}
-                yDomain={[
-                  graphData.reduce((p, c) => Math.min(p, c.min), 0),
-                  graphData.reduce((p, c) => Math.max(p, c.max), 0),
-                ]}
-              />
-            )}
-          </View>
+          )}
         </View>
       </View>
-    </View>
+
+      <View style={styles.graphRow}>
+        {loading && (
+          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+        )}
+        {!loading && (
+          <View style={styles.graphContainer}>
+            <Chart
+              data={graphData}
+              yDomain={[
+                graphData.reduce((p, c) => Math.min(p, c.min), 0),
+                graphData.reduce((p, c) => Math.max(p, c.max), 0),
+              ]}
+            />
+          </View>
+        )}
+      </View>
+    </ScrollView>
   )
 }
 

@@ -1,5 +1,5 @@
 import Text from './Text'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 
@@ -7,9 +7,31 @@ import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 import Chart from './Chart'
 import DropDownSelector from './DropDownSelector'
-import theme from '../theme'
 
 const styles = StyleSheet.create({
+  content: {
+    flexDirection: 'column',
+  },
+  labelRow: {
+    flexDirection: 'row',
+  },
+  optionListRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  optionComponentStyle: {
+    flexDirection: 'column',
+    margin: 10,
+  },
+  graphRow: {
+    flexDirection: 'row',
+  },
+  graphContainer: {
+    width: 400,
+    height: 350,
+    paddingTop: 10,
+  },
+
   row: {
     flexDirection: 'row',
   },
@@ -185,102 +207,89 @@ const Years = () => {
   }
 
   return (
-    <View style={theme.content}>
-      <View style={styles.column}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading1">Vuosivertailu</Text>
-          </View>
+    <ScrollView style={styles.content}>
+      <View style={styles.labelRow}>
+        <Text textType="heading1">Vuosivertailu</Text>
+      </View>
+      <View style={styles.optionListRow}>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Datapisteiden yhdistäminen</Text>
+          <DropDownSelector
+            selectorType="DropDown"
+            data={[
+              { label: 'vuorokausi', value: 'daily' },
+              { label: 'kuukausi', value: 'monthly' },
+            ]}
+            labelField="label"
+            valueField="value"
+            placeholder="valitse"
+            value={period}
+            onChange={(item) => {
+              setPeriod(item.value)
+            }}
+          />
         </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Datapisteiden yhdistäminen</Text>
-          </View>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Sensori</Text>
+          <DropDownSelector
+            selectorType="DropDown"
+            data={sensors.data.allSensors}
+            labelField="sensorFullname"
+            valueField="sensorName"
+            placeholder="valitse sensori"
+            value={selectedSensor}
+            onChange={(item) => {
+              handleSensorChange(item)
+            }}
+          />
         </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
+        <View style={styles.optionComponentStyle}>
+          <Text textType="heading2">Vuodet</Text>
+          {graphData && (
             <DropDownSelector
-              selectorType="DropDown"
-              data={[
-                { label: 'vuorokausi', value: 'daily' },
-                { label: 'kuukausi', value: 'monthly' },
-              ]}
+              selectorType="MultiSelect"
+              data={graphData.daily.graphData
+                .map((d) => ({
+                  label: d.legendLabel,
+                }))
+                .reverse()}
               labelField="label"
-              valueField="value"
-              placeholder="valitse"
-              value={period}
+              valueField="label"
+              placeholder="valitse vuosi"
+              value={selectedYears}
               onChange={(item) => {
-                setPeriod(item.value)
+                setSelectedYears(item)
               }}
+              maxSelect={4}
+              maxHeight={250}
             />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Sensori</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
+          )}
+          {!graphData && (
             <DropDownSelector
-              selectorType="DropDown"
-              data={sensors.data.allSensors}
-              labelField="sensorFullname"
-              valueField="sensorName"
-              placeholder="valitse sensori"
-              value={selectedSensor}
-              onChange={(item) => {
-                handleSensorChange(item)
-              }}
+              selectorType="MultiSelect"
+              disable={true}
+              placeholder=""
             />
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text textType="heading2">Vuodet</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            {graphData && (
-              <DropDownSelector
-                selectorType="MultiSelect"
-                data={graphData.daily.graphData
-                  .map((d) => ({
-                    label: d.legendLabel,
-                  }))
-                  .reverse()}
-                labelField="label"
-                valueField="label"
-                placeholder="valitse vuosi"
-                value={selectedYears}
-                onChange={(item) => {
-                  setSelectedYears(item)
-                }}
-                maxSelect={4}
-                maxHeight={250}
-              />
-            )}
-          </View>
-        </View>
-
-        <View style={styles.graphView}>
-          <View style={styles.column}>
-            {!sensorData.data && selectedSensor && (
-              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-            )}
-            {graphData && graphData[period] && selectedYears.length > 0 && (
-              <Chart
-                data={graphData[period].graphData.filter((d) =>
-                  selectedYears.includes(d.legendLabel)
-                )}
-                yDomain={[graphData[period].min, graphData[period].max]}
-              />
-            )}
-          </View>
+          )}
         </View>
       </View>
-    </View>
+
+      <View style={styles.graphRow}>
+        {!sensorData.data && selectedSensor && (
+          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+        )}
+        {graphData && graphData[period] && selectedYears.length > 0 && (
+          <View style={styles.graphContainer}>
+            <Chart
+              data={graphData[period].graphData.filter((d) =>
+                selectedYears.includes(d.legendLabel)
+              )}
+              yDomain={[graphData[period].min, graphData[period].max]}
+            />
+          </View>
+        )}
+      </View>
+    </ScrollView>
   )
 }
 

@@ -22,11 +22,18 @@
 | 23.5. | 9     | tempview mobile walking skeleton, login, current temps view, switch-view                                                                      |
 | 24.5. | 10    | web-socket running, first APK build, timeseries view, dropdown navigation                                                                     |
 | 25.5. | 8     | theme refactored, timeseries tuned, years-view created, new DropDownSelector and ItemBox components                                           |
+| 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                     |
 | total | 150   |                                                                                                                                               |
 
 ## Product backlog
 
-- oikea navbarin korkeus
+- poistaminen kestää kauan, vähän aikaa nappi näkyy sinisellä pohjalla?
+- myös asetusten päivittämisessä nappi jää siniseksi joksikin aikaa
+- tilastot: sensorit aakkosjärjestykseen
+- vain admin näkee sensoritokenin
+- datan päivittyminen kun sovelluksen avaa uudelleen
+- oikea virhe viesti kun backend ei vastaa (mobiili ja selain)
+
 - errormessage to login
 - images -view
 - statistics -view
@@ -38,3 +45,5 @@
 - front: queries refactoring, ennen 10.11.
 - käyttöohjeet
 - showcase to heroku
+- aitan kytkimen koodaus
+- koodaa uudelleen lämpötilanäyttö

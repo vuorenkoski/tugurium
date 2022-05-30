@@ -29,10 +29,14 @@ import useGetUser from '../hooks/useGetUser'
 import { VERSION } from '../utils/config'
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
+    flexDirection: 'column',
     backgroundColor: theme.colors.mainBackground,
-    flexGrow: 1,
-    flexShrink: 1,
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginLeft: 0,
+    marginRight: 0,
   },
   navContainer: {
     padding: 10,
@@ -120,30 +124,34 @@ const Main = () => {
   if (user) {
     return (
       <MenuProvider>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
         <View style={styles.navContainer}>
           <MenuElement />
           <Text style={styles.logo}>TEMPVIEW</Text>
         </View>
-        <Routes>
-          <Route path="/" element={<Current />} exact />
-          <Route path="/settings" element={<Settings />} exact />
-          <Route path="/images" element={<Images />} exact />
-          <Route path="/years" element={<Years />} exact />
-          <Route path="/switches" element={<Switches />} exact />
-          <Route path="/timeseries" element={<Timeseries />} exact />
-          <Route path="/statistics" element={<Statistics />} exact />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <View style={styles.content}>
+          <Routes>
+            <Route path="/" element={<Current />} exact />
+            <Route path="/settings" element={<Settings />} exact />
+            <Route path="/images" element={<Images />} exact />
+            <Route path="/years" element={<Years />} exact />
+            <Route path="/switches" element={<Switches />} exact />
+            <Route path="/timeseries" element={<Timeseries />} exact />
+            <Route path="/statistics" element={<Statistics />} exact />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </View>
       </MenuProvider>
     )
   }
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <Text style={styles.logoText}>TEMPVIEW</Text>
-      <Text style={styles.versioText}>versio {VERSION}</Text>
-      <Login />
+    <View>
+      <StatusBar style="dark" />
+      <View style={styles.content}>
+        <Text style={styles.logoText}>TEMPVIEW</Text>
+        <Text style={styles.versioText}>versio {VERSION}</Text>
+        <Login />
+      </View>
     </View>
   )
 }

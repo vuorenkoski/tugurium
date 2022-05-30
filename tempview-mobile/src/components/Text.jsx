@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
   heading1: {
     fontSize: theme.fontSizes.heading1,
     fontWeight: theme.fontWeights.bold,
-    paddingBottom: 5,
+    paddingBottom: 15,
   },
   heading2: {
     fontSize: theme.fontSizes.heading2,
     fontWeight: theme.fontWeights.bold,
-    paddingTop: 15,
+    paddingTop: 0,
     paddingBottom: 5,
   },
   menuItem: {
