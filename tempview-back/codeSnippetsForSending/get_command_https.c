@@ -12,7 +12,7 @@
 
 const char *sw = "CRHE";
 const char *hostname = "tempview.vuorenkoski.fi";
-const char *token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlbnNvciIsImlkIjoxLCJpYXQiOjE2NTEwNDY0OTN9.942e6l55Eh0y9nWwsdkS_s-q_6-EXeoGnDdsKp6vXho";
+const char *token = "xxxx";
 const int port = 443;
 int debug = 0;
 
@@ -43,28 +43,39 @@ int get_command() {
   SSL_load_error_strings();
 
   BIO_new(BIO_s_file());
-  if(SSL_library_init() < 0)
+
+  if(SSL_library_init() < 0) {
     if (debug) printf("Could not initialize the OpenSSL library !\n");
+    return -1;
+  }
 
   method = SSLv23_client_method();
-  if ( (ctx = SSL_CTX_new(method)) == NULL)
+  if ( (ctx = SSL_CTX_new(method)) == NULL) {
     if (debug) printf("Unable to create a new SSL context structure.\n");
+    return -1;
+  }
 
   SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2);
   ssl = SSL_new(ctx);
 
   server = create_socket();
-  if(server != 0)
+  if(server != 0) {
     if (debug) printf("Successfully made the TCP connection to: %s.\n", hostname);
+    return -1;
+  }
 
   SSL_set_fd(ssl, server);
 
-  if ( SSL_connect(ssl) != 1)
+  if ( SSL_connect(ssl) != 1) {
     if (debug) printf("Error: Could not build a SSL session to: %s.\n", hostname);
+    return -1;
+  }
 
   cert = SSL_get_peer_certificate(ssl);
-  if (cert == NULL && debug)
-    printf("Error: Could not get a certificate from: %s.\n", hostname);
+  if (cert == NULL) {
+    if (debug) printf("Error: Could not get a certificate from: %s.\n", hostname);
+    return -1;
+  }
 
   value = get_data(ssl);
 
@@ -82,7 +93,7 @@ int create_socket() {
 
   if ( (host = gethostbyname(hostname)) == NULL ) {
     if (debug) printf("Error: Cannot resolve hostname %s.\n",  hostname);
-    abort();
+    return 0;
   }
 
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -94,6 +105,7 @@ int create_socket() {
 
   if ( connect(sockfd, (struct sockaddr *) &dest_addr, sizeof(struct sockaddr)) == -1) {
     if (debug) printf("Error: Cannot connect to host %s [%s] on port %d.\n",hostname, tmp_ptr, port);
+    return 0;
   }
 
   return sockfd;
@@ -132,22 +144,32 @@ int get_data(SSL *ssl) {
   total = sizeof(response)-1;
   received = 0;
   do {
-      bytes = SSL_read(ssl,response+received,total-received);
-      if (bytes < 0)
-          if (debug) printf("ERROR reading response from socket");
-      if (bytes == 0)
-          break;
-      received+=bytes;
+    bytes = SSL_read(ssl,response+received,total-received);
+    if (bytes < 0) {
+      if (debug) printf("ERROR reading response from socket");
+      break;
+    }
+    if (bytes == 0)
+       break;
+    received+=bytes;
   } while (received < total);
   if (debug) printf("Response:\n%s\n",response);
 
-  // crude strin manipulation to find correct infromation...
+  // crude strin manipulation to find correct information...
   str = strstr(response, "getSwitchCommand");
-  str = strstr(str, ":")+1;
+  if (str==NULL)
+    return -1;
+  str = strstr(str, ":") + 1;
+  if (str==NULL)
+    return -1;
   strend = strstr(str, "}");
+  if (strend==NULL)
+    return -1;
   strend[0] = '\0';
   for(int i = 0; str[i]; i++) str[i] = tolower(str[i]);
   if (debug) printf("----\nResponse: %s\n", str);
 
-  return strstr(str,"true")!=0;
+  if (strstr(str,"true")!=0) return 1;
+  if (strstr(str,"false")!=0) return 0;
+  return -1;
 }
