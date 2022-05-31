@@ -16,22 +16,26 @@ const Settings = () => {
       <Sensors />
       <Images />
       <Switches />
-      <Row className="p-4 pb-1">
-        <Col>
-          <h2>Sensorien/kameroiden/kytkimien token</h2>
-        </Col>
-      </Row>
-      <Row className="p-4 pt-1">
-        {sensorToken.data && (
-          <Col className="col-auto">
-            <div className="tokenText">
-              {sensorToken.data.sensorToken.value.match(/.{1,40}/g).map((s) => (
-                <div key={s}>{s}</div>
-              ))}
-            </div>
-          </Col>
-        )}
-      </Row>
+      {sensorToken.data && (
+        <div>
+          <Row className="p-4 pb-1">
+            <Col>
+              <h2>Sensorien/kameroiden/kytkimien token</h2>
+            </Col>
+          </Row>
+          <Row className="p-4 pt-1">
+            <Col className="col-auto">
+              <div className="tokenText">
+                {sensorToken.data.sensorToken.value
+                  .match(/.{1,40}/g)
+                  .map((s) => (
+                    <div key={s}>{s}</div>
+                  ))}
+              </div>
+            </Col>
+          </Row>
+        </div>
+      )}
     </div>
   )
 }

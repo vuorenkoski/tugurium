@@ -28,12 +28,10 @@
 
 ## Product backlog
 
-- tilastot: sensorit aakkosjärjestykseen
-- vain admin näkee sensoritokenin
-- datan päivittyminen kun sovelluksen avaa uudelleen
-
 - errormessage to login (browser and mobile)
 - errormessage when no response from backend (browser and mobile)
+- valikon logo toiseen reunaan
+- datan päivittyminen kun sovelluksen avaa uudelleen
 - images -view
 - statistics -view
 - settings -view

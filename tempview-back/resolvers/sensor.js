@@ -84,7 +84,7 @@ const sensorDetails = async (root, args) => {
 }
 
 const sensorToken = async (root, args, context) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
 
