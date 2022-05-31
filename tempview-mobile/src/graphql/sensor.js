@@ -101,3 +101,12 @@ export const NEW_MEASUREMENT = gql`
     }
   }
 `
+
+export const DATAPOINTS = gql`
+  query Datapoints($sensorName: String) {
+    datapoints(sensorName: $sensorName) {
+      count
+      timestamp
+    }
+  }
+`
