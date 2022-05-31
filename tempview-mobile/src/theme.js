@@ -9,6 +9,7 @@ const theme = {
     secondary: 'silver',
     delete: 'red',
     update: 'green',
+    error: 'red',
   },
   fontSizes: {
     body: 16,

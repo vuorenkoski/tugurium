@@ -1,11 +1,16 @@
+import { useState } from 'react'
 import Text from './Text'
 import FormikTextInput from './FormikTextInput'
 import { View, Pressable, StyleSheet } from 'react-native'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import theme from '../theme'
-import useLogin from '../hooks/useLogin'
 import { useNavigate } from 'react-router-native'
+
+import { useMutation } from '@apollo/client'
+import { LOGIN } from '../graphql/user'
+import useAuthStorage from '../hooks/useAuthStorage'
+import { useApolloClient } from '@apollo/client'
 
 const initialValues = {
   username: '',
@@ -29,6 +34,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     textAlign: 'center',
     marginTop: 20,
+  },
+  errorText: {
+    alignItems: 'center',
+    padding: 20,
   },
 })
 
@@ -64,21 +73,40 @@ const LoginContainer = ({ onSubmit }) => {
 }
 
 const Login = () => {
-  const [login] = useLogin()
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
-  const onSubmit = async (values) => {
-    const { username, password } = values
+  const [mutate, result] = useMutation(LOGIN)
+  const authStorage = useAuthStorage()
+  const apolloClient = useApolloClient()
 
-    try {
-      await login({ username, password })
+  const onSubmit = async ({ username, password }) => {
+    const variables = { username, password }
+    const data = await mutate({
+      variables,
+      onError: () => console.log('error'),
+    })
+    if (data.data) {
+      await authStorage.setAccessToken(data.data.login.value)
+      apolloClient.resetStore()
       navigate('/current', { exact: true })
-    } catch (e) {
-      console.log(e)
+    }
+    if (!result.data && result.error && result.error.networkError) {
+      setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')
+    }
+    if (!result.data && result.error && !result.error.networkError) {
+      setErrorMessage(result.error.message)
     }
   }
 
-  return <LoginContainer onSubmit={onSubmit} />
+  return (
+    <View>
+      <LoginContainer onSubmit={onSubmit} />
+      <View style={styles.errorText}>
+        <Text textType="error">{errorMessage}</Text>
+      </View>
+    </View>
+  )
 }
 
 export default Login

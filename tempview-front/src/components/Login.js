@@ -22,7 +22,6 @@ const Login = ({ setToken }) => {
     }
     if (!result.data && result.error && result.error.networkError) {
       setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')
-      console.log(result)
     }
   }, [result]) // eslint-disable-line
 

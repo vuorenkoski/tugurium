@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 44,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingTop: 150,
+    paddingTop: 110,
     paddingBottom: 0,
   },
   versioText: {
