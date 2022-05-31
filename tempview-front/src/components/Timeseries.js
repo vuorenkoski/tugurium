@@ -177,111 +177,131 @@ const Timeseries = () => {
           <h2>Aikasarjat</h2>
         </Col>
       </Row>
-      <Row className="p-4 pt-0 pb-0">
-        <Form>
+      {!sensors.data && sensors.loading && (
+        <Row className="p-4 pb-0">
           <Col>
-            <Row>
-              <Col className="col-auto border rounded m-3 p-3">
-                <Row>
-                  <Col>
-                    <h4>Datapisteiden yhdistäminen</h4>
-                  </Col>
-                </Row>
-                <Row className="pt-1">
-                  <Col className="col-auto p-1">
-                    <Form.Check
-                      type={'radio'}
-                      id={'none'}
-                      label={'Ei yhdistetä (hidas)  '}
-                      name={'aggregatePeriod'}
-                      defaultValue={'NO'}
-                      onChange={handlePeriodChange.bind(this)}
-                    />
-                  </Col>
-                  <Col className="col-auto p-1">
-                    <Form.Check
-                      defaultChecked
-                      type={'radio'}
-                      id={'hour'}
-                      label={'Tunti'}
-                      name={'aggregatePeriod'}
-                      defaultValue={'HOUR'}
-                      onChange={handlePeriodChange.bind(this)}
-                    />
-                  </Col>
-                  <Col className="col-auto p-1">
-                    <Form.Check
-                      type={'radio'}
-                      id={'day'}
-                      label={'Päivä'}
-                      name={'aggregatePeriod'}
-                      defaultValue={'DAY'}
-                      onChange={handlePeriodChange.bind(this)}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col className="col-auto border rounded m-3 p-3">
-                <Row className="align-items-center">
-                  <Col className="col-auto">
-                    <h4>Ajanjakso</h4>
-                  </Col>
-                </Row>
-                <Row className="align-items-center">
-                  <Col className="col-auto">
-                    <Form.Select onChange={handleYearChange.bind(this)}>
-                      {years &&
-                        years.map((y, i) => (
-                          <option key={y.label} value={i}>
-                            {y.label}
-                          </option>
-                        ))}
-                    </Form.Select>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="border rounded m-3 p-3">
-                <Row>
-                  <Col>
-                    <h4>Sensorit</h4>
-                  </Col>
-                </Row>
-                <Row className="pt-1">
-                  {sensors.data &&
-                    sensors.data.allSensors.map((s) => (
-                      <Col key={s.sensorName} className="col-auto pr-3">
-                        <Form.Check
-                          type={'checkbox'}
-                          id={s.sensorName}
-                          label={s.sensorFullname}
-                          defaultValue={false}
-                          onChangeCapture={handleSensorChange.bind(this)}
-                        />
-                      </Col>
-                    ))}
-                </Row>
-              </Col>
-            </Row>
+            <p>Ladataan dataa palvelimelta...</p>
           </Col>
-        </Form>
-      </Row>
-      <Row className="p-4 pt-0 pb-0">
+        </Row>
+      )}
+      <Row className="p-4 pb-0">
         <Col>
-          {loading && <div>Ladataan dataa palvelimelta...</div>}
-          {!loading && <div> &nbsp;</div>}
+          {!sensors.data && sensors.error && (
+            <p className="errorMessage">Virhe: {sensors.error.message}</p>
+          )}
         </Col>
       </Row>
-      <Chart
-        data={data}
-        zoomDomain={zoomDomain}
-        setZoomDomain={setZoomDomain}
-        yDomain={[
-          data.reduce((p, c) => Math.min(p, c.min), 0),
-          data.reduce((p, c) => Math.max(p, c.max), 0),
-        ]}
-      />
+      {sensors.data && (
+        <div>
+          <Row className="p-4 pt-0 pb-0">
+            <Form>
+              <Col>
+                <Row>
+                  <Col className="col-auto border rounded m-3 p-3">
+                    <Row>
+                      <Col>
+                        <h4>Datapisteiden yhdistäminen</h4>
+                      </Col>
+                    </Row>
+                    <Row className="pt-1">
+                      <Col className="col-auto p-1">
+                        <Form.Check
+                          type={'radio'}
+                          id={'none'}
+                          label={'Ei yhdistetä (hidas)  '}
+                          name={'aggregatePeriod'}
+                          defaultValue={'NO'}
+                          onChange={handlePeriodChange.bind(this)}
+                        />
+                      </Col>
+                      <Col className="col-auto p-1">
+                        <Form.Check
+                          defaultChecked
+                          type={'radio'}
+                          id={'hour'}
+                          label={'Tunti'}
+                          name={'aggregatePeriod'}
+                          defaultValue={'HOUR'}
+                          onChange={handlePeriodChange.bind(this)}
+                        />
+                      </Col>
+                      <Col className="col-auto p-1">
+                        <Form.Check
+                          type={'radio'}
+                          id={'day'}
+                          label={'Päivä'}
+                          name={'aggregatePeriod'}
+                          defaultValue={'DAY'}
+                          onChange={handlePeriodChange.bind(this)}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col className="col-auto border rounded m-3 p-3">
+                    <Row className="align-items-center">
+                      <Col className="col-auto">
+                        <h4>Ajanjakso</h4>
+                      </Col>
+                    </Row>
+                    <Row className="align-items-center">
+                      <Col className="col-auto">
+                        <Form.Select onChange={handleYearChange.bind(this)}>
+                          {years &&
+                            years.map((y, i) => (
+                              <option key={y.label} value={i}>
+                                {y.label}
+                              </option>
+                            ))}
+                        </Form.Select>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="border rounded m-3 p-3">
+                    <Row>
+                      <Col>
+                        <h4>Sensorit</h4>
+                      </Col>
+                    </Row>
+                    <Row className="pt-1">
+                      {sensors.data &&
+                        sensors.data.allSensors.map((s) => (
+                          <Col key={s.sensorName} className="col-auto pr-3">
+                            <Form.Check
+                              type={'checkbox'}
+                              id={s.sensorName}
+                              label={s.sensorFullname}
+                              defaultValue={false}
+                              onChangeCapture={handleSensorChange.bind(this)}
+                            />
+                          </Col>
+                        ))}
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+            </Form>
+          </Row>
+          <Row className="p-4 pt-0 pb-0">
+            <Col>
+              {loading && <div>Ladataan dataa palvelimelta...</div>}
+              {!loading && <div> &nbsp;</div>}
+              {data.length > 0 && (
+                <Chart
+                  data={data}
+                  zoomDomain={zoomDomain}
+                  setZoomDomain={setZoomDomain}
+                  yDomain={[
+                    data.reduce((p, c) => Math.min(p, c.min), 0),
+                    data.reduce((p, c) => Math.max(p, c.max), 0),
+                  ]}
+                />
+              )}
+            </Col>
+          </Row>
+        </div>
+      )}
     </div>
   )
 }

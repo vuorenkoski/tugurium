@@ -19,7 +19,10 @@ const Home = () => {
       </Row>
 
       <Row className="p-4">
-        {!sensors.data && <p>Lataa tietoja...</p>}
+        {!sensors.data && sensors.loading && <p>Lataa tietoja...</p>}
+        {!sensors.data && sensors.error && (
+          <p className="errorMessage">Virhe: {sensors.error.message}</p>
+        )}
 
         <Col className="col-auto">
           {sensors.data && (

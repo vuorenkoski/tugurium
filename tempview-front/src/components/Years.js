@@ -187,104 +187,122 @@ const Years = () => {
           <h2>Vuosien välinen vertailu (päivän keskiarvo)</h2>
         </Col>
       </Row>
-      <Row className="p-4 pt-0 pb-0">
-        <Form>
+      {!sensors.data && sensors.loading && (
+        <Row className="p-4 pb-0">
           <Col>
-            <Row>
-              <Col className="col-auto border rounded m-3 p-3">
-                <Row className="align-items-center">
-                  <Col className="col-auto">
-                    <h4>Sensori</h4>
-                  </Col>
-                  <Col className="col-auto">
-                    <Form.Select
-                      onChange={handleSensorChange.bind(this)}
-                      defaultValue="empty"
-                    >
-                      <option disabled value="empty">
-                        -- valitse --
-                      </option>
-                      {sensors.data &&
-                        sensors.data.allSensors.map((s) => (
-                          <option key={s.sensorName} value={s.sensorName}>
-                            {s.sensorFullname}
-                          </option>
-                        ))}
-                    </Form.Select>
-                  </Col>
-                </Row>
-              </Col>
-              <Col className="col-auto border rounded m-3 p-3">
-                <Row>
-                  <Col>
-                    <h4>Datapisteiden yhdistäminen</h4>
-                  </Col>
-                </Row>
-                <Row className="pt-1">
-                  <Col className="col-auto p-1">
-                    <Form.Check
-                      defaultChecked
-                      type={'radio'}
-                      id={'day'}
-                      label={'Päivä'}
-                      name={'aggregatePeriod'}
-                      defaultValue={'daily'}
-                      onChange={handlePeriodChange.bind(this)}
-                    />
-                    <Form.Check
-                      type={'radio'}
-                      id={'month'}
-                      label={'Kuukausi'}
-                      name={'aggregatePeriod'}
-                      defaultValue={'monthly'}
-                      onChange={handlePeriodChange.bind(this)}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="border rounded m-3 p-3">
-                <Row>
-                  <Col>
-                    <h4>Vuodet</h4>
-                  </Col>
-                </Row>
-                <Row className="pt-1">
-                  {data &&
-                    data.daily.graphData.map((d) => (
-                      <Col key={d.legendLabel} className="col-auto pr-3">
-                        <Form.Check
-                          type={'checkbox'}
-                          id={d.legendLabel}
-                          label={d.legendLabel}
-                          defaultValue={false}
-                          onChange={handleYearChange.bind(this)}
-                        />
-                      </Col>
-                    ))}
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Form>
-      </Row>
-      {data && data[period] && selectedYears.length > 0 && (
-        <Chart
-          data={data[period].graphData.filter((d) =>
-            selectedYears.includes(d.legendLabel)
-          )}
-          zoomDomain={zoomDomain}
-          setZoomDomain={setZoomDomain}
-          yDomain={[data[period].min, data[period].max]}
-        />
-      )}
-      {!sensorData.data && selectedSensor && (
-        <Row className="p-4">
-          <Col className="col-9">
-            <p>Lataa tietoja...</p>
+            <p>Ladataan dataa palvelimelta...</p>
           </Col>
         </Row>
+      )}
+      <Row className="p-4 pb-0">
+        <Col>
+          {!sensors.data && sensors.error && (
+            <p className="errorMessage">Virhe: {sensors.error.message}</p>
+          )}
+        </Col>
+      </Row>
+      {sensors.data && (
+        <div>
+          <Row className="p-4 pt-0 pb-0">
+            <Form>
+              <Col>
+                <Row>
+                  <Col className="col-auto border rounded m-3 p-3">
+                    <Row className="align-items-center">
+                      <Col className="col-auto">
+                        <h4>Sensori</h4>
+                      </Col>
+                      <Col className="col-auto">
+                        <Form.Select
+                          onChange={handleSensorChange.bind(this)}
+                          defaultValue="empty"
+                        >
+                          <option disabled value="empty">
+                            -- valitse --
+                          </option>
+                          {sensors.data &&
+                            sensors.data.allSensors.map((s) => (
+                              <option key={s.sensorName} value={s.sensorName}>
+                                {s.sensorFullname}
+                              </option>
+                            ))}
+                        </Form.Select>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col className="col-auto border rounded m-3 p-3">
+                    <Row>
+                      <Col>
+                        <h4>Datapisteiden yhdistäminen</h4>
+                      </Col>
+                    </Row>
+                    <Row className="pt-1">
+                      <Col className="col-auto p-1">
+                        <Form.Check
+                          defaultChecked
+                          type={'radio'}
+                          id={'day'}
+                          label={'Päivä'}
+                          name={'aggregatePeriod'}
+                          defaultValue={'daily'}
+                          onChange={handlePeriodChange.bind(this)}
+                        />
+                        <Form.Check
+                          type={'radio'}
+                          id={'month'}
+                          label={'Kuukausi'}
+                          name={'aggregatePeriod'}
+                          defaultValue={'monthly'}
+                          onChange={handlePeriodChange.bind(this)}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="border rounded m-3 p-3">
+                    <Row>
+                      <Col>
+                        <h4>Vuodet</h4>
+                      </Col>
+                    </Row>
+                    <Row className="pt-1">
+                      {data &&
+                        data.daily.graphData.map((d) => (
+                          <Col key={d.legendLabel} className="col-auto pr-3">
+                            <Form.Check
+                              type={'checkbox'}
+                              id={d.legendLabel}
+                              label={d.legendLabel}
+                              defaultValue={false}
+                              onChange={handleYearChange.bind(this)}
+                            />
+                          </Col>
+                        ))}
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+            </Form>
+          </Row>
+          {data && data[period] && selectedYears.length > 0 && (
+            <Chart
+              data={data[period].graphData.filter((d) =>
+                selectedYears.includes(d.legendLabel)
+              )}
+              zoomDomain={zoomDomain}
+              setZoomDomain={setZoomDomain}
+              yDomain={[data[period].min, data[period].max]}
+            />
+          )}
+          {!sensorData.data && selectedSensor && (
+            <Row className="p-4">
+              <Col className="col-9">
+                <p>Ladataan dataa palvelimelta...</p>
+              </Col>
+            </Row>
+          )}
+        </div>
       )}
     </div>
   )

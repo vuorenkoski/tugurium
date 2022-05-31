@@ -20,7 +20,11 @@ const Login = ({ setToken }) => {
       setToken(token)
       localStorage.setItem('tempview-user-token', token)
     }
-  }, [result.data]) // eslint-disable-line
+    if (!result.data && result.error) {
+      setErrorMessage(`virhe: ${result.error.message}`)
+      console.log(result)
+    }
+  }, [result]) // eslint-disable-line
 
   const handleLogin = async (event) => {
     event.preventDefault()
