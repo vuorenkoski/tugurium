@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     flexDirection: 'row',
     backgroundColor: 'black',
+    justifyContent: 'space-between',
   },
   bodyContainer: {
     flex: 1,
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     color: theme.colors.mainBackground,
     fontSize: 20,
     paddingTop: 18,
+    paddingLeft: 40,
     fontWeight: 'bold',
   },
   logoText: {
@@ -98,7 +100,7 @@ const MenuElement = () => {
   }
 
   return (
-    <View>
+    <>
       <Menu>
         <MenuTrigger>
           <Icon reverse color="black" name="menu" />
@@ -121,7 +123,7 @@ const MenuElement = () => {
           </MenuOption>
         </MenuOptions>
       </Menu>
-    </View>
+    </>
   )
 }
 
@@ -134,8 +136,8 @@ const Main = () => {
         <StatusBar style="light" />
         <SafeAreaView style={styles.rootContainer}>
           <View style={styles.navContainer}>
-            <MenuElement />
             <Text style={styles.logo}>TEMPVIEW</Text>
+            <MenuElement />
           </View>
           <View style={styles.bodyContainer}>
             <Routes>
