@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from 'react-router-native'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, SafeAreaView } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import {
   MenuProvider,
@@ -29,7 +29,19 @@ import useGetUser from '../hooks/useGetUser'
 import { VERSION } from '../utils/config'
 
 const styles = StyleSheet.create({
-  content: {
+  rootContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  navContainer: {
+    padding: 10,
+    paddingBottom: 0,
+    paddingTop: 30,
+    flexDirection: 'row',
+    backgroundColor: 'black',
+  },
+  bodyContainer: {
+    flex: 1,
     flexDirection: 'column',
     backgroundColor: theme.colors.mainBackground,
     padding: 20,
@@ -38,13 +50,8 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
   },
-  navContainer: {
-    padding: 10,
-    paddingBottom: 0,
-    paddingTop: 30,
-    flexDirection: 'row',
-    backgroundColor: 'black',
-    alignContent: 'space-around',
+  footerContainer: {
+    padding: 0,
   },
   logo: {
     color: theme.colors.mainBackground,
@@ -125,22 +132,25 @@ const Main = () => {
     return (
       <MenuProvider>
         <StatusBar style="light" />
-        <View style={styles.navContainer}>
-          <MenuElement />
-          <Text style={styles.logo}>TEMPVIEW</Text>
-        </View>
-        <View style={styles.content}>
-          <Routes>
-            <Route path="/" element={<Current />} exact />
-            <Route path="/settings" element={<Settings />} exact />
-            <Route path="/images" element={<Images />} exact />
-            <Route path="/years" element={<Years />} exact />
-            <Route path="/switches" element={<Switches />} exact />
-            <Route path="/timeseries" element={<Timeseries />} exact />
-            <Route path="/statistics" element={<Statistics />} exact />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </View>
+        <SafeAreaView style={styles.rootContainer}>
+          <View style={styles.navContainer}>
+            <MenuElement />
+            <Text style={styles.logo}>TEMPVIEW</Text>
+          </View>
+          <View style={styles.bodyContainer}>
+            <Routes>
+              <Route path="/" element={<Current />} exact />
+              <Route path="/settings" element={<Settings />} exact />
+              <Route path="/images" element={<Images />} exact />
+              <Route path="/years" element={<Years />} exact />
+              <Route path="/switches" element={<Switches />} exact />
+              <Route path="/timeseries" element={<Timeseries />} exact />
+              <Route path="/statistics" element={<Statistics />} exact />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </View>
+          <View style={styles.footerContainer}></View>
+        </SafeAreaView>
       </MenuProvider>
     )
   }

@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { useState } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 
@@ -11,6 +11,7 @@ import DropDownSelector from './DropDownSelector'
 const styles = StyleSheet.create({
   content: {
     flexDirection: 'column',
+    flex: 1,
   },
   labelRow: {
     flexDirection: 'row',
@@ -25,14 +26,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   graphRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    flex: 1,
   },
   row: {
     flexDirection: 'row',
-  },
-  graphContainer: {
-    width: 400,
-    height: 350,
   },
 })
 
@@ -196,7 +194,7 @@ const Timeseries = () => {
   }
 
   return (
-    <ScrollView style={styles.content}>
+    <View style={styles.content}>
       <View style={styles.labelRow}>
         <Text textType="heading1">Aikasarjat</Text>
       </View>
@@ -213,7 +211,7 @@ const Timeseries = () => {
         </View>
       )}
       {sensors.data && (
-        <View>
+        <>
           <View style={styles.optionListRow}>
             <View style={styles.optionComponentStyle}>
               <Text textType="heading2">Datapisteiden yhdistäminen</Text>
@@ -266,26 +264,23 @@ const Timeseries = () => {
               )}
             </View>
           </View>
-
           <View style={styles.graphRow}>
             {loading && (
               <Text textType="loading">Ladataan dataa palvelimelta...</Text>
             )}
             {!loading && (
-              <View style={styles.graphContainer}>
-                <Chart
-                  data={graphData}
-                  yDomain={[
-                    graphData.reduce((p, c) => Math.min(p, c.min), 0),
-                    graphData.reduce((p, c) => Math.max(p, c.max), 0),
-                  ]}
-                />
-              </View>
+              <Chart
+                data={graphData}
+                yDomain={[
+                  graphData.reduce((p, c) => Math.min(p, c.min), 0),
+                  graphData.reduce((p, c) => Math.max(p, c.max), 0),
+                ]}
+              />
             )}
           </View>
-        </View>
+        </>
       )}
-    </ScrollView>
+    </View>
   )
 }
 

@@ -9,10 +9,10 @@ const styles = StyleSheet.create({
   labelRow: {
     flexDirection: 'row',
   },
+  senorsStyle: {},
   senorListStyle: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingBottom: 300,
   },
   itemBoxStyle: {
     width: 320,
@@ -50,22 +50,22 @@ const Current = () => {
 
   return (
     <View>
-      <View style={styles.labelRow}>
-        <Text textType="heading1">Viimeisimmät lämpötilat</Text>
-      </View>
-      {!sensors.data && sensors.loading && (
-        <View style={styles.row}>
-          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+      <ScrollView style={styles.senorStyle}>
+        <View style={styles.labelRow}>
+          <Text textType="heading1">Viimeisimmät lämpötilat</Text>
         </View>
-      )}
-      {!sensors.data && sensors.error && sensors.error.networkError && (
-        <View style={styles.row}>
-          <Text textType="error">
-            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-          </Text>
-        </View>
-      )}
-      <ScrollView>
+        {!sensors.data && sensors.loading && (
+          <View style={styles.row}>
+            <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+          </View>
+        )}
+        {!sensors.data && sensors.error && sensors.error.networkError && (
+          <View style={styles.row}>
+            <Text textType="error">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </Text>
+          </View>
+        )}
         <View style={styles.senorListStyle}>
           {sensors.data &&
             sensors.data.allSensors &&

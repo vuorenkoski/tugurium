@@ -9,7 +9,7 @@ import { View } from 'react-native'
 
 const { COLORS } = require('../utils/config')
 
-const chartStyle = { fontSize: 12 }
+const chartStyle = { fontSize: 12, height: 320 }
 
 const Chart = ({ data, yDomain }) => {
   if (data && data.length > 0) {
@@ -21,6 +21,7 @@ const Chart = ({ data, yDomain }) => {
           y: yDomain,
         }}
         scale={{ x: 'time' }}
+        height={chartStyle.height}
       >
         <VictoryAxis
           dependentAxis

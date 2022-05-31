@@ -11,6 +11,7 @@ import DropDownSelector from './DropDownSelector'
 const styles = StyleSheet.create({
   content: {
     flexDirection: 'column',
+    flex: 1,
   },
   labelRow: {
     flexDirection: 'row',
@@ -25,22 +26,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   graphRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    flex: 1,
   },
-  graphContainer: {
-    width: 400,
-    height: 350,
-    paddingTop: 10,
-  },
-
   row: {
     flexDirection: 'row',
-  },
-  column: {
-    flexDirection: 'column',
-  },
-  graphView: {
-    paddingTop: 20,
   },
 })
 
@@ -298,14 +288,12 @@ const Years = () => {
               <Text textType="loading">Ladataan dataa palvelimelta...</Text>
             )}
             {graphData && graphData[period] && selectedYears.length > 0 && (
-              <View style={styles.graphContainer}>
-                <Chart
-                  data={graphData[period].graphData.filter((d) =>
-                    selectedYears.includes(d.legendLabel)
-                  )}
-                  yDomain={[graphData[period].min, graphData[period].max]}
-                />
-              </View>
+              <Chart
+                data={graphData[period].graphData.filter((d) =>
+                  selectedYears.includes(d.legendLabel)
+                )}
+                yDomain={[graphData[period].min, graphData[period].max]}
+              />
             )}
           </View>
         </View>
