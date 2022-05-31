@@ -98,7 +98,7 @@ const Switches = () => {
     <div>
       <Row className="p-4 pb-1">
         <Col>
-          <h2>Kytkimet</h2>
+          <h3>Kytkimet</h3>
         </Col>
       </Row>
       <Row className="p-4 pt-1 pb-1">

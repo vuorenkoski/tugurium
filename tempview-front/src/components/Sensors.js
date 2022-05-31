@@ -111,7 +111,7 @@ const Sensors = () => {
     <div>
       <Row className="p-4 pb-1">
         <Col>
-          <h2>Sensorit</h2>
+          <h3>Sensorit</h3>
         </Col>
       </Row>
       <Row className="p-4 pt-1 pb-1">

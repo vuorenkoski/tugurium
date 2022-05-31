@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_SENSORS } from './queries'
+import { useApolloClient } from '@apollo/client'
 import Timeseries from './components/Timeseries'
 import Settings from './components/Settings'
 import Home from './components/Home'

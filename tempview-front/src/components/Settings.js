@@ -44,7 +44,7 @@ const Settings = () => {
             <div>
               <Row className="p-4 pb-1">
                 <Col>
-                  <h2>Sensorien/kameroiden/kytkimien token</h2>
+                  <h3>Sensorien/kameroiden/kytkimien token</h3>
                 </Col>
               </Row>
               <Row className="p-4 pt-1">

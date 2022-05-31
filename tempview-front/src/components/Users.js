@@ -55,7 +55,7 @@ const Users = ({ users }) => {
     <div>
       <Row className="p-4 pb-1">
         <Col>
-          <h2>Käyttäjät</h2>
+          <h3>Käyttäjät</h3>
         </Col>
       </Row>
       <Row className="p-4 pt-1 pb-1">
