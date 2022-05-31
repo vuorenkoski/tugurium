@@ -17,7 +17,11 @@ const Sensors = () => {
   const [sensorFullname, setSensorFullname] = useState('')
   const [agrmethod, setAgrmethod] = useState('')
   const [sensorId, setSensorId] = useState(-1)
-  const sensors = useQuery(ALL_SENSORS)
+  const [sensors, setSensors] = useState([])
+
+  useQuery(ALL_SENSORS, {
+    onCompleted: (data) => setSensors(data.allSensors),
+  })
 
   const [deleteSensor] = useMutation(DELETE_SENSOR, {
     onError: (error) => {
@@ -53,6 +57,7 @@ const Sensors = () => {
   })
 
   const handeDeleteSensor = (id) => {
+    setSensors(sensors.filter((s) => s.id !== Number(id)))
     const variables = { deleteSensorId: Number(id) }
     deleteSensor({ variables })
   }
@@ -122,32 +127,31 @@ const Sensors = () => {
                 <th></th>
                 <th></th>
               </tr>
-              {sensors.data &&
-                sensors.data.allSensors.map((a) => (
-                  <tr key={a.id}>
-                    <td>{a.sensorName}</td>
-                    <td>{a.sensorFullname}</td>
-                    <td>{a.sensorUnit}</td>
-                    <td>{a.agrmethod}</td>
-                    <td>{a.id}</td>
-                    <td>
-                      <button
-                        className="removeButton"
-                        onClick={() => handeDeleteSensor(a.id)}
-                      >
-                        poista
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="updateButton"
-                        onClick={() => handleUpdateSensor(a.id)}
-                      >
-                        päivitä
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+              {sensors.map((a) => (
+                <tr key={a.id}>
+                  <td>{a.sensorName}</td>
+                  <td>{a.sensorFullname}</td>
+                  <td>{a.sensorUnit}</td>
+                  <td>{a.agrmethod}</td>
+                  <td>{a.id}</td>
+                  <td>
+                    <button
+                      className="removeButton"
+                      onClick={() => handeDeleteSensor(a.id)}
+                    >
+                      poista
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="updateButton"
+                      onClick={() => handleUpdateSensor(a.id)}
+                    >
+                      päivitä
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </Col>
