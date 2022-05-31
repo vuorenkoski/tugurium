@@ -23,12 +23,11 @@
 | 24.5. | 10    | web-socket running, first APK build, timeseries view, dropdown navigation                                                                     |
 | 25.5. | 8     | theme refactored, timeseries tuned, years-view created, new DropDownSelector and ItemBox components                                           |
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                     |
-| 31.5. |       | improvements to browser front, token check to websocket                                                                                       |
+| 31.5. |       | improvements to browser front, authentiaction check to websocket                                                                              |
 | total | 153   |                                                                                                                                               |
 
 ## Product backlog
 
-- token check to ws mobile
 - errormessage to login (browser and mobile)
 - errormessage when no response from backend (browser and mobile)
 - valikon logo toiseen reunaan

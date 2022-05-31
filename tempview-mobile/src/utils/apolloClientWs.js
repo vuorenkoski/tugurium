@@ -24,6 +24,12 @@ const createApolloClient = (authStorage) => {
     uri: WEBSOCKET_URL,
     options: {
       reconnect: true,
+      connectionParams: async () => {
+        const token = await authStorage.getAccessToken()
+        return {
+          authLink: `bearer ${token}`,
+        }
+      },
     },
   })
 
