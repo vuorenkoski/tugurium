@@ -35,6 +35,9 @@ const wsLink = new WebSocketLink({
   uri: WEBSOCKET_URL,
   options: {
     reconnect: true,
+    connectionParams: {
+      authLink: `bearer ${localStorage.getItem('tempview-user-token')}`,
+    },
   },
 })
 

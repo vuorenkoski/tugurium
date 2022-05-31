@@ -108,21 +108,32 @@ const start = async () => {
   })
 
   const httpServer = http.createServer(app)
-
   const schema = makeExecutableSchema({ typeDefs, resolvers })
-
   const subscriptionServer = SubscriptionServer.create(
     {
       schema,
       execute,
       subscribe,
+      onConnect: async (connectionParams) => {
+        const token = connectionParams.authLink
+        if (token && token.toLowerCase().startsWith('bearer ')) {
+          let data = { token: token.substring(7) }
+          try {
+            const decodedToken = jwt.verify(data['token'], SECRET)
+            data['currentUser'] = await User.findByPk(decodedToken.id)
+            return data
+          } catch (error) {
+            return data
+          }
+        }
+        throw new Error('Missing auth token!')
+      },
     },
     {
       server: httpServer,
       path: '',
     }
   )
-
   const server = new ApolloServer({
     schema,
     context: checkToken,

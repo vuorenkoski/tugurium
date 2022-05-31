@@ -19,7 +19,6 @@ import {
 } from 'react-router-dom'
 
 const App = () => {
-  const sensors = useQuery(ALL_SENSORS)
   const [token, setToken] = useState(null)
   const client = useApolloClient()
 
@@ -42,11 +41,6 @@ const App = () => {
     setToken(null)
     localStorage.clear()
     client.resetStore()
-  }
-
-  let sensorList = []
-  if (sensors.data) {
-    sensorList = sensors.data.allSensors
   }
 
   return (
@@ -148,10 +142,7 @@ const App = () => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />
-          <Route
-            path="/timeseries"
-            element={<Timeseries sensors={sensorList} />}
-          />
+          <Route path="/timeseries" element={<Timeseries />} />
         </Routes>
       </Router>
     </div>
