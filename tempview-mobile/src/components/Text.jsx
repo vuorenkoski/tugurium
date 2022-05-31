@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   heading1: {
     fontSize: theme.fontSizes.heading1,
     fontWeight: theme.fontWeights.bold,
-    paddingBottom: 15,
+    paddingBottom: 25,
   },
   heading2: {
     fontSize: theme.fontSizes.heading2,
@@ -25,17 +25,20 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   primaryText: {
-    fontSize: theme.fontSizes.primaryValue,
+    fontSize: theme.fontSizes.primary,
     fontWeight: theme.fontWeights.bold,
   },
   secondaryText: {
-    fontSize: theme.fontSizes.secondaryValue,
+    fontSize: theme.fontSizes.secondary,
   },
   colorTextSecondary: {
     color: theme.colors.textSecondary,
   },
   error: {
+    fontSize: theme.fontSizes.primary,
     color: theme.colors.error,
+    padding: 20,
+    paddingTop: 40,
   },
   colorPrimary: {
     color: theme.colors.primary,
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: theme.fontWeights.bold,
   },
   loading: {
-    fontSize: theme.fontSizes.primaryValue,
+    fontSize: theme.fontSizes.primary,
     color: theme.colors.primary,
     padding: 20,
     paddingTop: 40,

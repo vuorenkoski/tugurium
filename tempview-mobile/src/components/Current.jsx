@@ -51,8 +51,20 @@ const Current = () => {
   return (
     <View>
       <View style={styles.labelRow}>
-        <Text textType="heading1">Lämpötilat</Text>
+        <Text textType="heading1">Viimeisimmät lämpötilat</Text>
       </View>
+      {!sensors.data && sensors.loading && (
+        <View style={styles.row}>
+          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+        </View>
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <View style={styles.row}>
+          <Text textType="error">
+            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+          </Text>
+        </View>
+      )}
       <ScrollView>
         <View style={styles.senorListStyle}>
           {sensors.data &&
@@ -60,9 +72,6 @@ const Current = () => {
             sensors.data.allSensors.map((item) => (
               <SensorItem key={item.id} item={item} />
             ))}
-          {(!sensors.data || !sensors.data.allSensors) && (
-            <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-          )}
         </View>
       </ScrollView>
     </View>

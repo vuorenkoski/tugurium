@@ -22,14 +22,17 @@ const styles = StyleSheet.create({
   optionComponentStyle: {
     flexDirection: 'column',
     margin: 10,
+    marginTop: 0,
   },
   graphRow: {
+    flexDirection: 'row',
+  },
+  row: {
     flexDirection: 'row',
   },
   graphContainer: {
     width: 400,
     height: 350,
-    paddingTop: 10,
   },
 })
 
@@ -126,7 +129,10 @@ const Timeseries = () => {
     onError: (e) => console.log(e),
   })
 
-  const sensors = useQuery(ALL_SENSORS, { onError: (e) => console.log(e) })
+  const sensors = useQuery(ALL_SENSORS, {
+    fetchPolicy: 'network-only',
+    onError: (e) => console.log(e),
+  })
 
   const handleSensorChange = async (value) => {
     setSelectedSensors(value)
@@ -194,75 +200,91 @@ const Timeseries = () => {
       <View style={styles.labelRow}>
         <Text textType="heading1">Aikasarjat</Text>
       </View>
-      <View style={styles.optionListRow}>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Datapisteiden yhdistäminen</Text>
-          <DropDownSelector
-            selectorType="DropDown"
-            data={[
-              { label: 'ei yhdistämistä', value: 'NO' },
-              { label: 'tunti', value: 'HOUR' },
-              { label: 'vuorokausi', value: 'DAY' },
-            ]}
-            labelField="label"
-            valueField="value"
-            placeholder="Select item"
-            value={period}
-            onChange={(item) => {
-              handlePeriodChange(item)
-            }}
-          />
-        </View>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Ajanjakso</Text>
-          <DropDownSelector
-            selectorType="DropDown"
-            data={years}
-            labelField="label"
-            valueField="label"
-            placeholder="valitse"
-            value={year.label}
-            onChange={(item) => {
-              handleYearChange(item)
-            }}
-          />
-        </View>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Sensorit</Text>
-          {sensors.data && (
-            <DropDownSelector
-              selectorType="MultiSelect"
-              data={sensors.data.allSensors}
-              labelField="sensorFullname"
-              valueField="sensorName"
-              placeholder="valitse sensorit"
-              value={selectedSensors}
-              onChange={(item) => {
-                handleSensorChange(item)
-              }}
-              maxSelect={4}
-              maxHeight={250}
-            />
-          )}
-        </View>
-      </View>
-
-      <View style={styles.graphRow}>
-        {loading && (
+      {!sensors.data && sensors.loading && (
+        <View style={styles.labelRow}>
           <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-        )}
-        {!loading && (
-          <View style={styles.graphContainer}>
-            <Chart
-              data={graphData}
-              yDomain={[
-                graphData.reduce((p, c) => Math.min(p, c.min), 0),
-                graphData.reduce((p, c) => Math.max(p, c.max), 0),
-              ]}
-            />
+        </View>
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <View style={styles.labelRow}>
+          <Text textType="error">
+            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+          </Text>
+        </View>
+      )}
+      {sensors.data && (
+        <View>
+          <View style={styles.optionListRow}>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Datapisteiden yhdistäminen</Text>
+              <DropDownSelector
+                selectorType="DropDown"
+                data={[
+                  { label: 'ei yhdistämistä', value: 'NO' },
+                  { label: 'tunti', value: 'HOUR' },
+                  { label: 'vuorokausi', value: 'DAY' },
+                ]}
+                labelField="label"
+                valueField="value"
+                placeholder="Select item"
+                value={period}
+                onChange={(item) => {
+                  handlePeriodChange(item)
+                }}
+              />
+            </View>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Ajanjakso</Text>
+              <DropDownSelector
+                selectorType="DropDown"
+                data={years}
+                labelField="label"
+                valueField="label"
+                placeholder="valitse"
+                value={year.label}
+                onChange={(item) => {
+                  handleYearChange(item)
+                }}
+              />
+            </View>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Sensorit</Text>
+              {sensors.data && (
+                <DropDownSelector
+                  selectorType="MultiSelect"
+                  data={sensors.data.allSensors}
+                  labelField="sensorFullname"
+                  valueField="sensorName"
+                  placeholder="valitse sensorit"
+                  value={selectedSensors}
+                  onChange={(item) => {
+                    handleSensorChange(item)
+                  }}
+                  maxSelect={4}
+                  maxHeight={250}
+                />
+              )}
+            </View>
           </View>
-        )}
-      </View>
+
+          <View style={styles.graphRow}>
+            {loading && (
+              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+            )}
+            {!loading && (
+              <View style={styles.graphContainer}>
+                <Chart
+                  data={graphData}
+                  yDomain={[
+                    graphData.reduce((p, c) => Math.min(p, c.min), 0),
+                    graphData.reduce((p, c) => Math.max(p, c.max), 0),
+                  ]}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      )}
     </ScrollView>
   )
 }

@@ -118,20 +118,34 @@ const Switches = () => {
       <View style={styles.labelRow}>
         <Text textType="heading1">Kytkimet</Text>
       </View>
-      <ScrollView>
-        <View style={styles.switchListStyle}>
-          {switches.data &&
-            switches.data.allSwitches &&
-            switches.data.allSwitches.map((item) => (
-              <Item key={item.id} item={item} />
-            ))}
-          {(!switches.data || !switches.data.allSwitches) && (
-            <View style={styles.column}>
-              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-            </View>
-          )}
+      {!switches.data && switches.loading && (
+        <View style={styles.labelRow}>
+          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
         </View>
-      </ScrollView>
+      )}
+      {!switches.data && switches.error && switches.error.networkError && (
+        <View style={styles.labelRow}>
+          <Text textType="error">
+            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+          </Text>
+        </View>
+      )}
+      {switches.data && (
+        <View>
+          <ScrollView>
+            <View style={styles.switchListStyle}>
+              {switches.data.allSwitches.map((item) => (
+                <Item key={item.id} item={item} />
+              ))}
+              {(!switches.data || !switches.data.allSwitches) && (
+                <View style={styles.column}>
+                  <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+      )}
     </View>
   )
 }

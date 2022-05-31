@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   optionComponentStyle: {
     flexDirection: 'column',
     margin: 10,
+    marginTop: 0,
   },
   graphRow: {
     flexDirection: 'row',
@@ -188,7 +189,11 @@ const Years = () => {
       average: 'DAY',
     },
   })
-  const sensors = useQuery(ALL_SENSORS)
+
+  const sensors = useQuery(ALL_SENSORS, {
+    fetchPolicy: 'network-only',
+    onError: (e) => console.log(e),
+  })
 
   useEffect(() => {
     if (firstTimestamp.data && sensorData.data) {
@@ -211,84 +216,100 @@ const Years = () => {
       <View style={styles.labelRow}>
         <Text textType="heading1">Vuosivertailu</Text>
       </View>
-      <View style={styles.optionListRow}>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Datapisteiden yhdistäminen</Text>
-          <DropDownSelector
-            selectorType="DropDown"
-            data={[
-              { label: 'vuorokausi', value: 'daily' },
-              { label: 'kuukausi', value: 'monthly' },
-            ]}
-            labelField="label"
-            valueField="value"
-            placeholder="valitse"
-            value={period}
-            onChange={(item) => {
-              setPeriod(item.value)
-            }}
-          />
-        </View>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Sensori</Text>
-          <DropDownSelector
-            selectorType="DropDown"
-            data={sensors.data.allSensors}
-            labelField="sensorFullname"
-            valueField="sensorName"
-            placeholder="valitse sensori"
-            value={selectedSensor}
-            onChange={(item) => {
-              handleSensorChange(item)
-            }}
-          />
-        </View>
-        <View style={styles.optionComponentStyle}>
-          <Text textType="heading2">Vuodet</Text>
-          {graphData && (
-            <DropDownSelector
-              selectorType="MultiSelect"
-              data={graphData.daily.graphData
-                .map((d) => ({
-                  label: d.legendLabel,
-                }))
-                .reverse()}
-              labelField="label"
-              valueField="label"
-              placeholder="valitse vuosi"
-              value={selectedYears}
-              onChange={(item) => {
-                setSelectedYears(item)
-              }}
-              maxSelect={4}
-              maxHeight={250}
-            />
-          )}
-          {!graphData && (
-            <DropDownSelector
-              selectorType="MultiSelect"
-              disable={true}
-              placeholder=""
-            />
-          )}
-        </View>
-      </View>
-
-      <View style={styles.graphRow}>
-        {!sensorData.data && selectedSensor && (
+      {!sensors.data && sensors.loading && (
+        <View style={styles.labelRow}>
           <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-        )}
-        {graphData && graphData[period] && selectedYears.length > 0 && (
-          <View style={styles.graphContainer}>
-            <Chart
-              data={graphData[period].graphData.filter((d) =>
-                selectedYears.includes(d.legendLabel)
+        </View>
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <View style={styles.labelRow}>
+          <Text textType="error">
+            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+          </Text>
+        </View>
+      )}
+      {sensors.data && (
+        <View>
+          <View style={styles.optionListRow}>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Datapisteiden yhdistäminen</Text>
+              <DropDownSelector
+                selectorType="DropDown"
+                data={[
+                  { label: 'vuorokausi', value: 'daily' },
+                  { label: 'kuukausi', value: 'monthly' },
+                ]}
+                labelField="label"
+                valueField="value"
+                placeholder="valitse"
+                value={period}
+                onChange={(item) => {
+                  setPeriod(item.value)
+                }}
+              />
+            </View>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Sensori</Text>
+              <DropDownSelector
+                selectorType="DropDown"
+                data={sensors.data.allSensors}
+                labelField="sensorFullname"
+                valueField="sensorName"
+                placeholder="valitse sensori"
+                value={selectedSensor}
+                onChange={(item) => {
+                  handleSensorChange(item)
+                }}
+              />
+            </View>
+            <View style={styles.optionComponentStyle}>
+              <Text textType="heading2">Vuodet</Text>
+              {graphData && (
+                <DropDownSelector
+                  selectorType="MultiSelect"
+                  data={graphData.daily.graphData
+                    .map((d) => ({
+                      label: d.legendLabel,
+                    }))
+                    .reverse()}
+                  labelField="label"
+                  valueField="label"
+                  placeholder="valitse vuosi"
+                  value={selectedYears}
+                  onChange={(item) => {
+                    setSelectedYears(item)
+                  }}
+                  maxSelect={4}
+                  maxHeight={250}
+                />
               )}
-              yDomain={[graphData[period].min, graphData[period].max]}
-            />
+              {!graphData && (
+                <DropDownSelector
+                  selectorType="MultiSelect"
+                  disable={true}
+                  placeholder=""
+                />
+              )}
+            </View>
           </View>
-        )}
-      </View>
+
+          <View style={styles.graphRow}>
+            {!sensorData.data && selectedSensor && (
+              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+            )}
+            {graphData && graphData[period] && selectedYears.length > 0 && (
+              <View style={styles.graphContainer}>
+                <Chart
+                  data={graphData[period].graphData.filter((d) =>
+                    selectedYears.includes(d.legendLabel)
+                  )}
+                  yDomain={[graphData[period].min, graphData[period].max]}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      )}
     </ScrollView>
   )
 }

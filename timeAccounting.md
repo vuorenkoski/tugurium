@@ -23,23 +23,19 @@
 | 24.5. | 10    | web-socket running, first APK build, timeseries view, dropdown navigation                                                                     |
 | 25.5. | 8     | theme refactored, timeseries tuned, years-view created, new DropDownSelector and ItemBox components                                           |
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                     |
-| 31.5. |       | improvements to browser front, authentiaction check to websocket                                                                              |
+| 31.5. |       | improvements to browser front, authentiaction check to websocket, error messages to login and views,                                          |
 | total | 153   |                                                                                                                                               |
 
 ## Product backlog
 
-- errormessage to login (browser and mobile)
-- errormessage when no response from backend (browser and mobile)
 - valikon logo toiseen reunaan
 - datan päivittyminen kun sovelluksen avaa uudelleen
 - images -view
 - statistics -view
 - settings -view
 - lisää mobileen backendin osoitteen syöttö
-- expo-constans
-- poista promise-hook
-- testit
 - front: queries refactoring, ennen 10.11.
+- testit
 - käyttöohjeet
 - showcase to heroku
 - koodaa uudelleen lämpötilanäyttö

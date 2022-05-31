@@ -15,8 +15,8 @@ const theme = {
     body: 16,
     heading1: 24,
     heading2: 18,
-    primaryValue: 18,
-    secondaryValue: 16,
+    primary: 16,
+    secondary: 16,
   },
   fonts: {
     main: Platform.select({
