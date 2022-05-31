@@ -65,169 +65,193 @@ const Statistics = () => {
 
   return (
     <div>
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <Col>
           <h2>Tilastoja</h2>
         </Col>
       </Row>
-
-      <Row className="p-4 pb-2 pt-0">
-        <h4>Sensorien datapisteiden määrät ja alkupäivä</h4>
-      </Row>
-
-      <Row className="p-4 pt-0">
-        {!sensors.data && <Col>Ladataan...</Col>}
-
-        {sensors.data && (
-          <Col className="col-auto">
-            <Table striped>
-              <tbody>
-                <tr>
-                  <th>Sensori</th>
-                  <th>lukumäärä</th>
-                  <th>Ensimmäinen aikaleima</th>
-                </tr>
-                {sensors.data.sensorStats.map((s) => (
-                  <tr key={s.sensor.sensorName}>
-                    <td>{s.sensor.sensorFullname}</td>
-                    <td>{convertNumber(s.count)}</td>
-                    <td>{convertDateToDate(s.firstTimestamp)}</td>
-                  </tr>
-                ))}
-                <tr>
-                  <td>YHTEENSÄ</td>
-                  <td>
-                    {convertNumber(
-                      sensors.data.sensorStats.reduce((p, c) => p + c.count, 0)
-                    )}
-                  </td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </Table>
+      {!sensors.data && sensors.loading && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p>Ladataan dataa palvelimelta...</p>
           </Col>
-        )}
-      </Row>
-
-      <Row className="p-4 pt-2 pb-2">
-        <Col>
-          <h4>Sensorin datapisteiden määrät vuorokaudessa</h4>
-        </Col>
-      </Row>
-
-      <Row className="p-4 pt-0">
-        {!sensors.data && <Col>Ladataan...</Col>}
-        {sensors.data && (
-          <Col className="col-auto">
-            <Form>
-              <Form.Select
-                onChange={handleSensorChange.bind(this)}
-                defaultValue="empty"
-              >
-                <option disabled value="empty">
-                  -- valitse --
-                </option>
-                {sensors.data.sensorStats.map((s) => (
-                  <option key={s.sensor.sensorName} value={s.sensor.sensorName}>
-                    {s.sensor.sensorFullname}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form>
+        </Row>
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p className="errorMessage">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </p>
           </Col>
-        )}
-      </Row>
+        </Row>
+      )}
+      {sensors.data && (
+        <div>
+          <Row className="p-4 pb-2">
+            <h4>Sensorien datapisteiden määrät ja alkupäivä</h4>
+          </Row>
 
-      <Row className="p-4">
-        {measurements && measurements.length > 0 && (
-          <div>
+          <Row className="p-4 pt-0">
             <Col className="col-auto">
-              <VictoryChart
-                width={1200}
-                height={400}
-                theme={VictoryTheme.material}
-                domain={{
-                  y: [0, measurements.reduce((p, c) => Math.max(p, c.y), 0)],
-                }}
-                scale={{ x: 'time' }}
-                containerComponent={
-                  <VictoryZoomContainer
-                    zoomDimension="x"
-                    zoomDomain={zoomDomain}
-                    onZoomDomainChange={handleZoom.bind(this)}
-                  />
-                }
-              >
-                <VictoryAxis
-                  dependentAxis
-                  crossAxis={false}
-                  label="lukumäärä"
-                  style={{
-                    tickLabels: { fontSize: 20 },
-                  }}
-                />
-                <VictoryAxis
-                  offsetY={50}
-                  tickCount={10}
-                  fixLabelOverlap={true}
-                  style={{
-                    axisLabel: { fontSize: 20 },
-                    tickLabels: { fontSize: 20, padding: 5 },
-                  }}
-                />
-                <VictoryLine
-                  data={measurements}
-                  interpolation="monotoneX"
-                  style={{ data: { stroke: 'black', strokeWidth: 1 } }}
-                />
-              </VictoryChart>
+              <Table striped>
+                <tbody>
+                  <tr>
+                    <th>Sensori</th>
+                    <th>lukumäärä</th>
+                    <th>Ensimmäinen aikaleima</th>
+                  </tr>
+                  {sensors.data.sensorStats.map((s) => (
+                    <tr key={s.sensor.sensorName}>
+                      <td>{s.sensor.sensorFullname}</td>
+                      <td>{convertNumber(s.count)}</td>
+                      <td>{convertDateToDate(s.firstTimestamp)}</td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td>YHTEENSÄ</td>
+                    <td>
+                      {convertNumber(
+                        sensors.data.sensorStats.reduce(
+                          (p, c) => p + c.count,
+                          0
+                        )
+                      )}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </Table>
             </Col>
+          </Row>
 
-            <Col className="col-auto ">
-              <VictoryChart
-                width={1200}
-                height={170}
-                scale={{ x: 'time' }}
-                domain={{
-                  y: [0, measurements.reduce((p, c) => Math.max(p, c.y), 0)],
-                }}
-                containerComponent={
-                  <VictoryBrushContainer
-                    brushDimension="x"
-                    brushDomain={zoomDomain}
-                    onBrushDomainChange={handleZoom.bind(this)}
-                  />
-                }
-              >
-                <VictoryAxis
-                  dependentAxis
-                  standalone={false}
-                  style={{
-                    axis: { stroke: 'transparent' },
-                    ticks: { stroke: 'transparent' },
-                    tickLabels: { fill: 'transparent' },
-                  }}
-                />
-                <VictoryLine
-                  data={measurements}
-                  interpolation="monotoneX"
-                  style={{ data: { stroke: 'black', strokeWidth: 1 } }}
-                />
-              </VictoryChart>
+          <Row className="p-4 pt-2 pb-2">
+            <Col>
+              <h4>Sensorin datapisteiden määrät vuorokaudessa</h4>
             </Col>
-          </div>
-        )}
-        {measurements && measurements.length === 0 && (
-          <Col className="col-9">
-            <p>ei datapisteitä</p>
-          </Col>
-        )}
-        {!measurements && selectedSensor && (
-          <Col className="col-9">
-            <p>lataa tietoja...</p>
-          </Col>
-        )}
-      </Row>
+          </Row>
+
+          <Row className="p-4 pt-0">
+            <Col className="col-auto">
+              <Form>
+                <Form.Select
+                  onChange={handleSensorChange.bind(this)}
+                  defaultValue="empty"
+                >
+                  <option disabled value="empty">
+                    -- valitse --
+                  </option>
+                  {sensors.data.sensorStats.map((s) => (
+                    <option
+                      key={s.sensor.sensorName}
+                      value={s.sensor.sensorName}
+                    >
+                      {s.sensor.sensorFullname}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form>
+            </Col>
+          </Row>
+
+          <Row className="p-4">
+            {measurements && measurements.length > 0 && (
+              <div>
+                <Col className="col-auto">
+                  <VictoryChart
+                    width={1200}
+                    height={400}
+                    theme={VictoryTheme.material}
+                    domain={{
+                      y: [
+                        0,
+                        measurements.reduce((p, c) => Math.max(p, c.y), 0),
+                      ],
+                    }}
+                    scale={{ x: 'time' }}
+                    containerComponent={
+                      <VictoryZoomContainer
+                        zoomDimension="x"
+                        zoomDomain={zoomDomain}
+                        onZoomDomainChange={handleZoom.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis
+                      dependentAxis
+                      crossAxis={false}
+                      label="lukumäärä"
+                      style={{
+                        tickLabels: { fontSize: 20 },
+                      }}
+                    />
+                    <VictoryAxis
+                      offsetY={50}
+                      tickCount={10}
+                      fixLabelOverlap={true}
+                      style={{
+                        axisLabel: { fontSize: 20 },
+                        tickLabels: { fontSize: 20, padding: 5 },
+                      }}
+                    />
+                    <VictoryLine
+                      data={measurements}
+                      interpolation="monotoneX"
+                      style={{ data: { stroke: 'black', strokeWidth: 1 } }}
+                    />
+                  </VictoryChart>
+                </Col>
+
+                <Col className="col-auto ">
+                  <VictoryChart
+                    width={1200}
+                    height={170}
+                    scale={{ x: 'time' }}
+                    domain={{
+                      y: [
+                        0,
+                        measurements.reduce((p, c) => Math.max(p, c.y), 0),
+                      ],
+                    }}
+                    containerComponent={
+                      <VictoryBrushContainer
+                        brushDimension="x"
+                        brushDomain={zoomDomain}
+                        onBrushDomainChange={handleZoom.bind(this)}
+                      />
+                    }
+                  >
+                    <VictoryAxis
+                      dependentAxis
+                      standalone={false}
+                      style={{
+                        axis: { stroke: 'transparent' },
+                        ticks: { stroke: 'transparent' },
+                        tickLabels: { fill: 'transparent' },
+                      }}
+                    />
+                    <VictoryLine
+                      data={measurements}
+                      interpolation="monotoneX"
+                      style={{ data: { stroke: 'black', strokeWidth: 1 } }}
+                    />
+                  </VictoryChart>
+                </Col>
+              </div>
+            )}
+            {measurements && measurements.length === 0 && (
+              <Col className="col-9">
+                <p>ei datapisteitä</p>
+              </Col>
+            )}
+            {!measurements && selectedSensor && (
+              <Col className="col-9">
+                <p>lataa tietoja...</p>
+              </Col>
+            )}
+          </Row>
+        </div>
+      )}
     </div>
   )
 }

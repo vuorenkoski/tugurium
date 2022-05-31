@@ -1,15 +1,13 @@
 import { Table, Row, Col, Form, Button } from 'react-bootstrap'
-import { useQuery, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useState } from 'react'
 import { ALL_USERS, DELETE_USER, CREATE_USER } from '../queries'
 
-const Users = () => {
+const Users = ({ users }) => {
   const [displayUserForm, setDisplayUserForm] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPasssword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
-
-  const users = useQuery(ALL_USERS)
 
   const [deleteUser] = useMutation(DELETE_USER, {
     onError: (error) => {

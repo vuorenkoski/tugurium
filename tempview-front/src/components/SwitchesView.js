@@ -24,17 +24,30 @@ const SwitchesView = () => {
 
   return (
     <div>
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <Col>
           <h2>Kytkimet</h2>
         </Col>
       </Row>
-
-      <Row className="p-4">
-        {!switches.data && <Col>Lataa tietoja...</Col>}
-
-        <Col className="col-auto">
-          {switches.data && (
+      {!switches.data && switches.loading && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p>Ladataan dataa palvelimelta...</p>
+          </Col>
+        </Row>
+      )}
+      {!switches.data && switches.error && switches.error.networkError && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p className="errorMessage">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </p>
+          </Col>
+        </Row>
+      )}
+      {switches.data && (
+        <Row className="p-4">
+          <Col className="col-auto">
             <Table striped>
               <tbody>
                 <tr>
@@ -61,9 +74,9 @@ const SwitchesView = () => {
                 ))}
               </tbody>
             </Table>
-          )}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
     </div>
   )
 }

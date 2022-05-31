@@ -8,10 +8,10 @@ import ShowImage from './ShowImage'
 const { BACKEND_URL } = require('../util/config')
 
 const ImagesView = () => {
-  const [images, setImages] = useState(null)
+  const [images, setImages] = useState([])
   const [showImage, setShowImage] = useState(null)
 
-  const image_names = useQuery(ALL_IMAGES, {
+  const imageNames = useQuery(ALL_IMAGES, {
     fetchPolicy: 'network-only',
   })
 
@@ -22,8 +22,8 @@ const ImagesView = () => {
         Authorization: 'BEARER ' + localStorage.getItem('tempview-user-token'),
       },
     }
-    if (image_names.data) {
-      let promises = image_names.data.allImages.map(async (image) => {
+    if (imageNames.data) {
+      let promises = imageNames.data.allImages.map(async (image) => {
         const res = await fetch(BACKEND_URL + '/image/' + image.name, headers)
         let imageObjectURL = null
         if (res.status === 200) {
@@ -45,17 +45,33 @@ const ImagesView = () => {
 
   useEffect(() => {
     fetchImages()
-  }, [image_names]) // eslint-disable-line
+  }, [imageNames]) // eslint-disable-line
 
   return (
     <div>
       {showImage && <ShowImage image={showImage} setShowImage={setShowImage} />}
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <Col>
           <h2>Kamerat</h2>
         </Col>
       </Row>
-      <Row>
+      {!imageNames.data && imageNames.loading && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p>Ladataan dataa palvelimelta...</p>
+          </Col>
+        </Row>
+      )}
+      {!imageNames.data && imageNames.error && imageNames.error.networkError && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p className="errorMessage">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </p>
+          </Col>
+        </Row>
+      )}
+      <Row className="p-4 pb-0">
         {images &&
           images.map((im) => (
             <Col key={im.name} className="col-auto p-4">

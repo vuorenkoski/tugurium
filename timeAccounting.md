@@ -43,5 +43,7 @@
 - front: queries refactoring, ennen 10.11.
 - käyttöohjeet
 - showcase to heroku
-- aitan kytkimen koodaus
 - koodaa uudelleen lämpötilanäyttö
+
+- aitan kytkimen koodaus
+- kameroiden token kuntoon

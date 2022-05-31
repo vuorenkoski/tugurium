@@ -21,7 +21,7 @@ const Login = ({ setToken }) => {
       localStorage.setItem('tempview-user-token', token)
     }
     if (!result.data && result.error && result.error.networkError) {
-      setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?')
+      setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')
       console.log(result)
     }
   }, [result]) // eslint-disable-line
