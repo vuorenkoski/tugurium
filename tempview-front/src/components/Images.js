@@ -112,20 +112,20 @@ const Images = () => {
                     <td>{convertDate(a.updatedAt / 1000)}</td>
                     <td>{a.id}</td>
                     <td>
-                      <Button
+                      <button
                         className="removeButton"
                         onClick={() => handleDeleteImage(a.id)}
                       >
                         poista
-                      </Button>
+                      </button>
                     </td>
                     <td>
-                      <Button
+                      <button
                         className="updateButton"
                         onClick={() => handleUpdateImage(a.id)}
                       >
                         päivitä
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 ))}

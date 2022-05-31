@@ -123,20 +123,20 @@ const Switches = () => {
                     <td>{convertDate(a.updatedAt / 1000)}</td>
                     <td>{a.id}</td>
                     <td>
-                      <Button
+                      <button
                         className="removeButton"
                         onClick={() => handleDeleteSwitch(a.id)}
                       >
                         poista
-                      </Button>
+                      </button>
                     </td>
                     <td>
-                      <Button
+                      <button
                         className="updateButton"
                         onClick={() => handleUpdateSwitch(a.id)}
                       >
                         päivitä
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 ))}

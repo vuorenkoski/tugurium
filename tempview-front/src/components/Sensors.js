@@ -131,20 +131,20 @@ const Sensors = () => {
                     <td>{a.agrmethod}</td>
                     <td>{a.id}</td>
                     <td>
-                      <Button
+                      <button
                         className="removeButton"
                         onClick={() => handeDeleteSensor(a.id)}
                       >
                         poista
-                      </Button>
+                      </button>
                     </td>
                     <td>
-                      <Button
+                      <button
                         className="updateButton"
                         onClick={() => handleUpdateSensor(a.id)}
                       >
                         päivitä
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 ))}
