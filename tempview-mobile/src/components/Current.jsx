@@ -1,5 +1,7 @@
+import { useRef, useEffect } from 'react'
+
 import Text from './Text'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, AppState } from 'react-native'
 import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../utils/conversions'
@@ -9,8 +11,7 @@ const styles = StyleSheet.create({
   labelRow: {
     flexDirection: 'row',
   },
-  senorsStyle: {},
-  senorListStyle: {
+  sensorListStyle: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
@@ -41,10 +42,24 @@ const SensorItem = ({ item }) => {
 }
 
 const Current = () => {
+  const appState = useRef(AppState.currentState)
   const sensors = useQuery(ALL_SENSORS, {
     fetchPolicy: 'network-only',
     onError: (e) => console.log(e),
   })
+
+  useEffect(() => {
+    AppState.addEventListener('change', (nextAppState) => {
+      if (
+        sensors &&
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        sensors.refetch()
+      }
+      appState.current = nextAppState
+    })
+  }, [])
 
   useSubscription(NEW_MEASUREMENT, { onError: (e) => console.log(e) })
 
@@ -66,7 +81,7 @@ const Current = () => {
             </Text>
           </View>
         )}
-        <View style={styles.senorListStyle}>
+        <View style={styles.sensorListStyle}>
           {sensors.data &&
             sensors.data.allSensors &&
             sensors.data.allSensors.map((item) => (

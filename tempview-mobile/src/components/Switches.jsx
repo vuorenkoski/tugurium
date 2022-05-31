@@ -1,6 +1,7 @@
-import { ScrollView, View, StyleSheet } from 'react-native'
+import { ScrollView, View, StyleSheet, AppState } from 'react-native'
 import { useQuery, useSubscription, useMutation } from '@apollo/client'
 import SwitchSelector from 'react-native-switch-selector'
+import { useRef, useEffect } from 'react'
 import {
   ALL_SWITCHES,
   STATUS_CHANGED,
@@ -94,6 +95,7 @@ const Item = ({ item }) => {
               { label: 'ON', value: true },
             ]}
             initial={item.command ? 1 : 0}
+            value={item.command ? 1 : 0}
             onPress={(value) => handleClick(item, value)}
             backgroundColor={theme.colors.secondary}
             buttonColor={theme.colors.primary}
@@ -107,12 +109,30 @@ const Item = ({ item }) => {
 }
 
 const Switches = () => {
+  const appState = useRef(AppState.currentState)
+
   const switches = useQuery(ALL_SWITCHES, {
     fetchPolicy: 'network-only',
     onError: (e) => console.log(e),
   })
 
+  useEffect(() => {
+    AppState.addEventListener('change', (nextAppState) => {
+      if (
+        switches &&
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('heataan')
+        console.log(switches.refetch)
+        switches.refetch()
+      }
+      appState.current = nextAppState
+    })
+  }, [])
+
   useSubscription(STATUS_CHANGED, { onError: (e) => console.log(e) })
+
   return (
     <View>
       <View style={styles.labelRow}>
