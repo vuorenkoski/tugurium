@@ -57,14 +57,14 @@ const Sensors = () => {
   })
 
   const handeDeleteSensor = (id) => {
-    setSensors(sensors.filter((s) => s.id !== Number(id)))
+    setSensors(sensors.filter((s) => s.id !== id))
     const variables = { deleteSensorId: Number(id) }
     deleteSensor({ variables })
   }
 
   const handleUpdateSensor = (id) => {
     setDisplaySensorForm(true)
-    const sensor = sensors.data.allSensors.filter((s) => s.id === id)[0]
+    const sensor = sensors.filter((s) => s.id === id)[0]
     setSensorName(sensor.sensorName)
     setSensorFullname(sensor.sensorFullname)
     setSensorUnit(sensor.sensorUnit)
