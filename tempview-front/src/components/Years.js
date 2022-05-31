@@ -194,13 +194,15 @@ const Years = () => {
           </Col>
         </Row>
       )}
-      <Row className="p-4 pb-0">
-        <Col>
-          {!sensors.data && sensors.error && (
-            <p className="errorMessage">Virhe: {sensors.error.message}</p>
-          )}
-        </Col>
-      </Row>
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p className="errorMessage">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </p>
+          </Col>
+        </Row>
+      )}
       {sensors.data && (
         <div>
           <Row className="p-4 pt-0 pb-0">

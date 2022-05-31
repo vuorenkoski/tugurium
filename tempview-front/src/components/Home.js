@@ -12,18 +12,28 @@ const Home = () => {
 
   return (
     <div>
-      <Row className="p-4">
+      <Row className="p-4 pb-0">
         <Col>
           <h2>Viimeisimmät lämpötilat</h2>
         </Col>
       </Row>
-
+      {!sensors.data && sensors.loading && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p>Ladataan dataa palvelimelta...</p>
+          </Col>
+        </Row>
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <Row className="p-4 pb-0">
+          <Col>
+            <p className="errorMessage">
+              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+            </p>
+          </Col>
+        </Row>
+      )}
       <Row className="p-4">
-        {!sensors.data && sensors.loading && <p>Lataa tietoja...</p>}
-        {!sensors.data && sensors.error && (
-          <p className="errorMessage">Virhe: {sensors.error.message}</p>
-        )}
-
         <Col className="col-auto">
           {sensors.data && (
             <Table striped>
