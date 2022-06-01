@@ -24,18 +24,18 @@
 | 25.5. | 8     | theme refactored, timeseries tuned, years-view created, new DropDownSelector and ItemBox components                                                   |
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                             |
 | 31.5. | 9     | improvements to browser-front, authentiaction check to websocket, better error messages to all views (mobile+browser), refetch after being background |
-| 1.6.  |       | statistics-view, name change to tugurium, images-view                                                                                                 |
-| total | 162   |                                                                                                                                                       |
+| 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
+| total | 171   |                                                                                                                                                       |
 
 ## Product backlog
 
-- front: queries refactoring, ennen 10.11.
 - kuvien taakse musta tausta
+- kytkimien komennot ei näys jos ei ole admin
+- showcase to heroku
 - lisää mobileen backendin osoitteen syöttö
+- koodaa uudelleen lämpötilanäyttö
 - testit
 - käyttöohjeet
-- showcase to heroku
-- koodaa uudelleen lämpötilanäyttö
 
 - hostin vaihto
 - aitan kytkimen koodaus

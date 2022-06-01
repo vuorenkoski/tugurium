@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'black',
   },
   imageRow: {
     flex: 1,
