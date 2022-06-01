@@ -64,32 +64,30 @@ const Current = () => {
   useSubscription(NEW_MEASUREMENT, { onError: (e) => console.log(e) })
 
   return (
-    <View>
-      <ScrollView style={styles.senorStyle}>
-        <View style={styles.labelRow}>
-          <Text textType="heading1">Viimeisimmät lämpötilat</Text>
+    <ScrollView>
+      <View style={styles.labelRow}>
+        <Text textType="heading1">Viimeisimmät lämpötilat</Text>
+      </View>
+      {!sensors.data && sensors.loading && (
+        <View style={styles.row}>
+          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
         </View>
-        {!sensors.data && sensors.loading && (
-          <View style={styles.row}>
-            <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-          </View>
-        )}
-        {!sensors.data && sensors.error && sensors.error.networkError && (
-          <View style={styles.row}>
-            <Text textType="error">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </Text>
-          </View>
-        )}
-        <View style={styles.sensorListStyle}>
-          {sensors.data &&
-            sensors.data.allSensors &&
-            sensors.data.allSensors.map((item) => (
-              <SensorItem key={item.id} item={item} />
-            ))}
+      )}
+      {!sensors.data && sensors.error && sensors.error.networkError && (
+        <View style={styles.row}>
+          <Text textType="error">
+            Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+          </Text>
         </View>
-      </ScrollView>
-    </View>
+      )}
+      <View style={styles.sensorListStyle}>
+        {sensors.data &&
+          sensors.data.allSensors &&
+          sensors.data.allSensors.map((item) => (
+            <SensorItem key={item.id} item={item} />
+          ))}
+      </View>
+    </ScrollView>
   )
 }
 

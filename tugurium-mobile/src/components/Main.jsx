@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-native'
 import { Icon } from 'react-native-elements'
 
 import Login from './Login'
-import Settings from './Settings'
 import Statistics from './Statistics'
 import Years from './Years'
 import Current from './Current'
@@ -144,7 +143,7 @@ const Main = () => {
           <View style={styles.bodyContainer}>
             <Routes>
               <Route path="/" element={<Current />} exact />
-              <Route path="/settings" element={<Settings />} exact />
+              <Route path="/statistics" element={<Statistics />} exact />
               <Route path="/images" element={<Images />} exact />
               <Route path="/years" element={<Years />} exact />
               <Route path="/switches" element={<Switches />} exact />
