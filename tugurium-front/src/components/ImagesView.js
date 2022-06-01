@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 
 import { useQuery } from '@apollo/client'
-import { ALL_IMAGES } from '../queries'
+import { ALL_IMAGES } from '../graphql/image'
 import { convertDate } from '../util/conversions'
 import ShowImage from './ShowImage'
 const { BACKEND_URL } = require('../util/config')

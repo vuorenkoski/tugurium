@@ -3,7 +3,8 @@ import { useQuery, useLazyQuery } from '@apollo/client'
 import { Row, Col, Form } from 'react-bootstrap'
 
 import Chart from './Chart'
-import { ALL_SENSORS, GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../queries'
+import { ALL_SENSORS } from '../graphql/sensor'
+import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 
 const createYearSeries = (data) => {
   const yearSeries = []

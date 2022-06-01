@@ -6,7 +6,7 @@ import {
   DELETE_SWITCH,
   UPDATE_SWITCH,
   NEW_SWITCH,
-} from '../queries'
+} from '../graphql/switch'
 import { convertDate } from '../util/conversions'
 
 const Switches = () => {

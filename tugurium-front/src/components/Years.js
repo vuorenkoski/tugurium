@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Row, Col, Form } from 'react-bootstrap'
-import { SENSOR_DATA, ALL_SENSORS, GET_FIRST_TIMESTAMP } from '../queries'
+import { SENSOR_DATA, GET_FIRST_TIMESTAMP } from '../graphql/measurement'
+import { ALL_SENSORS } from '../graphql/sensor'
 import Chart from './Chart'
 
 const currentYear = new Date().getFullYear()

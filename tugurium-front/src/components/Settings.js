@@ -5,7 +5,8 @@ import Users from './Users'
 import Images from './Images'
 import Switches from './Switches'
 
-import { SENSOR_TOKEN, ALL_USERS } from '../queries'
+import { SENSOR_TOKEN } from '../graphql/sensor'
+import { ALL_USERS } from '../graphql/user'
 
 const Settings = () => {
   const sensorToken = useQuery(SENSOR_TOKEN)

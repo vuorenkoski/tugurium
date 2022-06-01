@@ -1,7 +1,12 @@
 import { Table, Row, Col, Form, Button } from 'react-bootstrap'
 import { useQuery, useMutation } from '@apollo/client'
 import { useState } from 'react'
-import { ALL_IMAGES, DELETE_IMAGE, UPDATE_IMAGE, NEW_IMAGE } from '../queries'
+import {
+  ALL_IMAGES,
+  DELETE_IMAGE,
+  UPDATE_IMAGE,
+  NEW_IMAGE,
+} from '../graphql/image'
 import { convertDate } from '../util/conversions'
 
 const Images = () => {

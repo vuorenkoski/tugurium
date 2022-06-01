@@ -1,6 +1,10 @@
 import { Table, Row, Col, Button } from 'react-bootstrap'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
-import { ALL_SWITCHES, SET_SWITCH_COMMAND, STATUS_CHANGED } from '../queries'
+import {
+  ALL_SWITCHES,
+  SET_SWITCH_COMMAND,
+  STATUS_CHANGED,
+} from '../graphql/switch'
 import { convertDate } from '../util/conversions'
 
 const SwitchesView = () => {

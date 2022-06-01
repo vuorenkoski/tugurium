@@ -1,7 +1,7 @@
 import { Table, Row, Col, Form, Button } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
-import { ALL_USERS, DELETE_USER, CREATE_USER } from '../queries'
+import { ALL_USERS, DELETE_USER, CREATE_USER } from '../graphql/user'
 
 const Users = ({ users }) => {
   const [displayUserForm, setDisplayUserForm] = useState(false)

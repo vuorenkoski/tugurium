@@ -6,7 +6,7 @@ import {
   DELETE_SENSOR,
   UPDATE_SENSOR,
   NEW_SENSOR,
-} from '../queries'
+} from '../graphql/sensor'
 const { AGGREGATE_METHODS } = require('../util/config')
 
 const Sensors = () => {

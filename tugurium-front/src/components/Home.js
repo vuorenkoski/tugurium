@@ -1,6 +1,6 @@
 import { Table, Row, Col } from 'react-bootstrap'
 import { useQuery, useSubscription } from '@apollo/client'
-import { ALL_SENSORS, NEW_MEASUREMENT } from '../queries'
+import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../util/conversions'
 
 const Home = () => {

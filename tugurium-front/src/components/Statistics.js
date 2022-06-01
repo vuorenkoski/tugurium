@@ -11,7 +11,7 @@ import {
   VictoryTheme,
 } from 'victory'
 
-import { SENSOR_STATS, DATAPOINTS } from '../queries'
+import { SENSOR_STATS, DATAPOINTS } from '../graphql/sensor'
 
 const processData = (data, setMeasurements) => {
   const secondsInDay = 24 * 60 * 60

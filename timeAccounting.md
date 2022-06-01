@@ -29,14 +29,15 @@
 
 ## Product backlog
 
-- lisää mobileen backendin osoitteen syöttö
 - front: queries refactoring, ennen 10.11.
-- settings -view
+- kuvien taakse musta tausta
+- lisää mobileen backendin osoitteen syöttö
 - testit
 - käyttöohjeet
 - showcase to heroku
 - koodaa uudelleen lämpötilanäyttö
 
+- hostin vaihto
 - aitan kytkimen koodaus
 - kameroiden token kuntoon
 
