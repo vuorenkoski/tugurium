@@ -123,8 +123,6 @@ const Switches = () => {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        console.log('heataan')
-        console.log(switches.refetch)
         switches.refetch()
       }
       appState.current = nextAppState

@@ -24,7 +24,7 @@
 | 25.5. | 8     | theme refactored, timeseries tuned, years-view created, new DropDownSelector and ItemBox components                                                   |
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                             |
 | 31.5. | 9     | improvements to browser-front, authentiaction check to websocket, better error messages to all views (mobile+browser), refetch after being background |
-| 1.6.  |       | statistics-view, partial name change                                                                                                                  |
+| 1.6.  |       | statistics-view, name change to tugurium,                                                                                                             |
 | total | 162   |                                                                                                                                                       |
 
 ## Product backlog

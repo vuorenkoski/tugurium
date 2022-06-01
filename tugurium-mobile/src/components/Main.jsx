@@ -25,7 +25,8 @@ import Text from './Text'
 
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
-import useGetUser from '../hooks/useGetUser'
+import { useQuery } from '@apollo/client'
+import { GET_USER } from '../graphql/user'
 import { VERSION } from '../utils/config'
 
 const styles = StyleSheet.create({
@@ -128,9 +129,11 @@ const MenuElement = () => {
 }
 
 const Main = () => {
-  const { user } = useGetUser()
+  const user = useQuery(GET_USER, {
+    onError: (e) => console.log('virhe', e),
+  })
 
-  if (user) {
+  if (user.data && user.data.getUser) {
     return (
       <MenuProvider>
         <StatusBar style="light" />
