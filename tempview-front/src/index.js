@@ -18,7 +18,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 const { BACKEND_URL, WEBSOCKET_URL } = require('./util/config')
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('tempview-user-token')
+  const token = localStorage.getItem('tugurium-user-token')
   return {
     headers: {
       ...headers,
@@ -36,7 +36,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      authLink: `bearer ${localStorage.getItem('tempview-user-token')}`,
+      authLink: `bearer ${localStorage.getItem('tugurium-user-token')}`,
     },
   },
 })

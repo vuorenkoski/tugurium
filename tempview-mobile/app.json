@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Tempview",
-    "slug": "Tempview",
-    "version": "0.2.2",
+    "name": "Tugurium",
+    "slug": "Tugurium",
+    "version": "0.3.0",
     "description": "Home automation client",
     "githubUrl": "https://github.com/vuorenkoski/tempview",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/newIcon2.png",
+      "image": "./assets/newIcon3.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,11 +21,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/newIcon2.png",
+        "foregroundImage": "./assets/newIcon3.png",
         "backgroundColor": "#FFFFFF"
       },
       "versionCode": 3,
-      "package": "com.vuorenkoski.tempviewmobile"
+      "package": "com.vuorenkoski.tuguriumMobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

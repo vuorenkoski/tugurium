@@ -136,7 +136,7 @@ const Main = () => {
         <StatusBar style="light" />
         <SafeAreaView style={styles.rootContainer}>
           <View style={styles.navContainer}>
-            <Text style={styles.logo}>TEMPVIEW</Text>
+            <Text style={styles.logo}>TUGURIUM</Text>
             <MenuElement />
           </View>
           <View style={styles.bodyContainer}>
@@ -160,7 +160,7 @@ const Main = () => {
     <View>
       <StatusBar style="dark" />
       <View style={styles.content}>
-        <Text style={styles.logoText}>TEMPVIEW</Text>
+        <Text style={styles.logoText}>TUGURIUM</Text>
         <Text style={styles.versioText}>versio {VERSION}</Text>
         <Login />
       </View>

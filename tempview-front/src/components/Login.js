@@ -18,7 +18,7 @@ const Login = ({ setToken }) => {
     if (result.data) {
       const token = result.data.login.value
       setToken(token)
-      localStorage.setItem('tempview-user-token', token)
+      localStorage.setItem('tugurium-user-token', token)
     }
     if (!result.data && result.error && result.error.networkError) {
       setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')

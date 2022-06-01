@@ -246,7 +246,7 @@ const Statistics = () => {
             )}
             {!measurements && selectedSensor && (
               <Col className="col-9">
-                <p>lataa tietoja...</p>
+                <p>Ladataan dataa palvelimelta...</p>
               </Col>
             )}
           </Row>

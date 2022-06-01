@@ -19,7 +19,7 @@ const ImagesView = () => {
     const headers = {
       method: 'GET',
       headers: {
-        Authorization: 'BEARER ' + localStorage.getItem('tempview-user-token'),
+        Authorization: 'BEARER ' + localStorage.getItem('tugurium-user-token'),
       },
     }
     if (imageNames.data) {

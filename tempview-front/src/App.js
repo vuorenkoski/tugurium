@@ -21,11 +21,11 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
 
-  if (!token && !localStorage.getItem('tempview-user-token')) {
+  if (!token && !localStorage.getItem('tugurium-user-token')) {
     return (
       <div className="container">
         <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
-          <NavbarBrand className="text-white">TEMPVIEW</NavbarBrand>
+          <NavbarBrand className="text-white">TUGURIUM</NavbarBrand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto"></Nav>
@@ -52,7 +52,7 @@ const App = () => {
           bg="dark"
           className="p-3"
         >
-          <NavbarBrand className="text-white">TEMPVIEW</NavbarBrand>
+          <NavbarBrand className="text-white">TUGURIUM</NavbarBrand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">

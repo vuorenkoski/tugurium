@@ -1,14 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const DATAPOINTS = gql`
-  query Datapoints($sensorName: String) {
-    datapoints(sensorName: $sensorName) {
-      count
-      timestamp
-    }
-  }
-`
-
 export const GET_FIRST_TIMESTAMP = gql`
   query Query {
     getFirstTimestamp
