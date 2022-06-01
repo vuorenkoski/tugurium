@@ -162,9 +162,7 @@ const Statistics = () => {
           </View>
 
           <View style={styles.optionComponentStyle}>
-            <Text textType="heading2">
-              Sensorin datapisteiden määrät vuorokaudessa
-            </Text>
+            <Text textType="heading2">Datapisteiden lukumäärät (vrk)</Text>
             <DropDownSelector
               selectorType="DropDown"
               data={sensors}

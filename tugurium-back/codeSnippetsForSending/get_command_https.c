@@ -11,7 +11,7 @@
 #include <ctype.h>
 
 const char *sw = "CRHE";
-const char *hostname = "tempview.vuorenkoski.fi";
+const char *hostname = "tugurium.vuorenkoski.fi";
 const char *token = "xxxx";
 const int port = 443;
 int debug = 0;

@@ -1,8 +1,8 @@
-# Tempview
+# Tugurium
 
 Project work for FullStack 2022
 
-Idea: frontend and backend running in local Raspberry pi server, which collects and visualizes temperature and some other data. Frontend is build for browser and android device. Javascript is used as programming language.
+Idea: frontend and backend running in local Raspberry pi server, which collects and visualizes temperature and some other data produced locally. Frontend is build for browser and android device. Javascript is used as programming language.
 
 ## Data sources
 
@@ -22,7 +22,6 @@ Data is collected from sensors in two locations: home and summer cottage. In add
 - temperature (lake)
 - temperature (sleeping barn)
 - waterlevel (lake)
-- waterlevel (well)
 - motionsensor (inside)
 - activity alert (mousetrap inside)
 
@@ -105,13 +104,15 @@ sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
 
 ## Production environment
 
-Production server will be run Raspberry Pi 2 in address https://tempview.vuorenkoski.fi.
+Production server will be run Raspberry Pi 2 in address https://tugurium.vuorenkoski.fi.
 
-Frontend: https://tempview.vuorenkoski.fi/
+Frontend: https://tugurium.vuorenkoski.fi/
 
-Backend: https://tempview.vuorenkoski.fi/api/graphql
+Backend: https://tugurium.vuorenkoski.fi/api/graphql
 
-Backend image: https://tempview.vuorenkoski.fi/api/image
+Backend websocket: wss://tugurium.vuorenkoski.fi//wss/graphql
+
+Backend image: https://tugurium.vuorenkoski.fi/api/image
 
 ### Setting up production environment
 
@@ -152,11 +153,14 @@ SECRET is random secret string, SENSOR_TOKEN is static authorization token of se
 
 7. Install dependencies, build frontend and start background service
 
+copy tugurium-back/tugurium.service to /etc/systemd/system
+
 ```
 npm install --prefix tugurium-back/
 npm install --prefix tugurium-front/
 npm run build --prefix tugurium-front/
 sudo service tugurium start
+sudo systemctl enable tugurium
 ```
 
 8. Insert to crontab a script to fetch data from FMI (every 60 minutes)

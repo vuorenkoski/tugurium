@@ -10,7 +10,7 @@
 #include <openssl/ssl.h>
 
 const char *sw = "HLIG";
-const char *hostname = "tempview.vuorenkoski.fi";
+const char *hostname = "tugurium.vuorenkoski.fi";
 const char *token = "xxx";
 const int port = 443;
 int debug = 0;

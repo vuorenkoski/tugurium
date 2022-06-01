@@ -10,7 +10,7 @@
 #include <openssl/ssl.h>
 
 const char *sensor = "TEST";
-const char *hostname = "tempview.vuorenkoski.fi";
+const char *hostname = "tugurium.vuorenkoski.fi";
 const char *token = "xxxx";
 const char *ds18b20 = "/sys/bus/w1/devices/28-0000021ec953/w1_slave";
 const int port = 443;
