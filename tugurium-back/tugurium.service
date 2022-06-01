@@ -1,8 +1,8 @@
 [Unit]
-Description=Tempview nodejs app
+Description=Tugurium nodejs app
 
 [Service]
-WorkingDirectory=/home/pi/tempview/tempview-back
+WorkingDirectory=/home/pi/tugurium/tugurium-back
 ExecStart=/usr/bin/npm start
 Restart=always
 RestartSec=500ms

@@ -1,4 +1,4 @@
 node_modules
 .env
 /data
-/tempview-back/public
+/tugurium-back/public
