@@ -47,17 +47,13 @@ Database: Postgres
 
 Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
 
-ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
+ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db), ADMIN_PASSWORD contains admin password
 
 ### Frontend
 
 Framework: React (browser) and React native (mobile), Apollo-client, Victory, Bootstrap
 
 Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition lights and heating can be activated from frontend. Same functionalities are implemented to both browser and andoird platform.
-
-### Production server
-
-Process manager: https://github.com/Unitech/pm2
 
 ## Development environment
 
@@ -77,9 +73,9 @@ Create database:
 
 ```
 sudo -u postgres psql
-postgres=# create database tempviewdb;
-postgres=# create user tempviewuser with encrypted password 'secret';
-postgres=# grant all privileges on database tempviewdb to tempviewuser;
+postgres=# create database tugurium_db;
+postgres=# create user tugurium_user with encrypted password 'secret';
+postgres=# grant all privileges on database tugurium_db to tugurium_user;
 postgres=# \q
 ```
 
@@ -89,21 +85,21 @@ Import old csv data to backend:
 node importOld.js
 ```
 
-Clear database:
+Clear measurements when needed:
 
 ```
 sudo -u postgres psql
-postgres=# \c tempviewdb;
+postgres=# \c tugurium_db;
 postgres=# truncate table measurements;
 postgres=# \q
 ```
 
-Dump and restore sql data:
+Dump and restore sql data when needed:
 
 ```
-pg_dump -F c -U tempviewuser -h localhost tempviewdb -f sqlfile.sql
+pg_dump -F c -U tugurium_user -h localhost tugurium_db -f sqlfile.sql
 
-sudo -u postgres pg_restore -d tempviewdb -c sqlfile.sql
+sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
 
 ```
 
@@ -127,49 +123,49 @@ sudo apt install postgresql postgresql-contrib nodejs
 
 2. Create database (instructions in Create database -section)
 
-3. Clone repository to /home/pi/tempview
+3. Clone repository to /home/pi/tugurium
 
 4. Copy backround service script and activate run-on-boot
 
 ```
-sudo cp /home/pi/tempview/tempview-back/tempview.service /etc/systemd/system/.
+sudo cp /home/pi/tugurium/tugurium-back/tugurium.service /etc/systemd/system/.
 sudo systemctl daemon-reload
-sudo systemctl enable tempview.service
+sudo systemctl enable tugurium.service
 ```
 
 5. Apache2 config
 
-Make necessary configs to tempview-ssl.conf. After that:
+Make necessary configs to tugurium-ssl.conf. After that:
 
 ```
-sudo cp tempview-ssl.conf /etc/apache2/sites-available/.
+sudo cp tugurium-ssl.conf /etc/apache2/sites-available/.
 sudo a2enmod proxy
 sudo a2enmod proxy_wstunnel
 sudo a2enmod rewrite
-sudo a2ensite tempview-ssl.conf
+sudo a2ensite tugurium-ssl.conf
 sudo service apache2 restart
 ```
 
-6. Create .env file to tempview-back/.env
+6. Create .env file to tugurium-back/.env
 
 SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
 
 7. Install dependencies, build frontend and start background service
 
 ```
-npm install --prefix tempview-back/
-npm install --prefix tempview-front/
-npm run build --prefix tempview-front/
-sudo service tempview start
+npm install --prefix tugurium-back/
+npm install --prefix tugurium-front/
+npm run build --prefix tugurium-front/
+sudo service tugurium start
 ```
 
 8. Insert to crontab a script to fetch data from FMI (every 60 minutes)
 
 ```
-30 * * * * sh /home/pi/tempview/getFmiData.sh
+30 * * * * sh /home/pi/tugurium/getFmiData.sh
 ```
 
-There is example codesnippets in c and python to send data from sensors, switches and camera (tempview-back/codeSnippetsForSending).
+There is example codesnippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
 
 ## Mobile version
 
