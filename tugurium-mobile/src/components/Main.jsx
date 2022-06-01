@@ -118,7 +118,6 @@ const MenuElement = () => {
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
           <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
-          <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
           <MenuOption onSelect={logout}>
             <Text textType="menuItem">Kirjaudu ulos</Text>
           </MenuOption>
@@ -150,7 +149,6 @@ const Main = () => {
               <Route path="/years" element={<Years />} exact />
               <Route path="/switches" element={<Switches />} exact />
               <Route path="/timeseries" element={<Timeseries />} exact />
-              <Route path="/statistics" element={<Statistics />} exact />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </View>

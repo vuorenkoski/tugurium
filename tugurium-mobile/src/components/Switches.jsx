@@ -96,6 +96,7 @@ const Item = ({ item }) => {
             ]}
             initial={item.command ? 1 : 0}
             value={item.command ? 1 : 0}
+            disableValueChangeOnPress={true}
             onPress={(value) => handleClick(item, value)}
             backgroundColor={theme.colors.secondary}
             buttonColor={theme.colors.primary}

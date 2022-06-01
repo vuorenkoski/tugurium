@@ -29,7 +29,6 @@
 
 ## Product backlog
 
-- switch goes back and forth!!
 - images -view
 - lisää mobileen backendin osoitteen syöttö
 - front: queries refactoring, ennen 10.11.
