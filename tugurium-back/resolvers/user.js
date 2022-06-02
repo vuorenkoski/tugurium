@@ -30,7 +30,7 @@ const login = async (root, args) => {
   }
   const token = jwt.sign(userForToken, SECRET)
 
-  return { value: token }
+  return { token, user }
 }
 
 const createUser = async (root, args, context) => {

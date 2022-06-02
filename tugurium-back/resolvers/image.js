@@ -33,7 +33,7 @@ const updateImage = async (root, args, context) => {
 }
 
 const newImage = async (root, args, context) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
   const images = await Image.findAll()

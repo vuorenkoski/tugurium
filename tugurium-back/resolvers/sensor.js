@@ -58,7 +58,7 @@ const updateSensor = async (root, args, context) => {
 }
 
 const newSensor = async (root, args, context) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
   const sensors = await Sensor.findAll()
@@ -85,10 +85,10 @@ const sensorDetails = async (root, args) => {
 
 const sensorToken = async (root, args, context) => {
   if (!context.currentUser || !context.currentUser.admin) {
-    throw new AuthenticationError('Not authorized')
+    return { token: null }
   }
 
-  return { value: SENSOR_TOKEN }
+  return { token: SENSOR_TOKEN }
 }
 
 const currentSensorData = async (root, args, context) => {

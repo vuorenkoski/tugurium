@@ -39,7 +39,7 @@ const updateSwitch = async (root, args, context) => {
 }
 
 const newSwitch = async (root, args, context) => {
-  if (!context.currentUser) {
+  if (!context.currentUser || !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
   const switches = await Switch.findAll()

@@ -59,6 +59,11 @@ const typeDefs = gql`
     admin: Boolean!
   }
 
+  type Token {
+    token: String
+    user: User
+  }
+
   type Query {
     allSensors: [Sensor]
     allImages: [Image]
@@ -78,10 +83,6 @@ const typeDefs = gql`
     getFirstTimestamp: Int!
     getSwitchCommand(name: String!): Boolean
     getUser: User
-  }
-
-  type Token {
-    value: String!
   }
 
   type Mutation {
