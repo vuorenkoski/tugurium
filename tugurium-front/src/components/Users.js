@@ -82,8 +82,8 @@ const Users = ({ admin }) => {
                 users.data.allUsers.map((a) => (
                   <tr key={a.id}>
                     <td>{a.username}</td>
-                    <td>{a.admin && <div>kyllä</div>}</td>
-                    {admin && (
+                    <td>{a.admin ? 'kyllä' : 'ei'}</td>
+                    {admin && !a.admin && (
                       <td>
                         <button
                           className="removeButton"
