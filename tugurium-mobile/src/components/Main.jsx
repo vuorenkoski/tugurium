@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Route, Routes, Navigate } from 'react-router-native'
 import { View, StyleSheet, SafeAreaView } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
@@ -89,15 +90,8 @@ const MenuItem = ({ navigate, page, text }) => {
   )
 }
 
-const MenuElement = () => {
+const MenuElement = ({ logout }) => {
   const navigate = useNavigate()
-  const authStorage = useAuthStorage()
-  const apolloClient = useApolloClient()
-
-  const logout = () => {
-    authStorage.removeAccessToken()
-    apolloClient.resetStore()
-  }
 
   return (
     <>
@@ -127,18 +121,26 @@ const MenuElement = () => {
 }
 
 const Main = () => {
-  const user = useQuery(GET_USER, {
-    onError: (e) => console.log('virhe', e),
-  })
+  const authStorage = useAuthStorage()
+  const apolloClient = useApolloClient()
 
-  if (user.data && user.data.getUser) {
+  const [user, setUser] = useState(null)
+
+  const logout = () => {
+    authStorage.removeAccessToken()
+    authStorage.removeUser()
+    apolloClient.clearStore()
+    setUser(null)
+  }
+
+  if (user) {
     return (
       <MenuProvider>
         <StatusBar style="light" />
         <SafeAreaView style={styles.rootContainer}>
           <View style={styles.navContainer}>
             <Text style={styles.logo}>TUGURIUM</Text>
-            <MenuElement />
+            <MenuElement logout={logout} />
           </View>
           <View style={styles.bodyContainer}>
             <Routes>
@@ -146,7 +148,11 @@ const Main = () => {
               <Route path="/statistics" element={<Statistics />} exact />
               <Route path="/images" element={<Images />} exact />
               <Route path="/years" element={<Years />} exact />
-              <Route path="/switches" element={<Switches />} exact />
+              <Route
+                path="/switches"
+                element={<Switches user={user} />}
+                exact
+              />
               <Route path="/timeseries" element={<Timeseries />} exact />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
@@ -162,7 +168,7 @@ const Main = () => {
       <View style={styles.content}>
         <Text style={styles.logoText}>TUGURIUM</Text>
         <Text style={styles.versioText}>versio {VERSION}</Text>
-        <Login />
+        <Login setUser={setUser} />
       </View>
     </View>
   )

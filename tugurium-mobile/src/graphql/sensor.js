@@ -83,7 +83,7 @@ export const SENSOR_STATS = gql`
 export const SENSOR_TOKEN = gql`
   query SensorToken {
     sensorToken {
-      value
+      token
     }
   }
 `

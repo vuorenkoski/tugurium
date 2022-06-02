@@ -72,7 +72,7 @@ const LoginContainer = ({ onSubmit }) => {
   )
 }
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
@@ -82,13 +82,15 @@ const Login = () => {
 
   const onSubmit = async ({ username, password }) => {
     const variables = { username, password }
-    const data = await mutate({
+    const res = await mutate({
       variables,
       onError: () => console.log('error'),
     })
-    if (data.data) {
-      await authStorage.setAccessToken(data.data.login.value)
+    if (res.data) {
+      await authStorage.setAccessToken(res.data.login.token)
+      await authStorage.setUser(res.data.login.user)
       apolloClient.resetStore()
+      setUser(res.data.login.user)
       navigate('/current', { exact: true })
     }
     if (!result.data && result.error && result.error.networkError) {

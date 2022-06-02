@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const Item = ({ item }) => {
+const Item = ({ item, admin }) => {
   const [setSwitch] = useMutation(SET_SWITCH_COMMAND, {
     refetchQueries: [{ query: ALL_SWITCHES }],
   })
@@ -90,6 +90,7 @@ const Item = ({ item }) => {
         <View style={styles.columnCenter}>
           <SwitchSelector
             style={styles.selectorStyle}
+            disabled={!admin}
             options={[
               { label: 'OFF', value: false },
               { label: 'ON', value: true },
@@ -99,7 +100,7 @@ const Item = ({ item }) => {
             disableValueChangeOnPress={true}
             onPress={(value) => handleClick(item, value)}
             backgroundColor={theme.colors.secondary}
-            buttonColor={theme.colors.primary}
+            buttonColor={admin ? theme.colors.primary : 'grey'}
             fontSize={20}
             textColor={'white'}
           />
@@ -109,7 +110,7 @@ const Item = ({ item }) => {
   )
 }
 
-const Switches = () => {
+const Switches = ({ user }) => {
   const appState = useRef(AppState.currentState)
 
   const switches = useQuery(ALL_SWITCHES, {
@@ -154,7 +155,7 @@ const Switches = () => {
           <ScrollView>
             <View style={styles.switchListStyle}>
               {switches.data.allSwitches.map((item) => (
-                <Item key={item.id} item={item} />
+                <Item key={item.id} item={item} admin={user.admin} />
               ))}
               {(!switches.data || !switches.data.allSwitches) && (
                 <View style={styles.column}>
