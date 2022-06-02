@@ -6,6 +6,8 @@ const { DATABASE_URL } = require('./util/config')
 
 const blockSize = 200000
 
+const dateLimit = new Date(2014, 0, 1)
+
 const tables = [
   { filename: '../data/kellarissa.csv', sensorName: 'CKEL' },
   { filename: '../data/sisalla.csv', sensorName: 'CINS' },
@@ -52,14 +54,15 @@ const readCsvFile = (filename, sensorName, sensorId) => {
   content.split(/\r?\n/).forEach((line) => {
     const row = line.split(',')
     const value = parseFloat(row[1])
+    const timestamp = parseInt(row[0]) / 1000
     // there are some invalid values in old data...
     if (
+      timestamp * 1000 > dateLimit &&
       !isNaN(value) &&
       (sensorName === 'CLSR' ||
         sensorName === 'FSVI' ||
         (value > -40 && value < 80))
     ) {
-      const timestamp = parseInt(row[0]) / 1000
       data.push({ timestamp, value, sensorId })
       if (timestamp > lastTimestamp) {
         lastTimestamp = timestamp
