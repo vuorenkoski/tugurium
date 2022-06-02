@@ -15,7 +15,7 @@ Sensor.init(
       type: DataTypes.STRING,
       unique: true,
       validate: {
-        len: [4, 4],
+        len: { args: [4, 4], msg: 'Name must have four characters' },
       },
     },
     sensorFullname: {

@@ -15,6 +15,9 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      validate: {
+        len: { args: [3, 10], msg: 'Username must be 3-10 characters long' },
+      },
     },
     passwordHash: {
       type: DataTypes.STRING,

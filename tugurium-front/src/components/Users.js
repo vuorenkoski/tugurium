@@ -22,18 +22,15 @@ const Users = ({ admin }) => {
   const users = useQuery(ALL_USERS)
 
   const [deleteUser] = useMutation(DELETE_USER, {
-    onError: (error) => {
-      setErrorMessage(error.graphQLErrors[0].message)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 2000)
-    },
     refetchQueries: [{ query: ALL_USERS }],
   })
 
   const [createUser] = useMutation(CREATE_USER, {
     onError: (error) => {
-      setErrorMessage(error.graphQLErrors[0].message)
+      setErrorMessage(error.message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 4000)
     },
     onCompleted: (data) => {
       closeUserForm()

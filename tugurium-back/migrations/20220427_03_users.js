@@ -13,7 +13,7 @@ module.exports = {
         unique: true,
         allowNull: false,
         validate: {
-          isEmail: true,
+          len: { args: [3, 10], msg: 'Username must be 3-10 characters long' },
         },
       },
       password_hash: {

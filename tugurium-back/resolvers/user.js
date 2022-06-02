@@ -37,15 +37,21 @@ const createUser = async (root, args, context) => {
   if (!context.currentUser || !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
+  const { username, password } = args
 
-  const users = await User.findAll()
-  if (users.find((p) => p.username === args.username)) {
-    throw new UserInputError('username name must be unique', {
+  if (password.length < 5) {
+    throw new UserInputError('passowrd must be alteast 5 characters long', {
       invalidArgs: args.name,
     })
   }
 
-  const { username, password } = args
+  const users = await User.findAll()
+  if (users.find((p) => p.username === args.username)) {
+    throw new UserInputError('username must be unique', {
+      invalidArgs: args.name,
+    })
+  }
+
   const passwordHash = await bcrypt.hash(password, 10)
   const user = await User.create({
     username,
