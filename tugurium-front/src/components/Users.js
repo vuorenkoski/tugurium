@@ -17,6 +17,7 @@ const Users = ({ admin }) => {
   const [username, setUsername] = useState('')
   const [password, setPasssword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [deleteUserId, setDeleteUserId] = useState(null)
 
   const users = useQuery(ALL_USERS)
 
@@ -40,9 +41,11 @@ const Users = ({ admin }) => {
     refetchQueries: [{ query: ALL_USERS }],
   })
 
-  const handeDeleteUser = (id) => {
+  const handleDeleteUser = () => {
+    const id = deleteUserId.id
     const variables = { deleteUserId: Number(id) }
     deleteUser({ variables })
+    setDeleteUserId(null)
   }
 
   const handeCreateUser = (id) => {
@@ -87,7 +90,7 @@ const Users = ({ admin }) => {
                       <td>
                         <button
                           className="removeButton"
-                          onClick={() => handeDeleteUser(a.id)}
+                          onClick={() => setDeleteUserId(a)}
                         >
                           poista
                         </button>
@@ -107,6 +110,35 @@ const Users = ({ admin }) => {
           </Col>
         </Row>
       )}
+
+      <Modal show={deleteUserId} onHide={() => setDeleteUserId(null)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Käyttäjän poistaminen</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <h2>{deleteUserId?.username}</h2>
+            </Row>
+            <Row>
+              <p>Oletko varma että haluat poistaa käyttäjän?</p>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleDeleteUser}>Poista</Button>
+              </Col>
+              <Col className="col-auto">
+                <Button
+                  variant="secondary"
+                  onClick={() => setDeleteUserId(null)}
+                >
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
 
       <Modal show={displayUserForm} onHide={closeUserForm} centered>
         <Modal.Header closeButton>

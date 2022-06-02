@@ -24,6 +24,8 @@ const Images = ({ admin }) => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [description, setDescription] = useState('')
   const [imageId, setImageId] = useState(-1)
+  const [deleteImageId, setDeleteImageId] = useState(null)
+
   const images = useQuery(ALL_IMAGES)
 
   const [deleteImage] = useMutation(DELETE_IMAGE, {
@@ -59,9 +61,11 @@ const Images = ({ admin }) => {
     refetchQueries: [{ query: ALL_IMAGES }],
   })
 
-  const handleDeleteImage = (id) => {
+  const handleDeleteImage = () => {
+    const id = deleteImageId.id
     const variables = { deleteImageId: Number(id) }
     deleteImage({ variables })
+    setDeleteImageId(null)
   }
 
   const handleUpdateImage = (id) => {
@@ -132,7 +136,7 @@ const Images = ({ admin }) => {
                         <td>
                           <button
                             className="removeButton"
-                            onClick={() => handleDeleteImage(a.id)}
+                            onClick={() => setDeleteImageId(a)}
                           >
                             poista
                           </button>
@@ -161,6 +165,39 @@ const Images = ({ admin }) => {
           </Col>
         </Row>
       )}
+
+      <Modal
+        show={deleteImageId}
+        onHide={() => setDeleteImageId(null)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Kameran poistaminen</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <h2>{deleteImageId?.description}</h2>
+            </Row>
+            <Row>
+              <p>Oletko varma että haluat poistaa kameran?</p>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleDeleteImage}>Poista</Button>
+              </Col>
+              <Col className="col-auto">
+                <Button
+                  variant="secondary"
+                  onClick={() => setDeleteImageId(null)}
+                >
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
 
       <Modal show={displayImageForm} onHide={closeImageForm} centered>
         <Modal.Header closeButton>

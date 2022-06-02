@@ -25,6 +25,8 @@ const Switches = ({ admin }) => {
   const [description, setDescription] = useState('')
   const [commandFile, setCommandFile] = useState('')
   const [switchId, setSwitchId] = useState(-1)
+  const [deleteSwitchId, setDeleteSwitchId] = useState(null)
+
   const switches = useQuery(ALL_SWITCHES)
 
   const [deleteSwitch] = useMutation(DELETE_SWITCH, {
@@ -60,9 +62,11 @@ const Switches = ({ admin }) => {
     refetchQueries: [{ query: ALL_SWITCHES }],
   })
 
-  const handleDeleteSwitch = (id) => {
+  const handleDeleteSwitch = () => {
+    const id = deleteSwitchId.id
     const variables = { deleteSwitchId: Number(id) }
     deleteSwitch({ variables })
+    setDeleteSwitchId(null)
   }
 
   const handleUpdateSwitch = (id) => {
@@ -138,7 +142,7 @@ const Switches = ({ admin }) => {
                         <td>
                           <button
                             className="removeButton"
-                            onClick={() => handleDeleteSwitch(a.id)}
+                            onClick={() => setDeleteSwitchId(a)}
                           >
                             poista
                           </button>
@@ -159,6 +163,7 @@ const Switches = ({ admin }) => {
           </Table>
         </Col>
       </Row>
+
       {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
@@ -166,6 +171,39 @@ const Switches = ({ admin }) => {
           </Col>
         </Row>
       )}
+
+      <Modal
+        show={deleteSwitchId}
+        onHide={() => setDeleteSwitchId(null)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Käyttäjän poistaminen</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <h2>{deleteSwitchId?.description}</h2>
+            </Row>
+            <Row>
+              <p>Oletko varma että haluat poistaa kytkimen?</p>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleDeleteSwitch}>Poista</Button>
+              </Col>
+              <Col className="col-auto">
+                <Button
+                  variant="secondary"
+                  onClick={() => setDeleteSwitchId(null)}
+                >
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
 
       <Modal show={displaySwitchForm} onHide={closeSwitchForm} centered>
         <Modal.Header closeButton>
