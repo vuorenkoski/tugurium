@@ -4,12 +4,13 @@ import Sensors from './Sensors'
 import Users from './Users'
 import Images from './Images'
 import Switches from './Switches'
+import PasswordChange from './PasswordChange'
 
 import { SENSOR_TOKEN } from '../graphql/sensor'
 
 const Settings = () => {
   const sToken = useQuery(SENSOR_TOKEN)
-  const admin = localStorage.getItem('tugurium-user-admin') === 'true'
+  const user = JSON.parse(localStorage.getItem('tugurium-user'))
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -35,11 +36,12 @@ const Settings = () => {
       )}
       {sToken.data && (
         <div>
-          <Users admin={admin} />
-          <Sensors admin={admin} />
-          <Images admin={admin} />
-          <Switches admin={admin} />
-          {admin && sToken.data && (
+          <PasswordChange user={user} />
+          <Users admin={user.admin} />
+          <Sensors admin={user.admin} />
+          <Images admin={user.admin} />
+          <Switches admin={user.admin} />
+          {user.admin && (
             <div>
               <Row className="p-4 pb-1">
                 <Col>

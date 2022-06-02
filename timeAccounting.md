@@ -25,12 +25,14 @@
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                             |
 | 31.5. | 9     | improvements to browser-front, authentiaction check to websocket, better error messages to all views (mobile+browser), refetch after being background |
 | 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
+| 2.6.  |       | change ops only visible to admin, login+settings major refactor, passwordchange                                                                       |
 | total | 171   |                                                                                                                                                       |
 
 ## Product backlog
 
-- kuvien taakse musta tausta
-- kytkimien komennot ei näys jos ei ole admin
+- front: password change
+- mobile: wrong username in upperpart of screen
+- mobile: password change
 - showcase to heroku
 - lisää mobileen backendin osoitteen syöttö
 - koodaa uudelleen lämpötilanäyttö

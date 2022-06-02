@@ -86,8 +86,7 @@ const Switches = ({ admin }) => {
     setSwitchId(-1)
   }
 
-  const handleSubmitSwitch = async (event) => {
-    event.preventDefault()
+  const handleSubmitSwitch = async () => {
     if (switchId === -1) {
       const variables = { name, description, commandFile }
       await newSwitch({ variables })

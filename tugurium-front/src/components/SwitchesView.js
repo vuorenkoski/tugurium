@@ -18,7 +18,7 @@ const SwitchesView = () => {
 
   useSubscription(STATUS_CHANGED)
 
-  const admin = localStorage.getItem('tugurium-user-admin') === 'true'
+  const admin = JSON.parse(localStorage.getItem('tugurium-user')).admin
 
   const handleClick = async (sw) => {
     const variables = {

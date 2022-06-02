@@ -30,7 +30,14 @@ const {
   currentSensorData,
 } = require('./sensor')
 
-const { allUsers, createUser, deleteUser, login, getUser } = require('./user')
+const {
+  allUsers,
+  createUser,
+  deleteUser,
+  login,
+  getUser,
+  changePassword,
+} = require('./user')
 
 const resolvers = {
   Query: {
@@ -52,6 +59,7 @@ const resolvers = {
     addMeasurement,
     login,
     createUser,
+    changePassword,
     deleteUser,
     deleteSensor,
     updateSensor,

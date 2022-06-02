@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Form, Row, Button, Col } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../graphql/user'
@@ -8,28 +8,29 @@ const Login = ({ setLogged }) => {
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const [login, result] = useMutation(LOGIN, {
+  const [login] = useMutation(LOGIN, {
     onError: (error) => {
-      console.log(error)
+      if (error.networkError) {
+        setErrorMessage('Verkkovirhe (backend ei tavoitettavissa?)')
+      } else {
+        setErrorMessage(error.message)
+      }
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 4000)
+    },
+    onCompleted: (data) => {
+      const token = data.login.token
+      localStorage.setItem('tugurium-user-token', token)
+      localStorage.setItem('tugurium-user', JSON.stringify(data.login.user))
+      window.location.reload(false)
+      setLogged(true)
     },
   })
 
-  useEffect(() => {
-    if (result.data) {
-      const token = result.data.login.token
-      setLogged(true)
-      localStorage.setItem('tugurium-user-token', token)
-      localStorage.setItem('tugurium-user-admin', result.data.login.user.admin)
-    }
-    if (!result.data && result.error && result.error.networkError) {
-      setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')
-    }
-  }, [result]) // eslint-disable-line
-
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault()
-    const variables = { username, password }
-    login({ variables })
+    login({ variables: { username, password } })
   }
 
   return (

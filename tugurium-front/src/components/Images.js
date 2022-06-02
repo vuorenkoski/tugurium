@@ -83,8 +83,7 @@ const Images = ({ admin }) => {
     setImageId(-1)
   }
 
-  const handleSubmitImage = async (event) => {
-    event.preventDefault()
+  const handleSubmitImage = async () => {
     if (imageId === -1) {
       const variables = { name, description }
       await newImage({ variables })

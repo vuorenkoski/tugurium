@@ -94,8 +94,7 @@ const Sensors = ({ admin }) => {
     setSensorId(-1)
   }
 
-  const handleSubmitSensor = async (event) => {
-    event.preventDefault()
+  const handleSubmitSensor = async () => {
     if (sensorId === -1) {
       const variables = { sensorName, sensorFullname, sensorUnit, agrmethod }
       await newSensor({ variables })

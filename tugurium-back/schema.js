@@ -90,6 +90,7 @@ const typeDefs = gql`
     login(username: String!, password: String!): Token
     createUser(username: String!, password: String!): User
     deleteUser(id: Int!): User
+    changePassword(password: String!): User
     deleteSensor(id: Int!): Sensor
     updateSensor(
       sensorName: String!

@@ -83,10 +83,28 @@ const getUser = async (root, args, context) => {
   return context.currentUser
 }
 
+const changePassword = async (root, args, context) => {
+  if (!context.currentUser) {
+    return null
+  }
+
+  if (args.password.length < 5) {
+    throw new UserInputError('passowrd must be alteast 5 characters long', {
+      invalidArgs: args.name,
+    })
+  }
+  const user = await User.findOne({ where: { id: context.currentUser.id } })
+  const passwordHash = await bcrypt.hash(args.password, 10)
+  user.passwordHash = passwordHash
+  await user.save()
+  return user
+}
+
 module.exports = {
   allUsers,
   createUser,
   deleteUser,
   login,
   getUser,
+  changePassword,
 }

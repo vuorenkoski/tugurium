@@ -51,8 +51,7 @@ const Users = ({ admin }) => {
     setPasssword('')
   }
 
-  const handleSubmitUser = async (event) => {
-    event.preventDefault()
+  const handleSubmitUser = async () => {
     const variables = { username, password }
     await createUser({ variables })
   }
