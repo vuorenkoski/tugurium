@@ -98,7 +98,7 @@ const Images = () => {
         {!imageNames.data && imageNames.error && imageNames.error.networkError && (
           <View style={styles.row}>
             <Text textType="error">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+              Verkkovirhe (backend ei tavoitettavissa?)
             </Text>
           </View>
         )}

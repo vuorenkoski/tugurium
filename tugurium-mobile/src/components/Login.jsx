@@ -25,7 +25,9 @@ const validationSchema = yup.object().shape({
 const styles = StyleSheet.create({
   inputBox: {
     flexDirection: 'column',
-    padding: 15,
+    padding: 30,
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   button: {
     color: 'white',
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     alignItems: 'center',
-    padding: 20,
+    padding: 0,
   },
 })
 
@@ -76,29 +78,32 @@ const Login = ({ setUser }) => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
-  const [mutate, result] = useMutation(LOGIN)
+  const [login] = useMutation(LOGIN)
   const authStorage = useAuthStorage()
   const apolloClient = useApolloClient()
 
   const onSubmit = async ({ username, password }) => {
     const variables = { username, password }
-    const res = await mutate({
+    await login({
       variables,
-      onError: () => console.log('error'),
+      onError: (error) => {
+        if (error.networkError) {
+          setErrorMessage('Verkkovirhe (backend ei tavoitettavissa?)')
+        } else {
+          setErrorMessage(error.message)
+        }
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 4000)
+      },
+      onCompleted: async (data) => {
+        await authStorage.setAccessToken(data.login.token)
+        await authStorage.setUser(data.login.user)
+        apolloClient.resetStore()
+        setUser(data.login.user)
+        navigate('/current', { exact: true })
+      },
     })
-    if (res.data) {
-      await authStorage.setAccessToken(res.data.login.token)
-      await authStorage.setUser(res.data.login.user)
-      apolloClient.resetStore()
-      setUser(res.data.login.user)
-      navigate('/current', { exact: true })
-    }
-    if (!result.data && result.error && result.error.networkError) {
-      setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')
-    }
-    if (!result.data && result.error && !result.error.networkError) {
-      setErrorMessage(result.error.message)
-    }
   }
 
   return (

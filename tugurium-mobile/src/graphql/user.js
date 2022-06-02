@@ -48,3 +48,10 @@ export const ALL_USERS = gql`
     }
   }
 `
+export const CHANGE_PASSWORD = gql`
+  mutation Mutation($password: String!) {
+    changePassword(password: $password) {
+      username
+    }
+  }
+`

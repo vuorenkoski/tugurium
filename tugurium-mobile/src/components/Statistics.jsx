@@ -128,7 +128,7 @@ const Statistics = () => {
         sensorsData.error.networkError && (
           <View style={styles.labelRow}>
             <Text textType="error">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
+              Verkkovirhe (backend ei tavoitettavissa?)
             </Text>
           </View>
         )}

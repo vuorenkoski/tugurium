@@ -19,14 +19,13 @@ import Years from './Years'
 import Current from './Current'
 import Images from './Images'
 import Switches from './Switches'
+import Settings from './Settings'
 import Timeseries from './Timeseries'
 import theme from '../theme'
 import Text from './Text'
 
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
-import { useQuery } from '@apollo/client'
-import { GET_USER } from '../graphql/user'
 import { VERSION } from '../utils/config'
 
 const styles = StyleSheet.create({
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     padding: 0,
   },
-  logo: {
+  logoNav: {
     color: theme.colors.mainBackground,
     fontSize: 20,
     paddingTop: 18,
@@ -67,12 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 44,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingTop: 110,
+    paddingTop: 70,
     paddingBottom: 0,
   },
   versioText: {
     textAlign: 'center',
-    paddingBottom: 40,
+    paddingBottom: 30,
   },
   optionsWrapper: {
     paddingLeft: 20,
@@ -111,6 +110,7 @@ const MenuElement = ({ logout }) => {
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
           <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
+          <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
           <MenuOption onSelect={logout}>
             <Text textType="menuItem">Kirjaudu ulos</Text>
           </MenuOption>
@@ -139,7 +139,7 @@ const Main = () => {
         <StatusBar style="light" />
         <SafeAreaView style={styles.rootContainer}>
           <View style={styles.navContainer}>
-            <Text style={styles.logo}>TUGURIUM</Text>
+            <Text style={styles.logoNav}>TUGURIUM</Text>
             <MenuElement logout={logout} />
           </View>
           <View style={styles.bodyContainer}>
@@ -147,6 +147,11 @@ const Main = () => {
               <Route path="/" element={<Current />} exact />
               <Route path="/statistics" element={<Statistics />} exact />
               <Route path="/images" element={<Images />} exact />
+              <Route
+                path="/settings"
+                element={<Settings user={user} />}
+                exact
+              />
               <Route path="/years" element={<Years />} exact />
               <Route
                 path="/switches"
