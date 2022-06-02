@@ -5,5 +5,5 @@ module.exports = {
   //  BACKEND_URL: 'http://192.168.1.136:4000/',
   WEBSOCKET_URL: 'wss://tempview.vuorenkoski.fi/wss/graphql/',
   //  WEBSOCKET_URL: 'ws://192.168.1.136:4000/graphql',
-  VERSION: '0.3.0',
+  VERSION: '0.9.0',
 }

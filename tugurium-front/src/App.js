@@ -9,6 +9,7 @@ import Statistics from './components/Statistics'
 import SwitchesView from './components/SwitchesView'
 import ImagesView from './components/ImagesView'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
+import { VERSION } from './util/config'
 
 import {
   BrowserRouter as Router,
@@ -32,6 +33,7 @@ const App = () => {
               <Nav className="mr-auto"></Nav>
             </Navbar.Collapse>
           </Navbar>
+          version: {VERSION}
           <Login setLogged={setLogged} />
         </div>
       )

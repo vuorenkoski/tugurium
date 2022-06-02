@@ -7,4 +7,5 @@ module.exports = {
     process.env.NODE_ENV === 'production'
       ? `wss://${window.location.hostname}/wss/graphql`
       : 'ws://localhost:4000/graphql',
+  VERSION: '0.9.0',
 }

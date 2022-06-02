@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tugurium",
     "slug": "Tugurium",
-    "version": "0.3.0",
+    "version": "0.9.0",
     "description": "Home automation client",
     "githubUrl": "https://github.com/vuorenkoski/tempview",
     "orientation": "default",
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/newIcon3.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 3,
+      "versionCode": 4,
       "package": "com.vuorenkoski.tuguriumMobile"
     },
     "web": {

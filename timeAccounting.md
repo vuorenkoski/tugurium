@@ -30,9 +30,6 @@
 
 ## Product backlog
 
-- front: password change
-- mobile: wrong username in upperpart of screen
-- mobile: password change
 - showcase to heroku
 - lisää mobileen backendin osoitteen syöttö
 - koodaa uudelleen lämpötilanäyttö
