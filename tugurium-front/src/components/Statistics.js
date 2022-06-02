@@ -45,7 +45,9 @@ const Statistics = () => {
   const [zoomDomain, setZoomDomain] = useState({})
   const [measurements, setMeasurements] = useState(null)
 
-  const sensors = useQuery(SENSOR_STATS)
+  const sensors = useQuery(SENSOR_STATS, {
+    fetchPolicy: 'network-only',
+  })
 
   useQuery(DATAPOINTS, {
     variables: {

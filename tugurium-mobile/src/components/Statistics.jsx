@@ -89,6 +89,7 @@ const Statistics = () => {
   const [sensors, setSensors] = useState(null)
 
   const sensorsData = useQuery(SENSOR_STATS, {
+    fetchPolicy: 'network-only',
     onCompleted: (data) => {
       setSensors(
         data.sensorStats.map((s) => ({
