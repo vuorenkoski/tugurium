@@ -3,22 +3,23 @@ import { Form, Row, Button, Col } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../graphql/user'
 
-const Login = ({ setToken }) => {
+const Login = ({ setLogged }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      setErrorMessage(error.graphQLErrors[0].message)
+      console.log(error)
     },
   })
 
   useEffect(() => {
     if (result.data) {
-      const token = result.data.login.value
-      setToken(token)
+      const token = result.data.login.token
+      setLogged(true)
       localStorage.setItem('tugurium-user-token', token)
+      localStorage.setItem('tugurium-user-admin', result.data.login.user.admin)
     }
     if (!result.data && result.error && result.error.networkError) {
       setErrorMessage('Virhe: Verkkovirhe (backend ei tavoitettavissa?)')

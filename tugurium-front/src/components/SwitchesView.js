@@ -18,6 +18,8 @@ const SwitchesView = () => {
 
   useSubscription(STATUS_CHANGED)
 
+  const admin = localStorage.getItem('tugurium-user-admin') === 'true'
+
   const handleClick = async (sw) => {
     const variables = {
       command: !sw.command,
@@ -57,22 +59,24 @@ const SwitchesView = () => {
                 <tr>
                   <th>Kytkin</th>
                   <th>Tila</th>
-                  <th>Komento</th>
+                  {admin && <th>Komento</th>}
                   <th>Aikaleima</th>
                 </tr>
                 {switches.data.allSwitches.map((sw) => (
                   <tr key={sw.id}>
                     <td>{sw.description}</td>
                     <td>{sw.on ? <div>ON</div> : <div>OFF</div>}</td>
-                    <td>
-                      <Button
-                        variant={sw.command ? 'primary' : 'secondary'}
-                        size="sm"
-                        onClick={() => handleClick(sw)}
-                      >
-                        {sw.command ? <div>ON</div> : <div>OFF</div>}
-                      </Button>
-                    </td>
+                    {admin && (
+                      <td>
+                        <Button
+                          variant={sw.command ? 'primary' : 'secondary'}
+                          size="sm"
+                          onClick={() => handleClick(sw)}
+                        >
+                          {sw.command ? <div>ON</div> : <div>OFF</div>}
+                        </Button>
+                      </td>
+                    )}
                     <td>{convertDate(Number(sw.updatedAt) / 1000)}</td>
                   </tr>
                 ))}

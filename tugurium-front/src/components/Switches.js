@@ -1,4 +1,13 @@
-import { Table, Row, Col, Form, Button } from 'react-bootstrap'
+import {
+  Table,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Container,
+  InputGroup,
+  FormControl,
+} from 'react-bootstrap'
 import { useQuery, useMutation } from '@apollo/client'
 import { useState } from 'react'
 import {
@@ -9,7 +18,7 @@ import {
 } from '../graphql/switch'
 import { convertDate } from '../util/conversions'
 
-const Switches = () => {
+const Switches = ({ admin }) => {
   const [displaySwitchForm, setDisplaySwitchForm] = useState(false)
   const [name, setName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
@@ -110,9 +119,12 @@ const Switches = () => {
                 <th>Kuvaus</th>
                 <th>komentotiedosto</th>
                 <th>Päivitetty</th>
-                <th>Id</th>
-                <th></th>
-                <th></th>
+                {admin && (
+                  <>
+                    <th></th>
+                    <th></th>
+                  </>
+                )}
               </tr>
               {switches.data &&
                 switches.data.allSwitches.map((a) => (
@@ -121,30 +133,33 @@ const Switches = () => {
                     <td>{a.description}</td>
                     <td>{a.commandFile}</td>
                     <td>{convertDate(a.updatedAt / 1000)}</td>
-                    <td>{a.id}</td>
-                    <td>
-                      <button
-                        className="removeButton"
-                        onClick={() => handleDeleteSwitch(a.id)}
-                      >
-                        poista
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="updateButton"
-                        onClick={() => handleUpdateSwitch(a.id)}
-                      >
-                        päivitä
-                      </button>
-                    </td>
+                    {admin && (
+                      <>
+                        <td>
+                          <button
+                            className="removeButton"
+                            onClick={() => handleDeleteSwitch(a.id)}
+                          >
+                            poista
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="updateButton"
+                            onClick={() => handleUpdateSwitch(a.id)}
+                          >
+                            päivitä
+                          </button>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))}
             </tbody>
           </Table>
         </Col>
       </Row>
-      {!displaySwitchForm && (
+      {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
             <Button onClick={() => handleNewSwitch()}>Lisää uusi</Button>
@@ -152,60 +167,60 @@ const Switches = () => {
         </Row>
       )}
 
-      {displaySwitchForm && (
-        <div>
-          <Row className="p-4 pt-1 pb-1">
-            <Col className="col-auto p-2">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Nimi</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={name}
-                    onChange={({ target }) => setName(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-            <Col className="col-auto p-2">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Kuvaus</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={description}
-                    onChange={({ target }) => setDescription(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-            <Col className="col-auto p-2">
-              <Form>
-                <Form.Group>
-                  <Form.Label>Komentotiedosto</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={commandFile}
-                    onChange={({ target }) => setCommandFile(target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-          </Row>
-          <Row className="p-4 pt-1 pb-1">
-            <Col className="col-auto">
-              <Button onClick={handleSubmitSwitch}>päivitä/lisää</Button>
-            </Col>
-            <Col className="col-auto">
-              <Button onClick={closeSwitchForm}>peruuta</Button>
-            </Col>
-          </Row>
-        </div>
-      )}
-
-      <Row className="p-4">
-        <Col className="errorMessage">{errorMessage}</Col>
-      </Row>
+      <Modal show={displaySwitchForm} onHide={closeSwitchForm} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Kytkin</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  value={name}
+                  placeholder="nimi"
+                  onChange={({ target }) => setName(target.value)}
+                />
+              </InputGroup>
+            </Row>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  value={description}
+                  placeholder="kuvaus"
+                  onChange={({ target }) => setDescription(target.value)}
+                />
+              </InputGroup>
+            </Row>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  value={commandFile}
+                  placeholder="komentotiedosto"
+                  onChange={({ target }) => setCommandFile(target.value)}
+                />
+              </InputGroup>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleSubmitSwitch}>
+                  {switchId === -1 ? 'Lisää uusi' : 'Päivitä tiedot'}
+                </Button>
+              </Col>
+              <Col className="col-auto">
+                <Button variant="secondary" onClick={closeSwitchForm}>
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+            <Row className="p-4 pt-0">
+              <Col className="errorMessage">{errorMessage}</Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }

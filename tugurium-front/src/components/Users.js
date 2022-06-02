@@ -1,13 +1,24 @@
-import { Table, Row, Col, Form, Button } from 'react-bootstrap'
-import { useMutation } from '@apollo/client'
+import {
+  Table,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Container,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap'
+import { useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
 import { ALL_USERS, DELETE_USER, CREATE_USER } from '../graphql/user'
 
-const Users = ({ users }) => {
+const Users = ({ admin }) => {
   const [displayUserForm, setDisplayUserForm] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPasssword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+
+  const users = useQuery(ALL_USERS)
 
   const [deleteUser] = useMutation(DELETE_USER, {
     onError: (error) => {
@@ -65,23 +76,23 @@ const Users = ({ users }) => {
               <tr>
                 <th>Käyttäjänimi</th>
                 <th>admin</th>
-                <th>Id</th>
-                <th></th>
+                {admin && <th></th>}
               </tr>
               {users.data &&
                 users.data.allUsers.map((a) => (
                   <tr key={a.id}>
                     <td>{a.username}</td>
                     <td>{a.admin && <div>kyllä</div>}</td>
-                    <td>{a.id}</td>
-                    <td>
-                      <button
-                        className="removeButton"
-                        onClick={() => handeDeleteUser(a.id)}
-                      >
-                        poista
-                      </button>
-                    </td>
+                    {admin && (
+                      <td>
+                        <button
+                          className="removeButton"
+                          onClick={() => handeDeleteUser(a.id)}
+                        >
+                          poista
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
             </tbody>
@@ -89,7 +100,7 @@ const Users = ({ users }) => {
         </Col>
       </Row>
 
-      {!displayUserForm && (
+      {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
             <Button onClick={() => handeCreateUser()}>Lisää uusi</Button>
@@ -97,43 +108,48 @@ const Users = ({ users }) => {
         </Row>
       )}
 
-      {displayUserForm && (
-        <Row className="p-4 pt-1 pb-1 align-items-end">
-          <Col className="col-auto">
-            <Form>
-              <Form.Group>
-                <Form.Label>Käyttäjänimi</Form.Label>
-                <Form.Control
+      <Modal show={displayUserForm} onHide={closeUserForm} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Käyttäjä</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
                   type="text"
                   value={username}
+                  placeholder="nimi"
                   onChange={({ target }) => setUsername(target.value)}
                 />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col className="col-auto">
-            <Form>
-              <Form.Group>
-                <Form.Label>Salasana</Form.Label>
-                <Form.Control
+              </InputGroup>
+            </Row>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
                   type="text"
                   value={password}
+                  placeholder="salasana"
                   onChange={({ target }) => setPasssword(target.value)}
                 />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col className="col-auto">
-            <Button onClick={handleSubmitUser}>lisää</Button>
-          </Col>
-          <Col className="col-auto">
-            <Button onClick={closeUserForm}>peruuta</Button>
-          </Col>
-        </Row>
-      )}
-      <Row className="p-4">
-        <Col className="errorMessage">{errorMessage}</Col>
-      </Row>
+              </InputGroup>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleSubmitUser}>Lisää</Button>
+              </Col>
+              <Col className="col-auto">
+                <Button variant="secondary" onClick={closeUserForm}>
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+            <Row className="p-4 pt-0">
+              <Col className="errorMessage">{errorMessage}</Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }

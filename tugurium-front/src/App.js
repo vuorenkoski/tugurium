@@ -18,28 +18,31 @@ import {
 } from 'react-router-dom'
 
 const App = () => {
-  const [token, setToken] = useState(null)
+  const [logged, setLogged] = useState(false)
   const client = useApolloClient()
 
-  if (!token && !localStorage.getItem('tugurium-user-token')) {
-    return (
-      <div className="container">
-        <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
-          <NavbarBrand className="text-white">TUGURIUM</NavbarBrand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="mr-auto"></Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <Login setToken={setToken} />
-      </div>
-    )
+  if (!logged) {
+    if (!localStorage.getItem('tugurium-user-token')) {
+      return (
+        <div className="container">
+          <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
+            <NavbarBrand className="text-white">TUGURIUM</NavbarBrand>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className="mr-auto"></Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <Login setLogged={setLogged} />
+        </div>
+      )
+    }
+    setLogged(true)
   }
 
   const logout = () => {
-    setToken(null)
     localStorage.clear()
-    client.resetStore()
+    setLogged(false)
+    client.clearStore()
   }
 
   return (

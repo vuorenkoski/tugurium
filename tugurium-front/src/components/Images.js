@@ -1,4 +1,13 @@
-import { Table, Row, Col, Form, Button } from 'react-bootstrap'
+import {
+  Table,
+  Row,
+  Col,
+  Button,
+  InputGroup,
+  FormControl,
+  Modal,
+  Container,
+} from 'react-bootstrap'
 import { useQuery, useMutation } from '@apollo/client'
 import { useState } from 'react'
 import {
@@ -9,7 +18,7 @@ import {
 } from '../graphql/image'
 import { convertDate } from '../util/conversions'
 
-const Images = () => {
+const Images = ({ admin }) => {
   const [displayImageForm, setDisplayImageForm] = useState(false)
   const [name, setName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
@@ -105,9 +114,12 @@ const Images = () => {
                 <th>Nimi</th>
                 <th>Kuvaus</th>
                 <th>Päivitetty</th>
-                <th>Id</th>
-                <th></th>
-                <th></th>
+                {admin && (
+                  <>
+                    <th></th>
+                    <th></th>
+                  </>
+                )}
               </tr>
               {images.data &&
                 images.data.allImages.map((a) => (
@@ -115,23 +127,26 @@ const Images = () => {
                     <td>{a.name}</td>
                     <td>{a.description}</td>
                     <td>{convertDate(a.updatedAt / 1000)}</td>
-                    <td>{a.id}</td>
-                    <td>
-                      <button
-                        className="removeButton"
-                        onClick={() => handleDeleteImage(a.id)}
-                      >
-                        poista
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="updateButton"
-                        onClick={() => handleUpdateImage(a.id)}
-                      >
-                        päivitä
-                      </button>
-                    </td>
+                    {admin && (
+                      <>
+                        <td>
+                          <button
+                            className="removeButton"
+                            onClick={() => handleDeleteImage(a.id)}
+                          >
+                            poista
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="updateButton"
+                            onClick={() => handleUpdateImage(a.id)}
+                          >
+                            päivitä
+                          </button>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))}
             </tbody>
@@ -139,7 +154,7 @@ const Images = () => {
         </Col>
       </Row>
 
-      {!displayImageForm && (
+      {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
             <Button onClick={() => handleNewImage()}>Lisää uusi</Button>
@@ -147,43 +162,50 @@ const Images = () => {
         </Row>
       )}
 
-      {displayImageForm && (
-        <Row className="p-4 pt-1 pb-1 align-items-end">
-          <Col className="col-auto">
-            <Form>
-              <Form.Group>
-                <Form.Label>Nimi</Form.Label>
-                <Form.Control
+      <Modal show={displayImageForm} onHide={closeImageForm} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Kamera</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
                   type="text"
+                  placeholder="nimi"
                   value={name}
                   onChange={({ target }) => setName(target.value)}
                 />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col className="col-auto">
-            <Form>
-              <Form.Group>
-                <Form.Label>Kuvaus</Form.Label>
-                <Form.Control
+              </InputGroup>
+            </Row>
+            <Row className="pt-2">
+              <InputGroup>
+                <FormControl
                   type="text"
+                  placeholder="kuvaus"
                   value={description}
                   onChange={({ target }) => setDescription(target.value)}
                 />
-              </Form.Group>
-            </Form>
-          </Col>
-          <Col className="col-auto">
-            <Button onClick={handleSubmitImage}>päivitä/lisää</Button>
-          </Col>
-          <Col className="col-auto">
-            <Button onClick={closeImageForm}>peruuta</Button>
-          </Col>
-        </Row>
-      )}
-      <Row className="p-4">
-        <Col className="errorMessage">{errorMessage}</Col>
-      </Row>
+              </InputGroup>
+            </Row>
+            <Row className="p-4">
+              <Col className="col-auto">
+                <Button onClick={handleSubmitImage}>
+                  {imageId === -1 ? 'Lisää uusi' : 'Päivitä tiedot'}
+                </Button>
+              </Col>
+              <Col className="col-auto">
+                <Button variant="secondary" onClick={closeImageForm}>
+                  Peruuta
+                </Button>
+              </Col>
+            </Row>
+            <Row className="p-4 pt-0">
+              <Col className="errorMessage">{errorMessage}</Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }
