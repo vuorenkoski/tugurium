@@ -22,7 +22,7 @@ const sensorStats = async (root, args, context) => {
   const sensors = await sequelize.query(
     `SELECT count, "firstTimestamp", sensor.id as "sensor.id", sensor.sensor_name AS "sensor.sensorName", sensor.sensor_fullname AS "sensor.sensorFullname"
     FROM (SELECT COUNT(value) AS count, MIN(timestamp) AS "firstTimestamp", sensor_id FROM measurements  
-    GROUP BY sensor_id) AS measurement INNER JOIN sensors AS sensor ON sensor.id=measurement.sensor_id ORDER BY sensor.sensor_name`,
+    GROUP BY sensor_id) AS measurement FULL JOIN sensors AS sensor ON sensor.id=measurement.sensor_id ORDER BY sensor.sensor_name`,
     {
       type: QueryTypes.SELECT,
       nest: true,

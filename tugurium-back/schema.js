@@ -38,7 +38,7 @@ const typeDefs = gql`
   type SensorStat {
     sensor: Sensor!
     firstTimestamp: String
-    count: Int!
+    count: Int
   }
 
   type Measurement {

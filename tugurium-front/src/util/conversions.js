@@ -40,6 +40,9 @@ const convertTemp = (temp, unit) => {
 }
 
 const convertNumber = (number) => {
+  if (!number) {
+    return '0'
+  }
   if (number < 1000) {
     return String(number)
   }
