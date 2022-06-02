@@ -25,8 +25,8 @@
 | 30.5. | 3     | improved error handling to c snippets, improved view in tablet device and other refactoring to components                                             |
 | 31.5. | 9     | improvements to browser-front, authentiaction check to websocket, better error messages to all views (mobile+browser), refetch after being background |
 | 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
-| 2.6.  |       | change ops only visible to admin, login+settings major refactor, passwordchange                                                                       |
-| total | 171   |                                                                                                                                                       |
+| 2.6.  | 9     | change ops only visible to admin, login+settings major refactor, password-change, heroku init and db dumb to heroku                                   |
+| total | 180   |                                                                                                                                                       |
 
 ## Product backlog
 
