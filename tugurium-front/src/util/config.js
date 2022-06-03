@@ -9,7 +9,5 @@ module.exports = {
     process.env.NODE_ENV === 'production'
       ? `wss://${window.location.hostname}:${window.location.port}/api/graphql`
       : 'ws://localhost:4000/api/graphql',
-  // BACKEND_URL: 'https://tempview.vuorenkoski.fi/api',
-  // WEBSOCKET_URL: 'wss://tempview.vuorenkoski.fi/api/graphql',
   VERSION: '0.9.0',
 }
