@@ -56,7 +56,7 @@ Data is fetched from backend thourgh api layer and presented in different format
 
 ## Development environment
 
-Backend is running in http://localhost:4000/
+Backend is running in http://localhost:4000/api/
 
 Frontend is running in http://localhost:3000/
 
@@ -142,7 +142,6 @@ Make necessary configs to tugurium-ssl.conf. After that:
 sudo cp tugurium-ssl.conf /etc/apache2/sites-available/.
 sudo a2enmod proxy
 sudo a2enmod proxy_wstunnel
-sudo a2enmod rewrite
 sudo a2ensite tugurium-ssl.conf
 sudo service apache2 restart
 ```
