@@ -106,7 +106,7 @@ sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
 
 ## Production environment
 
-Production server will be run Raspberry Pi 2 in address https://tugurium.vuorenkoski.fi.
+Production server will be run Raspberry Pi 2 in address https://tugurium.vuorenkoski.fi. There is also showcase environment https://tugurium.herokuapp.com/ where switches are not conneceted and measurements are not updated.
 
 Frontend: https://tugurium.vuorenkoski.fi/
 

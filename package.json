@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "heroku-prebuild": "cd tugurium-front && npm install && npm run build && cd .. && cd tugurium-back && npm install",
+    "start": "cd tugurium-back && npm start"
+  }
+}
