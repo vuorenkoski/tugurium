@@ -2,11 +2,8 @@ const { ApolloServer } = require('apollo-server-express')
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
-const http = require('http')
 const cors = require('cors')
 const { Sequelize } = require('sequelize')
-const { execute, subscribe } = require('graphql')
-const { SubscriptionServer } = require('subscriptions-transport-ws')
 
 const { connectToDatabase } = require('./util/db')
 const { User, Image } = require('./models')
@@ -118,12 +115,32 @@ const start = async () => {
     path: '/api/graphql',
   })
 
-  const serverCleanup = useServer({ schema }, wsServer)
+  const serverCleanup = useServer(
+    {
+      schema,
+      onConnect: async (ctx) => {
+        const token = ctx.connectionParams.authToken
+        if (token && token.toLowerCase().startsWith('bearer ')) {
+          try {
+            jwt.verify(token.substring(7), SECRET)
+          } catch (error) {
+            return false
+          }
+        } else {
+          return false
+        }
+      },
+    },
+    wsServer
+  )
 
   const server = new ApolloServer({
     schema,
     context: checkToken,
     csrfPrevention: true,
+    cors: {
+      origin: ['*', 'https://studio.apollographql.com'],
+    },
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {

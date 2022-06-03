@@ -123,11 +123,7 @@ const getFirstTimestamp = async (root, args, context) => {
 }
 
 const newMeasurement = {
-  subscribe: (root, args, context) => {
-    if (!context.currentUser) {
-      throw new AuthenticationError('Not authorized')
-    }
-    console.log('auth ok')
+  subscribe: () => {
     return pubsub.asyncIterator(['NEW_MEASUREMENT'])
   },
 }
