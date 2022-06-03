@@ -18,6 +18,10 @@ const resolvers = require('./resolvers')
 
 const multer = require('multer')
 
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+const { createServer } = require('http')
+
 const sequelize = new Sequelize(DATABASE_URL, {
   dialectOptions: {
     ssl: {
@@ -107,49 +111,75 @@ const start = async () => {
     )
   })
 
-  const httpServer = http.createServer(app)
+  const httpServer = createServer(app)
   const schema = makeExecutableSchema({ typeDefs, resolvers })
-  const subscriptionServer = SubscriptionServer.create(
-    {
-      schema,
-      execute,
-      subscribe,
-      onConnect: async (connectionParams) => {
-        const token = connectionParams.authLink
-        if (token && token.toLowerCase().startsWith('bearer ')) {
-          let data = { token: token.substring(7) }
-          try {
-            const decodedToken = jwt.verify(data['token'], SECRET)
-            data['currentUser'] = await User.findByPk(decodedToken.id)
-            return data
-          } catch (error) {
-            return data
-          }
-        }
-        throw new Error('Missing auth token!')
-      },
-    },
-    {
-      server: httpServer,
-      path: '',
-    }
-  )
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/api/graphql',
+  })
+
+  const serverCleanup = useServer({ schema }, wsServer)
+
   const server = new ApolloServer({
     schema,
     context: checkToken,
+    csrfPrevention: true,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async serverWillStart() {
           return {
             async drainServer() {
-              subscriptionServer.close()
+              await serverCleanup.dispose()
             },
           }
         },
       },
     ],
   })
+  // const httpServer = http.createServer(app)
+  // const schema = makeExecutableSchema({ typeDefs, resolvers })
+  // const subscriptionServer = SubscriptionServer.create(
+  //   {
+  //     schema,
+  //     execute,
+  //     subscribe,
+  //     onConnect: async (connectionParams) => {
+  //       const token = connectionParams.authLink
+  //       if (token && token.toLowerCase().startsWith('bearer ')) {
+  //         let data = { token: token.substring(7) }
+  //         try {
+  //           const decodedToken = jwt.verify(data['token'], SECRET)
+  //           data['currentUser'] = await User.findByPk(decodedToken.id)
+  //           return data
+  //         } catch (error) {
+  //           return data
+  //         }
+  //       }
+  //       throw new Error('Missing auth token!')
+  //     },
+  //   },
+  //   {
+  //     server: httpServer,
+  //     path: '',
+  //   }
+  // )
+  // const server = new ApolloServer({
+  //   schema,
+  //   context: checkToken,
+  //   plugins: [
+  //     ApolloServerPluginDrainHttpServer({ httpServer }),
+  //     {
+  //       async serverWillStart() {
+  //         return {
+  //           async drainServer() {
+  //             subscriptionServer.close()
+  //           },
+  //         }
+  //       },
+  //     },
+  //   ],
+  // })
 
   await server.start()
 
@@ -157,6 +187,8 @@ const start = async () => {
     app,
     path: '/api/graphql',
   })
+
+  // server.applyMiddleware({ app })
 
   app.use(express.static('../tugurium-front/build'))
   app.use(

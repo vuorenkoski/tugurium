@@ -43,7 +43,7 @@ const Login = ({ setLogged }) => {
               <Form.Label>Käyttäjänimi</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="anna käyttäjänimi"
+                placeholder="käyttäjänimi"
                 value={username}
                 onChange={({ target }) => setUsername(target.value)}
               />

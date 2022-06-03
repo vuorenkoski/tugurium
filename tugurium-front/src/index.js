@@ -15,6 +15,9 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
+
 const { BACKEND_URL, WEBSOCKET_URL } = require('./util/config')
 
 const authLink = setContext((_, { headers }) => {
@@ -31,15 +34,24 @@ const httpLink = new HttpLink({
   uri: BACKEND_URL + '/graphql',
 })
 
-const wsLink = new WebSocketLink({
-  uri: WEBSOCKET_URL,
-  options: {
-    reconnect: true,
+// const wsLink = new WebSocketLink({
+//   uri: WEBSOCKET_URL,
+//   options: {
+//     reconnect: true,
+//     connectionParams: {
+//       authLink: `bearer ${localStorage.getItem('tugurium-user-token')}`,
+//     },
+//   },
+// })
+
+const link = new GraphQLWsLink(
+  createClient({
+    url: 'ws://localhost:4000/api/graphql',
     connectionParams: {
-      authLink: `bearer ${localStorage.getItem('tugurium-user-token')}`,
+      authToken: `bearer ${localStorage.getItem('tugurium-user-token')}`,
     },
-  },
-})
+  })
+)
 
 const splitLink = split(
   ({ query }) => {
@@ -49,7 +61,7 @@ const splitLink = split(
       definition.operation === 'subscription'
     )
   },
-  wsLink,
+  link,
   authLink.concat(httpLink)
 )
 
