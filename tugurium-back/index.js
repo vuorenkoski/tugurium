@@ -56,8 +56,9 @@ const start = async () => {
 
   const app = express()
   app.use(cors())
+  app.use(express.static('../tugurium-front/build'))
 
-  app.get('/image/:name', (req, res) => {
+  app.get('/api/image/:name', (req, res) => {
     checkToken({ req }).then((user) => {
       if (!user.currentUser) {
         res.status(401).send('unauthorized')
@@ -84,7 +85,7 @@ const start = async () => {
     })
   })
 
-  app.post('/image/:name', multer().single('file'), (req, res) => {
+  app.post('/api/image/:name', multer().single('file'), (req, res) => {
     checkToken({ req }).then(
       (user) => {
         if (user.token !== SENSOR_TOKEN) {
@@ -155,11 +156,11 @@ const start = async () => {
 
   server.applyMiddleware({
     app,
-    path: '/graphql',
+    path: '/api/graphql',
   })
 
   httpServer.listen(PORT, () =>
-    console.log(`Server is now running on http://localhost:${PORT}`)
+    console.log(`Server is now running on port ${PORT}`)
   )
 }
 
