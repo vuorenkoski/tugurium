@@ -26,11 +26,11 @@
 | 31.5. | 9     | improvements to browser-front, authentiaction check to websocket, better error messages to all views (mobile+browser), refetch after being background |
 | 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
 | 2.6.  | 9     | change ops only visible to admin, login+settings major refactor, password-change, heroku init and db dumb to heroku                                   |
+| 3.6.  |       | showcase to heroku, backend hostname can be changed in mobile, websocket subprotocol changed                                                          |
 | total | 180   |                                                                                                                                                       |
 
 ## Product backlog
 
-- showcase to heroku
 - lisää mobileen backendin osoitteen syöttö
 - koodaa uudelleen lämpötilanäyttö
 - testit
