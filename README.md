@@ -58,6 +58,8 @@ Data is fetched from backend thourgh api layer and presented in different format
 
 Backend is running in http://localhost:4000/api/
 
+Backend websocket: ws://localhost:4000/api/graphql
+
 Frontend is running in http://localhost:3000/
 
 ### Set up the database
@@ -110,7 +112,7 @@ Frontend: https://tugurium.vuorenkoski.fi/
 
 Backend: https://tugurium.vuorenkoski.fi/api/graphql
 
-Backend websocket: wss://tugurium.vuorenkoski.fi//wss/graphql
+Backend websocket: wss://tugurium.vuorenkoski.fi/api/graphql
 
 Backend image: https://tugurium.vuorenkoski.fi/api/image
 
@@ -142,6 +144,7 @@ Make necessary configs to tugurium-ssl.conf. After that:
 sudo cp tugurium-ssl.conf /etc/apache2/sites-available/.
 sudo a2enmod proxy
 sudo a2enmod proxy_wstunnel
+sudo a2enmod rewrite
 sudo a2ensite tugurium-ssl.conf
 sudo service apache2 restart
 ```
