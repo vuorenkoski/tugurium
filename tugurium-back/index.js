@@ -56,7 +56,6 @@ const start = async () => {
 
   const app = express()
   app.use(cors())
-  app.use(express.static('../tugurium-front/build'))
 
   app.get('/api/image/:name', (req, res) => {
     checkToken({ req }).then((user) => {
@@ -158,6 +157,12 @@ const start = async () => {
     app,
     path: '/api/graphql',
   })
+
+  app.use(express.static('../tugurium-front/build'))
+  app.use(
+    '*',
+    express.static('../tugurium-front/build', { index: 'index.html' })
+  )
 
   httpServer.listen(PORT, () =>
     console.log(`Server is now running on port ${PORT}`)
