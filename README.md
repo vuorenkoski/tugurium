@@ -2,7 +2,25 @@
 
 Project work for FullStack 2022
 
-Idea: frontend and backend running in local Raspberry pi server, which collects and visualizes temperature and some other data produced locally. Frontend is build for browser and android device. Javascript is used as programming language.
+Idea: frontend and backend (running in local Raspberry pi server), which collects and visualizes temperature and some other data produced locally. Frontend is build for both browser and android device.
+
+Running application: https://tempview.vuorenkoski.fi/
+
+- Raspberry pi 2
+- 2.9m datapoints
+- somewhat slow with some queries concering many datapoints
+
+Running application: https://tugurium.herokuapp.com
+
+- Heroku platform
+- 9k datapoints (there is 10k limit in free plan)
+- not connected to actual sensors, cameras, witches of FMI data
+
+[User instructions in Finnish](userInstrcutions.md)
+
+[Time accounting](timeAccounting.md)
+
+There are laos example codesnippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
 
 ## Data sources
 
@@ -42,17 +60,23 @@ Data is collected from sensors in two locations: home and summer cottage. In add
 ### Backend
 
 Framework: Express, graphQL, Apolloserver, Sequalize, Umzug
+
 Database: Postgres
 
-Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Data can be fetched from api layer by defining sensors, time period and aggregation method (hourly, daily, monthly average). When time period is defned current, most recent sensordata is given with timestamps.
+Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Sensor/image/Switch data can be fetched from api layer. Sensordata can aggregated hourly and daily (sum or average).
 
-ENV: SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db), ADMIN_PASSWORD contains admin password
+ENV definitions:
+
+- SECRET is random secret string
+- SENSOR_TOKEN is static authorization token of sensors,
+- DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
+- ADMIN_PASSWORD initial admin password
 
 ### Frontend
 
 Framework: React (browser) and React native (mobile), Apollo-client, Victory, Bootstrap
 
-Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition lights and heating can be activated from frontend. Same functionalities are implemented to both browser and andoird platform.
+Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition switches can be activated from frontend. Same functionalities are implemented to both browser and android platform (except settings are available only in browser).
 
 ## Development environment
 
@@ -106,8 +130,6 @@ sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
 
 ## Production environment
 
-Production server will be run Raspberry Pi 2 in address https://tugurium.vuorenkoski.fi. There is also showcase environment https://tugurium.herokuapp.com/ where switches are not conneceted and measurements are not updated.
-
 Frontend: https://tugurium.vuorenkoski.fi/
 
 Backend: https://tugurium.vuorenkoski.fi/api/graphql
@@ -151,7 +173,10 @@ sudo service apache2 restart
 
 6. Create .env file to tugurium-back/.env
 
-SECRET is random secret string, SENSOR_TOKEN is static authorization token of sensors, DATABASE_URL is URL for postgre database, ADMIN_PASSWORD contains admin password
+- SECRET is random secret string
+- SENSOR_TOKEN is static authorization token of sensors,
+- DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
+- ADMIN_PASSWORD initial admin password
 
 7. Install dependencies, build frontend and start background service
 
@@ -171,11 +196,9 @@ sudo systemctl enable tugurium
 30 * * * * sh /home/pi/tugurium/getFmiData.sh
 ```
 
-There is example codesnippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
-
 ## Mobile version
 
-Build:
+Build apk:
 
 ```
 eas build -p android --profile apk

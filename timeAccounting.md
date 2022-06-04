@@ -27,13 +27,12 @@
 | 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
 | 2.6.  | 9     | change ops only visible to admin, login+settings major refactor, password-change, heroku init and db dumb to heroku                                   |
 | 3.6.  | 8     | showcase to heroku, paths refactored, backend hostname can be changed in mobile, websocket subprotocol changed (back+browser)                         |
+| 4.6.  |       | websocket subprotocol changed (mobile)                                                                                                                |
 | total | 188   |                                                                                                                                                       |
 
 ## Product backlog
 
-- lisää mobileen backendin osoitteen syöttö
 - koodaa uudelleen lämpötilanäyttö
-- testit
 - käyttöohjeet
 
 - hostin vaihto
