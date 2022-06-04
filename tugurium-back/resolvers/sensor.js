@@ -76,7 +76,10 @@ const newSensor = async (root, args, context) => {
   return sensor
 }
 
-const sensorDetails = async (root, args) => {
+const sensorDetails = async (root, args, context) => {
+  if (context.token !== SENSOR_TOKEN && !context.currentUser) {
+    throw new AuthenticationError('Not authorized')
+  }
   const sensor = await Sensor.findOne({
     where: { sensorName: args.sensorName },
   })

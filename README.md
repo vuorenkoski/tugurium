@@ -12,15 +12,18 @@ Running application: https://tempview.vuorenkoski.fi/
 
 Running application: https://tugurium.herokuapp.com
 
+- credentials (normal user): vieras, fullstack
 - Heroku platform
 - 9k datapoints (there is 10k limit in free plan)
 - not connected to actual sensors, cameras, witches of FMI data
+
+Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
 [User instructions in Finnish](userInstructions.md)
 
 [Time accounting](timeAccounting.md)
 
-There are laos example codesnippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
+There are laos example code snippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
 
 ## Data sources
 
