@@ -1,6 +1,6 @@
 // Fetches most recent obaservation data from FMI open data API
 //
-// Espoo fmisid=101149 (temperature 15min interval)
+// Espoo fmisid=874863 (temperature 30min interval)
 
 const { Sensor, Measurement } = require('./models')
 
@@ -12,7 +12,7 @@ const http = require('http')
 
 const optionsEspoo = {
   host: 'opendata.fmi.fi',
-  path: 'https://opendata.fmi.fi/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=874863&parameters=temperature&timestep=15',
+  path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=874863&parameters=temperature&timestep=30',
 }
 
 // define sensornames in database
