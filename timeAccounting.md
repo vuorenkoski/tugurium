@@ -34,7 +34,6 @@
 
 - koodaa uudelleen lämpötilanäyttö
 - käyttöohjeet
-
 - hostin vaihto
 - aitan kytkimen koodaus
 - kameroiden token kuntoon

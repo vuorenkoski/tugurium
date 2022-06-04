@@ -16,7 +16,7 @@ Running application: https://tugurium.herokuapp.com
 - 9k datapoints (there is 10k limit in free plan)
 - not connected to actual sensors, cameras, witches of FMI data
 
-[User instructions in Finnish](userInstrcutions.md)
+[User instructions in Finnish](userInstructions.md)
 
 [Time accounting](timeAccounting.md)
 
