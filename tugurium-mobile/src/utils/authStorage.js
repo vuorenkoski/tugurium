@@ -20,7 +20,7 @@ class AuthStorage {
 
   async getUser() {
     const user = await AsyncStorage.getItem(`${this.namespace}:user`)
-    return user
+    return JSON.parse(user)
   }
 
   async setUser(user) {
@@ -29,6 +29,19 @@ class AuthStorage {
 
   async removeUser() {
     await AsyncStorage.removeItem(`${this.namespace}:user`)
+  }
+
+  async getHost() {
+    const host = await AsyncStorage.getItem(`${this.namespace}:host`)
+    return host
+  }
+
+  async setHost(host) {
+    await AsyncStorage.setItem(`${this.namespace}:host`, host)
+  }
+
+  async removeHost() {
+    await AsyncStorage.removeItem(`${this.namespace}:host`)
   }
 }
 

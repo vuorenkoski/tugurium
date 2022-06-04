@@ -37,8 +37,7 @@ const styles = StyleSheet.create({
   error: {
     fontSize: theme.fontSizes.primary,
     color: theme.colors.error,
-    padding: 20,
-    paddingTop: 40,
+    padding: 10,
   },
   colorPrimary: {
     color: theme.colors.primary,

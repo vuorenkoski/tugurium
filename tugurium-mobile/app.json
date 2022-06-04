@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tugurium",
     "slug": "Tugurium",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "description": "Home automation client",
     "githubUrl": "https://github.com/vuorenkoski/tempview",
     "orientation": "default",

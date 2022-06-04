@@ -9,7 +9,13 @@ const { connectToDatabase } = require('./util/db')
 const { User, Image } = require('./models')
 
 const jwt = require('jsonwebtoken')
-const { SECRET, SENSOR_TOKEN, PORT, DATABASE_URL } = require('./util/config')
+const {
+  SECRET,
+  SENSOR_TOKEN,
+  PORT,
+  DATABASE_URL,
+  VERSION,
+} = require('./util/config')
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 
@@ -57,6 +63,10 @@ const start = async () => {
 
   const app = express()
   app.use(cors())
+
+  app.get('/api/version', (req, res) => {
+    res.send(`Tugurium, version ${VERSION}`)
+  })
 
   app.get('/api/image/:name', (req, res) => {
     checkToken({ req }).then((user) => {
@@ -138,9 +148,6 @@ const start = async () => {
     schema,
     context: checkToken,
     csrfPrevention: true,
-    cors: {
-      origin: ['*', 'https://studio.apollographql.com'],
-    },
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
@@ -154,49 +161,6 @@ const start = async () => {
       },
     ],
   })
-  // const httpServer = http.createServer(app)
-  // const schema = makeExecutableSchema({ typeDefs, resolvers })
-  // const subscriptionServer = SubscriptionServer.create(
-  //   {
-  //     schema,
-  //     execute,
-  //     subscribe,
-  //     onConnect: async (connectionParams) => {
-  //       const token = connectionParams.authLink
-  //       if (token && token.toLowerCase().startsWith('bearer ')) {
-  //         let data = { token: token.substring(7) }
-  //         try {
-  //           const decodedToken = jwt.verify(data['token'], SECRET)
-  //           data['currentUser'] = await User.findByPk(decodedToken.id)
-  //           return data
-  //         } catch (error) {
-  //           return data
-  //         }
-  //       }
-  //       throw new Error('Missing auth token!')
-  //     },
-  //   },
-  //   {
-  //     server: httpServer,
-  //     path: '',
-  //   }
-  // )
-  // const server = new ApolloServer({
-  //   schema,
-  //   context: checkToken,
-  //   plugins: [
-  //     ApolloServerPluginDrainHttpServer({ httpServer }),
-  //     {
-  //       async serverWillStart() {
-  //         return {
-  //           async drainServer() {
-  //             subscriptionServer.close()
-  //           },
-  //         }
-  //       },
-  //     },
-  //   ],
-  // })
 
   await server.start()
 
@@ -204,8 +168,6 @@ const start = async () => {
     app,
     path: '/api/graphql',
   })
-
-  // server.applyMiddleware({ app })
 
   app.use(express.static('../tugurium-front/build'))
   app.use(

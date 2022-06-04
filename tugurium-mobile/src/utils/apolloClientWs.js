@@ -1,14 +1,16 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { WebSocketLink } from '@apollo/client/link/ws'
 import { setContext } from 'apollo-link-context'
 
-const { BACKEND_URL, WEBSOCKET_URL } = require('./config')
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 const createApolloClient = (authStorage) => {
   const authLink = setContext(async (_, { headers }) => {
     const token = await authStorage.getAccessToken()
+    const host = await authStorage.getHost()
     return {
+      uri: host ? `https://${host}/api/graphql` : null,
       headers: {
         ...headers,
         authorization: token ? `bearer ${token}` : null,
@@ -16,22 +18,20 @@ const createApolloClient = (authStorage) => {
     }
   })
 
-  const httpLink = new HttpLink({
-    uri: BACKEND_URL + '/graphql',
-  })
-
-  const wsLink = new WebSocketLink({
-    uri: WEBSOCKET_URL,
-    options: {
-      reconnect: true,
+  const link = new GraphQLWsLink(
+    createClient({
+      url: async () => {
+        const host = await authStorage.getHost()
+        return host ? `wss://${host}/api/graphql` : null
+      },
       connectionParams: async () => {
         const token = await authStorage.getAccessToken()
         return {
-          authLink: `bearer ${token}`,
+          authToken: token ? `bearer ${token}` : null,
         }
       },
-    },
-  })
+    })
+  )
 
   const splitLink = split(
     ({ query }) => {
@@ -41,8 +41,8 @@ const createApolloClient = (authStorage) => {
         definition.operation === 'subscription'
       )
     },
-    wsLink,
-    authLink.concat(httpLink)
+    link,
+    authLink.concat(new HttpLink())
   )
 
   const client = new ApolloClient({

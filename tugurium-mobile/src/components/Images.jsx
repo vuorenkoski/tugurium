@@ -7,7 +7,6 @@ import { ALL_IMAGES } from '../graphql/image'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { convertDate } from '../utils/conversions'
 import ShowImage from './ShowImage'
-const { BACKEND_URL } = require('../utils/config')
 
 const styles = StyleSheet.create({
   labelRow: {
@@ -52,6 +51,7 @@ const Images = () => {
 
   const fetchImages = async () => {
     const token = await authStorage.getAccessToken()
+    const host = await authStorage.getHost()
     const headers = {
       method: 'GET',
       headers: {
@@ -60,7 +60,10 @@ const Images = () => {
     }
     if (imageNames.data) {
       let promises = imageNames.data.allImages.map(async (image) => {
-        const res = await fetch(BACKEND_URL + 'image/' + image.name, headers)
+        const res = await fetch(
+          `https://${host}/api/image/${image.name}`,
+          headers
+        )
         let imageObjectURL = null
         if (res.status === 200) {
           const content = await res.blob()

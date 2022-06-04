@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Text from './Text'
 import FormikTextInput from './FormikTextInput'
 import { View, Pressable, StyleSheet } from 'react-native'
@@ -11,11 +11,6 @@ import { useMutation } from '@apollo/client'
 import { LOGIN } from '../graphql/user'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
-
-const initialValues = {
-  username: '',
-  password: '',
-}
 
 const validationSchema = yup.object().shape({
   username: yup.string().required('Käyttäjänimi on pakollinen'),
@@ -40,13 +35,28 @@ const styles = StyleSheet.create({
   errorText: {
     alignItems: 'center',
     padding: 0,
+    margin: 0,
+  },
+  loginText: {
+    alignItems: 'center',
+    margin: 20,
+  },
+  error: {
+    padding: 0,
+    margin: 0,
+    marginBottom: 10,
   },
 })
 
 const LoginForm = ({ onSubmit }) => {
   return (
     <View style={styles.inputBox}>
-      <FormikTextInput name="username" placeholder="käyttäjänimi" />
+      <FormikTextInput name="host" placeholder="serveri" />
+      <FormikTextInput
+        name="username"
+        placeholder="käyttäjänimi"
+        style={{ marginTop: 20 }}
+      />
       <FormikTextInput
         name="password"
         placeholder="salasana"
@@ -63,11 +73,24 @@ const LoginForm = ({ onSubmit }) => {
 }
 
 const LoginContainer = ({ onSubmit }) => {
+  const [host, setHost] = useState('')
+  const authStorage = useAuthStorage()
+
+  useEffect(async () => {
+    const hostname = await authStorage.getHost()
+    setHost(hostname)
+  }, [])
+
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{
+        host,
+        username: '',
+        password: '',
+      }}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       {({ handleSubmit }) => <LoginForm onSubmit={handleSubmit} />}
     </Formik>
@@ -78,11 +101,13 @@ const Login = ({ setUser }) => {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
-  const [login] = useMutation(LOGIN)
+  const [login, { loading }] = useMutation(LOGIN)
   const authStorage = useAuthStorage()
   const apolloClient = useApolloClient()
 
-  const onSubmit = async ({ username, password }) => {
+  const onSubmit = async ({ host, username, password }) => {
+    await authStorage.setHost(host)
+
     const variables = { username, password }
     await login({
       variables,
@@ -108,10 +133,17 @@ const Login = ({ setUser }) => {
 
   return (
     <View>
-      <LoginContainer onSubmit={onSubmit} />
       <View style={styles.errorText}>
-        <Text textType="error">{errorMessage}</Text>
+        <Text textType="error" style={styles.error}>
+          {errorMessage}
+        </Text>
       </View>
+      <LoginContainer onSubmit={onSubmit} />
+      {loading && (
+        <View style={styles.loginText}>
+          <Text>Kirjaudutaan...</Text>
+        </View>
+      )}
     </View>
   )
 }
