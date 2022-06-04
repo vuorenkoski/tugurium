@@ -9,8 +9,8 @@
 #include <unistd.h>
 #include <openssl/ssl.h>
 
-const char *sw = "HLIG";
-const char *hostname = "tugurium.vuorenkoski.fi";
+const char *sw = "TEST";
+const char *hostname = "tugurium.herokuapp.com";
 const char *token = "xxx";
 const int port = 443;
 int debug = 0;

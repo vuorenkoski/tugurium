@@ -51,13 +51,13 @@ const checkToken = async ({ req }) => {
   return data
 }
 
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
+// const requestLogger = (request, response, next) => {
+//   console.log('Method:', request.method)
+//   console.log('Path:  ', request.path)
+//   console.log('Body:  ', request.body)
+//   console.log('---')
+//   next()
+// }
 
 const start = async () => {
   try {
@@ -70,7 +70,7 @@ const start = async () => {
   }
 
   const app = express()
-  app.use(requestLogger)
+  // app.use(requestLogger)
   app.use(cors())
 
   app.get('/api/version', (req, res) => {

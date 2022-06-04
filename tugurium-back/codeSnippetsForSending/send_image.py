@@ -6,8 +6,7 @@
 import sys
 import requests
 
-url = 'http://localhost:4000/image/'
-# url = 'https://tugurium.vuorenkoski.fi/api/image/'
+url = 'https://tugurium.herokuapp.com/api/image/'
 token = 'xxxx'
 
 f = open(sys.argv[2], "rb")

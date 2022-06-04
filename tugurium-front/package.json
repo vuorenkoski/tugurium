@@ -1,7 +1,6 @@
 {
   "name": "tugurium-front",
   "version": "0.9.1",
-  "private": true,
   "dependencies": {
     "@apollo/client": "^3.6.4",
     "apollo-link-context": "^1.0.20",
@@ -15,6 +14,8 @@
     "victory": "^36.3.2",
     "web-vitals": "^2.1.4"
   },
+  "author": "Lauri Vuorenkoski",
+  "license": "MIT",
   "scripts": {
     "start": "react-scripts start",
     "build": "NODE_ENV=production react-scripts build",

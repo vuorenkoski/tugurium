@@ -27,16 +27,14 @@
 | 1.6.  | 9     | statistics-view, name change to tugurium, images-view, front queires divided to multiple files                                                        |
 | 2.6.  | 9     | change ops only visible to admin, login+settings major refactor, password-change, heroku init and db dumb to heroku                                   |
 | 3.6.  | 8     | showcase to heroku, paths refactored, backend hostname can be changed in mobile, websocket subprotocol changed (back+browser)                         |
-| 4.6.  |       | websocket subprotocol changed (mobile), publish in expo                                                                                               |
-| total | 188   |                                                                                                                                                       |
+| 4.6.  | 4     | websocket subprotocol changed (mobile), publish in expo, codesnippet for arduino                                                                      |
+| total | 192   |                                                                                                                                                       |
 
 ## Product backlog
 
-- koodaa uudelleen lämpötilanäyttö
 - käyttöohjeet
-- hostin vaihto
+- hostin ja tokienien vaihto
 - aitan kytkimen koodaus
-- kameroiden token kuntoon
 
 sensorit:
 
