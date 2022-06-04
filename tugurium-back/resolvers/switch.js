@@ -72,6 +72,7 @@ const setSwitchCommand = async (root, args, context) => {
       console.error(err)
     }
   }
+  pubsub.publish('STATUS_CHANGED', { statusChanged: sw })
   return sw
 }
 
