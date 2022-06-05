@@ -1,16 +1,19 @@
-// EXAMPLE CODE FOR ARDUINO
+// EXAMPLE CODE FOR MCU
 // Program gets values of two sensors from server. Additionally it measures one temperature value itself and sends that to server 
 //
 // Hardware: 
 //   Lolin(Wemos) D1 mini pro, ESP8266
 //   Nokia 5110 display
-//   Thermistor, 10kohm
+//   DS18B20 temperaturesensor
 //
 // Libraries:
 //   ESP8266 board: https://arduino-esp8266.readthedocs.io/en/latest/installing.html
 //   ArduinoJson (version 6.19.4)
 //   Adafruit GFX library (version 1.10.12)
 //   Adarfuit PCD8544 Nokia 5110 LCD library (version 1.2.1)
+//   DallasTemperature 3.9.0
+//   OneWire 2.3.7
+
 
 int debug=0;
 
@@ -25,6 +28,13 @@ StaticJsonDocument<400> doc;
 #include <WiFiClientSecureBearSSL.h>
 ESP8266WiFiMulti WiFiMulti;
 
+// DS18B20
+#include <OneWire.h>
+#include <DallasTemperature.h>
+const int oneWireBus = 0;     
+OneWire oneWire(oneWireBus);
+DallasTemperature sensors(&oneWire);
+
 // Nokia5110
 #include <SPI.h>
 #include <Adafruit_GFX.h>
@@ -35,16 +45,13 @@ const int8_t DC_PIN = D6; // D6,12
 const int8_t BL_PIN = D0; // D0,16
 Adafruit_PCD8544 display = Adafruit_PCD8544(DC_PIN, CE_PIN, RST_PIN);
 
-// Thermistor
-const int8_t THERM_PIN = A0;
-
 // Configs
 const char* ssid = "xxx";
-const char* password = "xx";
-String token = "bearer xxx";
-string host = "https://tugurium.herokuapp.com/api/graphql"
+const char* password = "xxx";
+String token = "bearer xxxx";
+String host = "https://tugurium.herokuapp.com/api/graphql";
 const int8_t interval = 20; // Measurement interval in minutes
-const int8_t samples = 5; // number of samples from thermistor, more takes longer  but is more 'smooth'
+const int8_t samples = 15; // number of samples from thermistor, more takes longer  but is more 'smooth'
 
 double lake = 999;
 double out = 999;
@@ -52,7 +59,7 @@ double in = 999;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Started");
+  if (debug) Serial.println("Started");
 
   // Init fisplay
   pinMode(BL_PIN, OUTPUT);
@@ -157,34 +164,8 @@ double getTempFromServer(String sensor) {
 }
 
 double measureLocalTemp() {
-  double value;
-  double average=0;
-  
-  for (uint8_t i=0; i< samples; i++) {
-    average += analogRead(THERM_PIN);
-    delay(200);
-  }
-  average /= samples;
- 
-  if (debug==1) {
-    Serial.print("Average analog reading ");
-    Serial.println(average);
-  }
- 
-  return tempFromThermistorReading(average);
-}
-
-double tempFromThermistorReading(int value) {
-  int Vo;
-  double R1 = 10000;
-  double logR2, R2, T;
-  double c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
-
-  R2 = R1 * (1023.0 / (float)value - 1.0);
-  logR2 = log(R2);
-  T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
-  T = T - 273.15;
-  return T;
+  sensors.requestTemperatures(); 
+  return sensors.getTempCByIndex(0);
 }
 
 // Methods for display
