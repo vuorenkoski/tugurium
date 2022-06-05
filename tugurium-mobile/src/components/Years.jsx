@@ -251,6 +251,9 @@ const Years = () => {
                   handleSensorChange(item)
                 }}
               />
+              {graphData && graphData.unit && (
+                <Text>Mittayksikkö: {graphData.unit} </Text>
+              )}
             </View>
             <View style={styles.optionComponentStyle}>
               <Text textType="heading2">Vuodet</Text>

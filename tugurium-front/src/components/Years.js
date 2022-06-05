@@ -232,6 +232,11 @@ const Years = () => {
                         </Form.Select>
                       </Col>
                     </Row>
+                    <Row className="align-items-center pt-2">
+                      {data && data.unit && (
+                        <Col>Mittayksikkö: {data.unit} </Col>
+                      )}
+                    </Row>
                   </Col>
                   <Col className="col-auto border rounded m-3 p-3">
                     <Row>

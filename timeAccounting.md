@@ -33,10 +33,8 @@
 
 ## Product backlog
 
-- käyttöohjeet
-- vuosivertailuun näkyviin mittayksikkö
-- tuunaa koko kuvan näyttö.
 - vuosivertailuun korjaus: kuukausidatassa käytetään koontimetodia
+- tuunaa koko kuvan näyttö.
 - hostin ja tokienien vaihto
 - aitan kytkimen koodaus
 
