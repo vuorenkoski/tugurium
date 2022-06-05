@@ -28,11 +28,15 @@
 | 2.6.  | 9     | change ops only visible to admin, login+settings major refactor, password-change, heroku init and db dumb to heroku                                   |
 | 3.6.  | 8     | showcase to heroku, paths refactored, backend hostname can be changed in mobile, websocket subprotocol changed (back+browser)                         |
 | 4.6.  | 4     | websocket subprotocol changed (mobile), publish in expo, codesnippet for arduino                                                                      |
+| 5.6.  |       | käyttöohjeet, readme päivitys, vikojen etsintää,                                                                                                      |
 | total | 192   |                                                                                                                                                       |
 
 ## Product backlog
 
 - käyttöohjeet
+- vuosivertailuun näkyviin mittayksikkö
+- tuunaa koko kuvan näyttö.
+- vuosivertailuun korjaus: kuukausidatassa käytetään koontimetodia
 - hostin ja tokienien vaihto
 - aitan kytkimen koodaus
 

@@ -2,7 +2,7 @@
 
 Project work for FullStack 2022
 
-Idea: frontend and backend (running in local Raspberry pi server), which collects and visualizes temperature and some other data produced locally. Frontend is build for both browser and android device.
+Idea: frontend and backend (running in local Raspberry pi server), which collects and visualizes temperature and some other data. Frontend is build for both browser and Android device.
 
 Running application: https://tempview.vuorenkoski.fi/
 
@@ -15,7 +15,7 @@ Running application: https://tugurium.herokuapp.com
 - credentials (normal user): vieras, fullstack
 - Heroku platform
 - 9k datapoints (there is 10k limit in free plan)
-- not connected to actual sensors, cameras, witches of FMI data
+- not connected to actual sensors, cameras, switches or FMI data
 
 Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
@@ -23,73 +23,70 @@ Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
 [Time accounting](timeAccounting.md)
 
-There are laos example code snippets in c and python to send data from sensors, switches and camera (tugurium-back/codeSnippetsForSending).
+There are also some example code snippets in C, Python and Arduino to send/get data from sensors, switches and cameras (tugurium-back/codeSnippetsForSending).
 
-## Data sources
-
-Data is collected from sensors in two locations: home and summer cottage. In addition, some weather data is collected from Finnish Meterological Institute (https://en.ilmatieteenlaitos.fi/open-data).
-
-### Home
-
-- temperature (upstairs)
-- temperature (downstairs)
-
-### Cottage
-
-- temperature (inside)
-- temperature (outside)
-- temperature (cellar)
-- temperature (sauna)
-- temperature (lake)
-- temperature (sleeping barn)
-- waterlevel (lake)
-- motionsensor (inside)
-- activity alert (mousetrap inside)
-
-### Controls
-
-- lights on/off (home)
-- heating on/off (cottage)
-
-### Finnish meteorological institute
-
-- Rain (cottage, Röykkä observatory)
-- Snow depth (cottage, Röykkä observatory)
-- Wind speed (cottage, Röykkä observatory)
-- Temperature (Home, Espoo)
-
-## Basic functionalities
-
-### Backend
+## Backend
 
 Framework: Express, graphQL, Apolloserver, Sequalize, Umzug
 
 Database: Postgres
 
-Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database. Sensor/image/Switch data can be fetched from api layer. Sensordata can aggregated hourly and daily (sum or average).
+Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database (postgres). Sensor/image/Switch data can be fetched from api layer. Sensordata can aggregated hourly and daily (sum or average).
 
-ENV definitions:
+### ENV definitions
 
 - SECRET is random secret string
 - SENSOR_TOKEN is static authorization token of sensors,
 - DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
 - ADMIN_PASSWORD initial admin password
 
-### Frontend
+### Development environment api
 
-Framework: React (browser) and React native (mobile), Apollo-client, Victory, Bootstrap
+- http://localhost:4000/api/image
+- http://localhost:4000/api/graphql
+- ws://localhost:4000/api/graphql
+
+### Development environment api
+
+- https://tugurium.herokuapp.com/api/image
+- https://tugurium.herokuapp.com/api/graphql
+- wss://tugurium.herokuapp.com/api/graphql
+
+## Frontend
+
+Framework: React, Apollo-client, Victory, Bootstrap
 
 Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition switches can be activated from frontend. Same functionalities are implemented to both browser and android platform (except settings are available only in browser).
 
-## Development environment
+### Development environment url
 
-Backend is running in http://localhost:4000/api/
+- http://localhost:3000/
 
-Backend websocket: ws://localhost:4000/api/graphql
+### production environment url
 
-Frontend is running in http://localhost:3000/
+- https://tugurium.herokuapp.com
 
-### Set up the database
+## Mobile version
+
+Framwork: Expo, React-native, Apollo-client, Victory-native
+
+Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
+
+Build apk:
+
+```
+eas build -p android --profile apk
+```
+
+## Setting up production environment in raspberry pi
+
+1. Install node, npm and postgre
+
+```
+sudo apt install postgresql postgresql-contrib nodejs
+```
+
+2. Create database (instructions in Create database -section)
 
 Install PostgreSQL:
 
@@ -106,50 +103,6 @@ postgres=# create user tugurium_user with encrypted password 'secret';
 postgres=# grant all privileges on database tugurium_db to tugurium_user;
 postgres=# \q
 ```
-
-Import old csv data to backend:
-
-```
-node importOld.js
-```
-
-Clear measurements when needed:
-
-```
-sudo -u postgres psql
-postgres=# \c tugurium_db;
-postgres=# truncate table measurements;
-postgres=# \q
-```
-
-Dump and restore sql data when needed:
-
-```
-pg_dump -F c -U tugurium_user -h localhost tugurium_db -f sqlfile.sql
-
-sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
-
-```
-
-## Production environment
-
-Frontend: https://tugurium.vuorenkoski.fi/
-
-Backend: https://tugurium.vuorenkoski.fi/api/graphql
-
-Backend websocket: wss://tugurium.vuorenkoski.fi/api/graphql
-
-Backend image: https://tugurium.vuorenkoski.fi/api/image
-
-### Setting up production environment
-
-1. Install node, npm and postgre
-
-```
-sudo apt install postgresql postgresql-contrib nodejs
-```
-
-2. Create database (instructions in Create database -section)
 
 3. Clone repository to /home/pi/tugurium
 
@@ -193,7 +146,7 @@ sudo service tugurium start
 sudo systemctl enable tugurium
 ```
 
-8. Insert to crontab a script to fetch data from FMI (every 60 minutes)
+8. Insert to crontab a script to fetch data from FMI (in this example every 60 minutes)
 
 ```
 30 * * * * sh /home/pi/tugurium/getFmiData.sh
@@ -205,4 +158,30 @@ Build apk:
 
 ```
 eas build -p android --profile apk
+```
+
+## Some methods for database handling
+
+Import old csv data to backend:
+
+```
+node importOld.js
+```
+
+Clear measurements when needed:
+
+```
+sudo -u postgres psql
+postgres=# \c tugurium_db;
+postgres=# truncate table measurements;
+postgres=# \q
+```
+
+Dump and restore sql data when needed:
+
+```
+pg_dump -F c -U tugurium_user -h localhost tugurium_db -f sqlfile.sql
+
+sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
+
 ```
