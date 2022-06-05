@@ -1,4 +1,4 @@
-import { Row, Button, FormControl, InputGroup, Col } from 'react-bootstrap'
+import { Row, FormControl, InputGroup, Col } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
 import { CHANGE_PASSWORD } from '../graphql/user'

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tugurium",
     "slug": "Tugurium",
-    "version": "0.9.1",
+    "version": "0.9.2",
     "description": "Home automation client",
     "githubUrl": "https://github.com/vuorenkoski/tugurium",
     "orientation": "default",
