@@ -46,7 +46,7 @@ Välilehdellä luetellaan kaikki serverin kytkimet. Siinä näkyy myös kytkimen
 
 Komentojen antaminen on mahdollista vain admin käyttäjälle. Tavalliselle käyttäjälle ei näy kommennon antamisen painikkeita.
 
-### TilastojaerrorMessage
+### Tilastoja
 
 Välilehti näyttää luettelon kaisista sensoreista, niiden mittauspisteiden lukumäristä ja päivästä jollein ensimmäinen mittaus on tallennettu.
 

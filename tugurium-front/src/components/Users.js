@@ -45,7 +45,7 @@ const Users = ({ admin }) => {
     setDeleteUserId(null)
   }
 
-  const handeCreateUser = (id) => {
+  const handleCreateUser = (id) => {
     setDisplayUserForm(true)
     setUsername('')
     setPasssword('')
@@ -85,6 +85,7 @@ const Users = ({ admin }) => {
                     {admin && !a.admin && (
                       <td>
                         <button
+                          type="button"
                           className="removeButton"
                           onClick={() => setDeleteUserId(a)}
                         >
@@ -102,7 +103,13 @@ const Users = ({ admin }) => {
       {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
-            <Button onClick={() => handeCreateUser()}>Lisää uusi</Button>
+            <button
+              type="button"
+              className="addButton"
+              onClick={() => handleCreateUser()}
+            >
+              Lisää uusi
+            </button>
           </Col>
         </Row>
       )}

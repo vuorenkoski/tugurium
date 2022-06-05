@@ -152,6 +152,7 @@ const Sensors = ({ admin }) => {
                     <>
                       <td>
                         <button
+                          type="button"
                           className="removeButton"
                           onClick={() => setDeleteSensorId(a)}
                         >
@@ -160,6 +161,7 @@ const Sensors = ({ admin }) => {
                       </td>
                       <td>
                         <button
+                          type="button"
                           className="updateButton"
                           onClick={() => handleUpdateSensor(a.id)}
                         >
@@ -178,7 +180,13 @@ const Sensors = ({ admin }) => {
       {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
-            <Button onClick={() => handleNewSensor()}>Lisää uusi</Button>
+            <button
+              type="button"
+              className="addButton"
+              onClick={() => handleNewSensor()}
+            >
+              Lisää uusi
+            </button>
           </Col>
         </Row>
       )}

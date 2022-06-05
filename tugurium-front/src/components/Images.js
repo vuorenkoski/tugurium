@@ -134,6 +134,7 @@ const Images = ({ admin }) => {
                       <>
                         <td>
                           <button
+                            type="button"
                             className="removeButton"
                             onClick={() => setDeleteImageId(a)}
                           >
@@ -142,6 +143,7 @@ const Images = ({ admin }) => {
                         </td>
                         <td>
                           <button
+                            type="button"
                             className="updateButton"
                             onClick={() => handleUpdateImage(a.id)}
                           >
@@ -160,7 +162,13 @@ const Images = ({ admin }) => {
       {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
-            <Button onClick={() => handleNewImage()}>Lisää uusi</Button>
+            <button
+              type="button"
+              className="addButton"
+              onClick={() => handleNewImage()}
+            >
+              Lisää uusi
+            </button>
           </Col>
         </Row>
       )}

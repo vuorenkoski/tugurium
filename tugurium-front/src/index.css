@@ -34,14 +34,10 @@
 
 .removeButton:hover {
   color: black;
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
 }
 
 .updateButton {
-  color: darkblue;
+  color: #0d6efd;
   background: none;
   border: none;
   padding: 0;
@@ -50,9 +46,19 @@
 
 .updateButton:hover {
   color: black;
-  background: none;
+}
+
+.addButton {
+  color: white;
+  background: #0d6efd;
   border: none;
-  padding: 0;
+  border-radius: 5px;
+  padding: 10px;
+  font: inherit;
+}
+
+.addButton:hover {
+  color: silver;
   font: inherit;
 }
 

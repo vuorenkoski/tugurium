@@ -53,7 +53,7 @@ const Users = ({ user }) => {
         <Col className="col-auto">
           <InputGroup>
             <FormControl
-              type="text"
+              type="password"
               value={password}
               placeholder="salasana"
               onChange={({ target }) => setPasssword(target.value)}
@@ -65,7 +65,7 @@ const Users = ({ user }) => {
         <Col className="col-auto">
           <InputGroup>
             <FormControl
-              type="text"
+              type="password"
               value={passwordConfirmation}
               placeholder="salasana uudestaan"
               onChange={({ target }) => setPassswordConfirmation(target.value)}
@@ -75,7 +75,13 @@ const Users = ({ user }) => {
       </Row>
       <Row className="p-4 pt-1 pb-1">
         <Col>
-          <Button onClick={handleSubmitPassword}>Vaihda</Button>
+          <button
+            type="button"
+            className="addButton"
+            onClick={handleSubmitPassword}
+          >
+            Vaihda
+          </button>
         </Col>
       </Row>
       <Row className="p-4 pt-1 pb-1">

@@ -140,6 +140,7 @@ const Switches = ({ admin }) => {
                       <>
                         <td>
                           <button
+                            type="button"
                             className="removeButton"
                             onClick={() => setDeleteSwitchId(a)}
                           >
@@ -148,6 +149,7 @@ const Switches = ({ admin }) => {
                         </td>
                         <td>
                           <button
+                            type="button"
                             className="updateButton"
                             onClick={() => handleUpdateSwitch(a.id)}
                           >
@@ -166,7 +168,13 @@ const Switches = ({ admin }) => {
       {admin && (
         <Row className="p-4 pt-1 pb-1">
           <Col>
-            <Button onClick={() => handleNewSwitch()}>Lisää uusi</Button>
+            <button
+              type="button"
+              className="addButton"
+              onClick={() => handleNewSwitch()}
+            >
+              Lisää uusi
+            </button>
           </Col>
         </Row>
       )}
