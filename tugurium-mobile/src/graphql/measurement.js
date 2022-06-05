@@ -22,6 +22,7 @@ export const SENSOR_DATA = gql`
       sensorName
       sensorFullname
       sensorUnit
+      agrmethod
       measurements {
         value
         timestamp

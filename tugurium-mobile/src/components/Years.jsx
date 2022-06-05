@@ -53,7 +53,7 @@ const yearToEpoch = (year) => {
 
 const noScale = (x) => x
 
-const monthlyDataFromDaily = (dailyData) => {
+const monthlyDataFromDaily = (dailyData, isSum) => {
   const currentMonthYear = new Date().getMonth() + new Date().getFullYear() * 12
   let newData = []
   let min = 0
@@ -83,7 +83,7 @@ const monthlyDataFromDaily = (dailyData) => {
 
       sum.forEach((x, i) => {
         if (count[i] > 0) {
-          const value = sum[i] / count[i]
+          const value = isSum ? sum[i] : sum[i] / count[i]
           min = Math.min(min, value)
           max = Math.max(max, value)
 
@@ -158,7 +158,7 @@ const groupByYear = (measurements, firstTimestamp) => {
 const processData = (sensorData, setData, firstTimestamp) => {
   if (sensorData) {
     const daily = groupByYear(sensorData.measurements, firstTimestamp)
-    const monthly = monthlyDataFromDaily(daily)
+    const monthly = monthlyDataFromDaily(daily, sensorData.agrmethod === 'SUM')
     const unit = sensorData.sensorUnit
     const result = { monthly, daily, unit }
     setData(result)
