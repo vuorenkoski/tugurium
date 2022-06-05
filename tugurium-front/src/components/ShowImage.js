@@ -13,7 +13,13 @@ const ShowImage = ({ image, setShowImage }) => {
           </Row>
           <Row>
             <Col className="col-auto p-4">
-              {image && <img src={image.data} alt={image.name} />}
+              {image && (
+                <img
+                  className="fullscreenImage"
+                  src={image.data}
+                  alt={image.name}
+                />
+              )}
             </Col>
           </Row>
           <Row>

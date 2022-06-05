@@ -33,7 +33,6 @@
 
 ## Product backlog
 
-- vuosivertailuun korjaus: kuukausidatassa käytetään koontimetodia
 - tuunaa koko kuvan näyttö.
 - hostin ja tokienien vaihto
 - aitan kytkimen koodaus
