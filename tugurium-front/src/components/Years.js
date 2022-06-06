@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import { Row, Col, Form } from 'react-bootstrap'
 import { SENSOR_DATA, GET_FIRST_TIMESTAMP } from '../graphql/measurement'
 import { ALL_SENSORS } from '../graphql/sensor'
+import { NETWORK_ERROR, LOADING } from '../util/config'
 import Chart from './Chart'
 
 const currentYear = new Date().getFullYear()
@@ -181,6 +182,7 @@ const Years = () => {
   const handlePeriodChange = (e) => {
     setPeriod(e.target.value)
   }
+
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -191,16 +193,14 @@ const Years = () => {
       {!sensors.data && sensors.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}
@@ -306,7 +306,7 @@ const Years = () => {
           {!sensorData.data && selectedSensor && (
             <Row className="p-4">
               <Col className="col-9">
-                <p>Ladataan dataa palvelimelta...</p>
+                <p>{LOADING}</p>
               </Col>
             </Row>
           )}

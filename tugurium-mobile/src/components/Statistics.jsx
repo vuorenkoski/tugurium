@@ -6,6 +6,7 @@ import { convertDateToDate, convertNumber } from '../utils/conversions'
 import DropDownSelector from './DropDownSelector'
 import Chart from './Chart'
 import { SENSOR_STATS, DATAPOINTS } from '../graphql/sensor'
+import { NETWORK_ERROR, LOADING } from '../utils/config'
 
 const styles = StyleSheet.create({
   content: {
@@ -121,16 +122,14 @@ const Statistics = () => {
       </View>
       {!sensorsData.data && sensorsData.loading && (
         <View style={styles.labelRow}>
-          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+          <Text textType="loading">{LOADING}</Text>
         </View>
       )}
       {!sensorsData.data &&
         sensorsData.error &&
         sensorsData.error.networkError && (
           <View style={styles.labelRow}>
-            <Text textType="error">
-              Verkkovirhe (backend ei tavoitettavissa?)
-            </Text>
+            <Text textType="error">{NETWORK_ERROR}</Text>
           </View>
         )}
       {sensors && (
@@ -163,7 +162,7 @@ const Statistics = () => {
           </View>
 
           <View style={styles.optionComponentStyle}>
-            <Text textType="heading2">Datapisteiden lukumäärät (vrk)</Text>
+            <Text textType="heading2">Mittauspisteiden lukumäärät (vrk)</Text>
             <DropDownSelector
               selectorType="DropDown"
               data={sensors}
@@ -178,7 +177,7 @@ const Statistics = () => {
           </View>
           <View style={styles.graphRow}>
             {!measurements && selectedSensor && (
-              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+              <Text textType="loading">{LOADING}</Text>
             )}
             {measurements && measurements.length === 0 && (
               <Text>ei datapisteitä</Text>

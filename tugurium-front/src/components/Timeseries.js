@@ -5,6 +5,7 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Chart from './Chart'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
+import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const createYearSeries = (data) => {
   const yearSeries = []
@@ -181,16 +182,14 @@ const Timeseries = () => {
       {!sensors.data && sensors.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}
@@ -288,7 +287,7 @@ const Timeseries = () => {
           </Row>
           <Row className="p-4 pt-0 pb-0">
             <Col>
-              {loading && <div>Ladataan dataa palvelimelta...</div>}
+              {loading && <div>{LOADING}</div>}
               {!loading && <div> &nbsp;</div>}
               {data.length > 0 && (
                 <Chart

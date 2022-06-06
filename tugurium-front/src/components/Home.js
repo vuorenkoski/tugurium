@@ -2,6 +2,7 @@ import { Table, Row, Col } from 'react-bootstrap'
 import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../util/conversions'
+import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const Home = () => {
   const sensors = useQuery(ALL_SENSORS, {
@@ -20,16 +21,14 @@ const Home = () => {
       {!sensors.data && sensors.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}

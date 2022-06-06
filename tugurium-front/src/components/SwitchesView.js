@@ -6,6 +6,7 @@ import {
   STATUS_CHANGED,
 } from '../graphql/switch'
 import { convertDate } from '../util/conversions'
+import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const SwitchesView = () => {
   const switches = useQuery(ALL_SWITCHES, {
@@ -38,16 +39,14 @@ const SwitchesView = () => {
       {!switches.data && switches.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!switches.data && switches.error && switches.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}

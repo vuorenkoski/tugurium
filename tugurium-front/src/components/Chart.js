@@ -10,7 +10,8 @@ import {
 import { Row, Col } from 'react-bootstrap'
 
 import { convertDate } from '../util/conversions'
-const { COLORS } = require('../util/config')
+import { COLORS } from '../util/config'
+
 const VictoryZoomVoronoiContainer = createContainer('zoom', 'voronoi')
 
 const Chart = ({ data, zoomDomain, setZoomDomain, yDomain }) => {

@@ -12,6 +12,7 @@ import Text from './Text'
 import ItemBox from './ItemBox'
 import theme from '../theme'
 import { convertDate } from '../utils/conversions'
+import { NETWORK_ERROR, LOADING } from '../utils/config'
 
 const styles = StyleSheet.create({
   labelRow: {
@@ -140,14 +141,12 @@ const Switches = ({ user }) => {
       </View>
       {!switches.data && switches.loading && (
         <View style={styles.labelRow}>
-          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+          <Text textType="loading">{LOADING}</Text>
         </View>
       )}
       {!switches.data && switches.error && switches.error.networkError && (
         <View style={styles.labelRow}>
-          <Text textType="error">
-            Verkkovirhe (backend ei tavoitettavissa?)
-          </Text>
+          <Text textType="error">{NETWORK_ERROR}</Text>
         </View>
       )}
       {switches.data && (
@@ -159,7 +158,7 @@ const Switches = ({ user }) => {
               ))}
               {(!switches.data || !switches.data.allSwitches) && (
                 <View style={styles.column}>
-                  <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+                  <Text textType="loading">{LOADING}</Text>
                 </View>
               )}
             </View>

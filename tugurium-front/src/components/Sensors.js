@@ -17,7 +17,7 @@ import {
   UPDATE_SENSOR,
   NEW_SENSOR,
 } from '../graphql/sensor'
-const { AGGREGATE_METHODS } = require('../util/config')
+import { AGGREGATE_METHODS } from '../util/config'
 
 const Sensors = ({ admin }) => {
   const [displaySensorForm, setDisplaySensorForm] = useState(false)

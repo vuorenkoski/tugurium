@@ -6,6 +6,7 @@ import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../utils/conversions'
 import ItemBox from './ItemBox'
+import { NETWORK_ERROR, LOADING } from '../utils/config'
 
 const styles = StyleSheet.create({
   labelRow: {
@@ -70,14 +71,12 @@ const Current = () => {
       </View>
       {!sensors.data && sensors.loading && (
         <View style={styles.row}>
-          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+          <Text textType="loading">{LOADING}</Text>
         </View>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <View style={styles.row}>
-          <Text textType="error">
-            Verkkovirhe (backend ei tavoitettavissa?)
-          </Text>
+          <Text textType="error">{NETWORK_ERROR}</Text>
         </View>
       )}
       <View style={styles.sensorListStyle}>

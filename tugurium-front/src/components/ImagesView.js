@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
-
 import { useQuery } from '@apollo/client'
+
 import { ALL_IMAGES } from '../graphql/image'
 import { convertDate } from '../util/conversions'
 import ShowImage from './ShowImage'
-const { BACKEND_URL } = require('../util/config')
+import { NETWORK_ERROR, LOADING } from '../util/config'
+import { BACKEND_URL } from '../util/config'
 
 const ImagesView = () => {
   const [images, setImages] = useState([])
@@ -58,16 +59,14 @@ const ImagesView = () => {
       {!imageNames.data && imageNames.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!imageNames.data && imageNames.error && imageNames.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}

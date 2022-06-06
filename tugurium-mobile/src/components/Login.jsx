@@ -11,6 +11,7 @@ import { useMutation } from '@apollo/client'
 import { LOGIN } from '../graphql/user'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
+import { NETWORK_ERROR } from '../utils/config'
 
 const validationSchema = yup.object().shape({
   username: yup.string().required('Käyttäjänimi on pakollinen'),
@@ -113,7 +114,7 @@ const Login = ({ setUser }) => {
       variables,
       onError: (error) => {
         if (error.networkError) {
-          setErrorMessage('Verkkovirhe (backend ei tavoitettavissa?)')
+          setErrorMessage(NETWORK_ERROR)
         } else {
           setErrorMessage(error.message)
         }

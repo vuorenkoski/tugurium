@@ -8,7 +8,7 @@ import Switches from './Switches'
 import PasswordChange from './PasswordChange'
 
 import { SENSOR_TOKEN } from '../graphql/sensor'
-import { VERSION } from '../util/config'
+import { VERSION, NETWORK_ERROR, LOADING } from '../util/config'
 
 const Settings = () => {
   const sToken = useQuery(SENSOR_TOKEN)
@@ -36,16 +36,14 @@ const Settings = () => {
       {!sToken.data && sToken.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}</p>
           </Col>
         </Row>
       )}
       {!sToken.data && sToken.error && sToken.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}

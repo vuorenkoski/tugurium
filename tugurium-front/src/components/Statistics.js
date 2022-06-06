@@ -12,6 +12,7 @@ import {
 } from 'victory'
 
 import { SENSOR_STATS, DATAPOINTS } from '../graphql/sensor'
+import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const processData = (data, setMeasurements) => {
   const secondsInDay = 24 * 60 * 60
@@ -75,16 +76,14 @@ const Statistics = () => {
       {!sensors.data && sensors.loading && (
         <Row className="p-4 pb-0">
           <Col>
-            <p>Ladataan dataa palvelimelta...</p>
+            <p>{LOADING}.</p>
           </Col>
         </Row>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <Row className="p-4 pb-0">
           <Col>
-            <p className="errorMessage">
-              Virhe: Verkkovirhe (backend ei tavoitettavissa?)
-            </p>
+            <p className="errorMessage">{NETWORK_ERROR}</p>
           </Col>
         </Row>
       )}
@@ -248,7 +247,7 @@ const Statistics = () => {
             )}
             {!measurements && selectedSensor && (
               <Col className="col-9">
-                <p>Ladataan dataa palvelimelta...</p>
+                <p>{LOADING}</p>
               </Col>
             )}
           </Row>

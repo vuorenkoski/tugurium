@@ -7,6 +7,7 @@ import { ALL_IMAGES } from '../graphql/image'
 import useAuthStorage from '../hooks/useAuthStorage'
 import { convertDate } from '../utils/conversions'
 import ShowImage from './ShowImage'
+import { NETWORK_ERROR, LOADING } from '../utils/config'
 
 const styles = StyleSheet.create({
   labelRow: {
@@ -95,14 +96,12 @@ const Images = () => {
         </View>
         {!imageNames.data && imageNames.loading && (
           <View style={styles.row}>
-            <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+            <Text textType="loading">{LOADING}</Text>
           </View>
         )}
         {!imageNames.data && imageNames.error && imageNames.error.networkError && (
           <View style={styles.row}>
-            <Text textType="error">
-              Verkkovirhe (backend ei tavoitettavissa?)
-            </Text>
+            <Text textType="error">{NETWORK_ERROR}</Text>
           </View>
         )}
         <View style={styles.imageListStyle}>

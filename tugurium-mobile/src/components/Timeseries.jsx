@@ -7,6 +7,7 @@ import Chart from './Chart'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 import DropDownSelector from './DropDownSelector'
+import { NETWORK_ERROR, LOADING } from '../utils/config'
 
 const styles = StyleSheet.create({
   content: {
@@ -200,14 +201,12 @@ const Timeseries = () => {
       </View>
       {!sensors.data && sensors.loading && (
         <View style={styles.labelRow}>
-          <Text textType="loading">Ladataan dataa palvelimelta...</Text>
+          <Text textType="loading">{LOADING}</Text>
         </View>
       )}
       {!sensors.data && sensors.error && sensors.error.networkError && (
         <View style={styles.labelRow}>
-          <Text textType="error">
-            Verkkovirhe (backend ei tavoitettavissa?)
-          </Text>
+          <Text textType="error">{NETWORK_ERROR}</Text>
         </View>
       )}
       {sensors.data && (
@@ -265,9 +264,7 @@ const Timeseries = () => {
             </View>
           </View>
           <View style={styles.graphRow}>
-            {loading && (
-              <Text textType="loading">Ladataan dataa palvelimelta...</Text>
-            )}
+            {loading && <Text textType="loading">{LOADING}</Text>}
             {!loading && (
               <Chart
                 data={graphData}

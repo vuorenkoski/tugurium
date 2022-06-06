@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Form, Row, Button, Col } from 'react-bootstrap'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '../graphql/user'
+import { NETWORK_ERROR } from '../util/config'
 
 const Login = ({ setLogged }) => {
   const [username, setUsername] = useState('')
@@ -11,7 +12,7 @@ const Login = ({ setLogged }) => {
   const [login] = useMutation(LOGIN, {
     onError: (error) => {
       if (error.networkError) {
-        setErrorMessage('Verkkovirhe (backend ei tavoitettavissa?)')
+        setErrorMessage(NETWORK_ERROR)
       } else {
         setErrorMessage(error.message)
       }

@@ -6,8 +6,7 @@ import {
   VictoryLegend,
 } from 'victory-native'
 import { View } from 'react-native'
-
-const { COLORS } = require('../utils/config')
+import { COLORS } from '../utils/config'
 
 const chartStyle = { fontSize: 12, height: 320 }
 
