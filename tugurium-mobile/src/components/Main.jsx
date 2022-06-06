@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes, Navigate } from 'react-router-native'
 import { View, StyleSheet, SafeAreaView } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-native'
 import { Icon } from 'react-native-elements'
 
 import Login from './Login'
+import NewMeasurement from './NewMeasurement'
 import Statistics from './Statistics'
 import Years from './Years'
 import Current from './Current'
@@ -89,7 +90,7 @@ const MenuItem = ({ navigate, page, text }) => {
   )
 }
 
-const MenuElement = ({ logout }) => {
+const MenuElement = ({ logout, admin }) => {
   const navigate = useNavigate()
 
   return (
@@ -110,6 +111,13 @@ const MenuElement = ({ logout }) => {
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
           <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
+          {admin && (
+            <MenuItem
+              text="Lisää mittaus"
+              page="/newMeasurement"
+              navigate={navigate}
+            />
+          )}
           <MenuItem text="Asetukset" page="/settings" navigate={navigate} />
           <MenuOption onSelect={logout}>
             <Text textType="menuItem">Kirjaudu ulos</Text>
@@ -126,10 +134,15 @@ const Main = () => {
 
   const [user, setUser] = useState(null)
 
-  const logout = () => {
-    authStorage.removeAccessToken()
-    authStorage.removeUser()
-    apolloClient.clearStore()
+  useEffect(async () => {
+    const user = await authStorage.getUser()
+    setUser(user)
+  }, [])
+
+  const logout = async () => {
+    await authStorage.removeAccessToken()
+    await authStorage.removeUser()
+    await apolloClient.clearStore()
     setUser(null)
   }
 
@@ -140,12 +153,17 @@ const Main = () => {
         <SafeAreaView style={styles.rootContainer}>
           <View style={styles.navContainer}>
             <Text style={styles.logoNav}>TUGURIUM</Text>
-            <MenuElement logout={logout} />
+            <MenuElement logout={logout} admin={user.admin} />
           </View>
           <View style={styles.bodyContainer}>
             <Routes>
               <Route path="/" element={<Current />} exact />
               <Route path="/statistics" element={<Statistics />} exact />
+              <Route
+                path="/newMeasurement"
+                element={<NewMeasurement />}
+                exact
+              />
               <Route path="/images" element={<Images />} exact />
               <Route
                 path="/settings"

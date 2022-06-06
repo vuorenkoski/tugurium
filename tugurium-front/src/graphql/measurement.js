@@ -30,3 +30,11 @@ export const SENSOR_DATA = gql`
     }
   }
 `
+export const ADD_MEASUREMENT = gql`
+  mutation Mutation($sensorName: String!, $value: String) {
+    addMeasurement(sensorName: $sensorName, value: $value) {
+      value
+      timestamp
+    }
+  }
+`

@@ -78,7 +78,7 @@ const datapoints = async (root, args, context) => {
 }
 
 const addMeasurement = async (root, args, context) => {
-  if (!context.sensor) {
+  if (!context.sensor && !context.currentUser && !context.currentUser.admin) {
     throw new AuthenticationError('Not authorized')
   }
   const sensor = await Sensor.findOne({

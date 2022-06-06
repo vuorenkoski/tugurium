@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Years from './components/Years'
 import Statistics from './components/Statistics'
 import SwitchesView from './components/SwitchesView'
+import NewMeasurement from './components/NewMeasurement'
 import ImagesView from './components/ImagesView'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 import { VERSION } from './util/config'
@@ -21,9 +22,9 @@ import {
 const App = () => {
   const [logged, setLogged] = useState(false)
   const client = useApolloClient()
-
+  const user = JSON.parse(localStorage.getItem('tugurium-user'))
   if (!logged) {
-    if (!localStorage.getItem('tugurium-user-token')) {
+    if (!user) {
       return (
         <div className="container">
           <Navbar collapseOnSelect expand="lg" bg="dark" className="p-3">
@@ -121,6 +122,18 @@ const App = () => {
                   Tilastoja
                 </NavLink>
               </Nav.Link>
+              {user.admin && (
+                <Nav.Link href="#" as="span">
+                  <NavLink
+                    to="/newMeasurement"
+                    className={({ isActive }) =>
+                      isActive ? 'activeMenuitem' : 'menuitem'
+                    }
+                  >
+                    Lisää mittaus
+                  </NavLink>
+                </Nav.Link>
+              )}
               <Nav.Link href="#" as="span">
                 <NavLink
                   to="/settings"
@@ -141,6 +154,7 @@ const App = () => {
         </Navbar>
         <Routes>
           <Route path="/statistics" element={<Statistics />} />
+          <Route path="/newMeasurement" element={<NewMeasurement />} />
           <Route path="/switches" element={<SwitchesView />} />
           <Route path="/images" element={<ImagesView />} />
           <Route path="/settings" element={<Settings />} />
