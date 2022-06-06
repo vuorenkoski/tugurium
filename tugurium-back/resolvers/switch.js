@@ -2,7 +2,6 @@ const { UserInputError, AuthenticationError } = require('apollo-server')
 const { PubSub } = require('graphql-subscriptions')
 const fs = require('fs')
 const { Switch } = require('../models')
-const { SENSOR_TOKEN } = require('../util/config')
 
 const pubsub = new PubSub()
 
@@ -77,7 +76,7 @@ const setSwitchCommand = async (root, args, context) => {
 }
 
 const getSwitchCommand = async (root, args, context) => {
-  if (context.token !== SENSOR_TOKEN) {
+  if (!context.token.sensor) {
     throw new AuthenticationError('Not authorized')
   }
   const sw = await Switch.findOne({ where: { name: args.name } })
@@ -85,7 +84,7 @@ const getSwitchCommand = async (root, args, context) => {
 }
 
 const setSwitchStatus = async (root, args, context) => {
-  if (context.token !== SENSOR_TOKEN) {
+  if (!context.sensor) {
     throw new AuthenticationError('Not authorized')
   }
 

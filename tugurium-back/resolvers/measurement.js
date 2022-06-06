@@ -5,7 +5,6 @@ const pubsub = new PubSub()
 
 const { sequelize } = require('../util/db')
 const { Sensor, Measurement } = require('../models')
-const { SENSOR_TOKEN } = require('../util/config')
 
 const sensorData = async (root, args, context) => {
   if (!context.currentUser) {
@@ -79,7 +78,7 @@ const datapoints = async (root, args, context) => {
 }
 
 const addMeasurement = async (root, args, context) => {
-  if (context.token !== SENSOR_TOKEN) {
+  if (!context.sensor) {
     throw new AuthenticationError('Not authorized')
   }
   const sensor = await Sensor.findOne({
