@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 module.exports = {
-  VERSION: '0.9.2',
+  VERSION: '0.9.3',
   DATABASE_URL: process.env.DATABASE_URL,
   PORT: process.env.PORT || 4000,
   SECRET: process.env.SECRET,

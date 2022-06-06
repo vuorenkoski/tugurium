@@ -29,8 +29,8 @@
 | 3.6.  | 8     | showcase to heroku, paths refactored, backend hostname can be changed in mobile, websocket subprotocol changed (back+browser)                         |
 | 4.6.  | 4     | websocket subprotocol changed (mobile), publish in expo, codesnippet for arduino                                                                      |
 | 5.6.  | 4     | userinstructions, readme update, problem searching, fiew fixes                                                                                        |
-| 6.6.  |       | version number in settings, refactoring, view for adding measurement (browser+mobile)                                                                 |
-| total | 196   |                                                                                                                                                       |
+| 6.6.  | 6     | version number in settings, refactoring, view for adding measurement (browser+mobile)                                                                 |
+| total | 202   |                                                                                                                                                       |
 
 ## Product backlog
 
