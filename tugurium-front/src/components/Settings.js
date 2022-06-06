@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { useQuery } from '@apollo/client'
 import Sensors from './Sensors'
@@ -7,10 +8,24 @@ import Switches from './Switches'
 import PasswordChange from './PasswordChange'
 
 import { SENSOR_TOKEN } from '../graphql/sensor'
+import { VERSION } from '../util/config'
 
 const Settings = () => {
   const sToken = useQuery(SENSOR_TOKEN)
+  const [backendVersion, setBackendVersion] = useState('')
   const user = JSON.parse(localStorage.getItem('tugurium-user'))
+
+  useEffect(() => {
+    const xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        setBackendVersion(this.responseText)
+      }
+    }
+    xhttp.open('GET', '/api/version', true)
+    xhttp.send()
+  }, [])
+
   return (
     <div>
       <Row className="p-4 pb-0">
@@ -41,6 +56,21 @@ const Settings = () => {
           <Sensors admin={user.admin} />
           <Images admin={user.admin} />
           <Switches admin={user.admin} />
+          <Row className="p-4 pb-1">
+            <Col>
+              <h3>Versiot</h3>
+            </Col>
+          </Row>
+          <Row className="p-4 pt-1 pb-0">
+            <Col>
+              <p>Frontend: Tugurium {VERSION}</p>
+            </Col>
+          </Row>
+          <Row className="p-4 pt-0">
+            <Col>
+              <p>Backend: {backendVersion}</p>
+            </Col>
+          </Row>
           {user.admin && (
             <div>
               <Row className="p-4 pb-1">

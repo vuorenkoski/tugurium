@@ -4,11 +4,14 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const express = require('express')
 const cors = require('cors')
 const { Sequelize } = require('sequelize')
+const multer = require('multer')
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+const { createServer } = require('http')
+const jwt = require('jsonwebtoken')
 
 const { connectToDatabase } = require('./util/db')
 const { User, Image } = require('./models')
-
-const jwt = require('jsonwebtoken')
 const {
   SECRET,
   SENSOR_TOKEN,
@@ -18,12 +21,6 @@ const {
 } = require('./util/config')
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
-
-const multer = require('multer')
-
-const { WebSocketServer } = require('ws')
-const { useServer } = require('graphql-ws/lib/use/ws')
-const { createServer } = require('http')
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialectOptions: {
@@ -74,7 +71,7 @@ const start = async () => {
   app.use(cors())
 
   app.get('/api/version', (req, res) => {
-    res.send(`Tugurium, version ${VERSION}`)
+    res.send(`Tugurium ${VERSION}`)
   })
 
   app.get('/api/image/:name', (req, res) => {

@@ -29,11 +29,13 @@
 | 3.6.  | 8     | showcase to heroku, paths refactored, backend hostname can be changed in mobile, websocket subprotocol changed (back+browser)                         |
 | 4.6.  | 4     | websocket subprotocol changed (mobile), publish in expo, codesnippet for arduino                                                                      |
 | 5.6.  | 4     | userinstructions, readme update, problem searching, fiew fixes                                                                                        |
+| 6.6.  |       | version number in settings,                                                                                                                           |
 | total | 196   |                                                                                                                                                       |
 
 ## Product backlog
 
-- backend version visible + mobiilissa host
+- app reafactoring in back
+- table refactoring in settings
 - hostin ja tokienien vaihto
 - aitan kytkimen koodaus
 
