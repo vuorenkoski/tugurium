@@ -52,6 +52,10 @@ Välilehti näyttää luettelon kaisista sensoreista, niiden mittauspisteiden lu
 
 Lisäksi välilehdellä voi valita sensorin, jonka osalta näytetään graafi mittauspisteiden lukumäärästä vuorokaudessa. Graafi on interaktiivinen kuten ’Aikasarjat’ kohdassa esiteltiin.
 
+### Lisää mittaus
+
+Välilehti näkyy vain admin käyttäjäjälle. Tällä voidaan manuaalisesti syöttää mittaustulos serverille. ENsin valitaan sensori jolla mittaustulos kirjataan. Tämän jälkeen syötetään mittaustulos (desimaaliluku) ja painetaan lisää.
+
 ### Asetukset
 
 Välilehdellä voi vaihtaa käyttäjät vaihtaa salasanansa. Kaikki käyttäjät neäkevän myös linstan käyttäjistä, sensoreista, kameroista ja kytkimistä. Admin käyttäjä voi myös lisätä/päivittää ja poistaa näitä (admin käyttäjää ei voi poistaa). Admin käyttäjä näkee myös tokenin jonka avulla sensorit, kytkimet ja kamerat tunnistautuvat lähettäessään tai kysellessään dataa.
