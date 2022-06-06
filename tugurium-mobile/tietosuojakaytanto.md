@@ -1,3 +1,5 @@
 # Tugurium - Tietosujakäytäntö
 
-Applikaatio tallentaa puhelimeen serverin nimen ja käyttäjätunnuksen. Applikaatio lähettää tietoa vain käyttäjän määrittelemälle serverille.
+Applikaatio tallentaa puhelimeen vain serverin nimen ja käyttäjätunnuksen.
+
+Applikaatio lähettää ja vastaanottaa dataa vain käyttäjän määrittelemälle serverille. Serverille ei mobiiliapllikaatiosta tallenneta mitään henkilötietoa käyttäjätunnuksen lisäksi.
