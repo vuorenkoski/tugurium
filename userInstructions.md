@@ -2,11 +2,11 @@
 
 ## Käyttö selaimella
 
-Tugurium kerää ja visualisoi dataa käyttäjän sensoreista, kytkimistä ja kameroista.
+Tugurium kerää, prosessoit ja visualisoi dataa käyttäjän sensoreista, kytkimistä ja kameroista.
 
-Sensorit voivat mitata esimerkiksi lämpötiloja, liikettä, tuulennopeutta ja sademääriä. Sensorit lähettävät mittaustuloksia serverille graphql api:n kautta. Sensorien lähettämä tallennetaan pysyvästi.
+Kytketyt sensorit voivat mitata esimerkiksi lämpötiloja, liikettä, tuulennopeutta ja sademääriä. Sensorit lähettävät mittaustuloksia serverille graphql api:n kautta. Sensorien lähettämät mittaustulokset tallennetaan pysyvästi.
 
-Kytkimet voivat olla suoraan integroitu serveriin, tai jos ne ovat erillisiä ne voivat pollata uutta kytkimen asentoa serveriltä tasaisin väliajoin.
+Kytkimet voivat olla suoraan integroituna serveriin, tai jos ne ovat erillisiä ne voivat pollata uutta kytkimen asentoa serveriltä graphql api:n kautta tasaisin väliajoin. Serverille on tallennettu vain kytkimen nykyinen asento ja viimeinen komento.
 
 Kamerat lähettävät kuvan serverille jpg muodossa. Serverillä on tallennettuna vain viimeiseksi lähetetty kuva.
 
