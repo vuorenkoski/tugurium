@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    paddingBottom: 10,
+  },
+  passwordChange: {
+    flexDirection: 'row',
   },
 })
 
@@ -41,13 +45,13 @@ const Settings = ({ user }) => {
       <View style={styles.row}>
         <PasswordChange user={user} />
       </View>
-      <View style={styles.labelRow}>
+      <View style={styles.passwordChange}>
         <Text textType="heading2">Versiot</Text>
       </View>
-      <View style={styles.labelRow}>
+      <View style={styles.row}>
         <Text>Frontend: Tugurium {VERSION}</Text>
       </View>
-      <View style={styles.labelRow}>
+      <View style={styles.row}>
         <Text>
           Backend: {backendVersion} ({hostname})
         </Text>
