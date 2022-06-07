@@ -1,6 +1,6 @@
 # Tugurium
 
-Weather application, and more
+This application is in Fullstack 2022 project course.
 
 Idea: Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes weather data and some other data. Frontend is build for both browser and Android device.
 
@@ -23,7 +23,7 @@ There are also some example code snippets in C, Python and Arduino to send/get d
 
 ## Backend
 
-Framework: Javascipt, Node, Express, graphQL, Apolloserver, Sequalize, Umzug
+Framework: javascript, Node, Express, graphQL, Apolloserver, Sequalize, Umzug
 
 Database: Postgres
 
@@ -91,12 +91,16 @@ Create database:
 ```
 sudo -u postgres psql
 postgres=# create database tugurium_db;
-postgres=# create user tugurium_user with encrypted password 'secret';
+postgres=# create user tugurium_user with encrypted password 'DB_PASSWORD';
 postgres=# grant all privileges on database tugurium_db to tugurium_user;
 postgres=# \q
 ```
 
-#### 3. Clone repository to /home/pi/tugurium
+#### 3. Clone repository
+
+```
+git clone git@github.com:vuorenkoski/tugurium.git
+```
 
 #### 4. Copy backround service script and activate run-on-boot
 
@@ -123,7 +127,7 @@ sudo service apache2 restart
 
 - SECRET is random secret string
 - SENSOR_TOKEN is static authorization token of sensors,
-- DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
+- DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:DB_PASSWORD@localhost:5432/tugurium_db),
 - ADMIN_PASSWORD initial admin password
 
 #### 7. Install dependencies, build frontend and start background service
