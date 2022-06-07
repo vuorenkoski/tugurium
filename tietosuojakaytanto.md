@@ -4,11 +4,11 @@ Tugurium serveri ja applikaatio on ilmainen ja vapaasti jaettava sovellus, jolla
 
 ## Mobiiliapplikaatio
 
-Applikaatio tallentaa puhelimeen vain serverin nimen, käyttäjätunnuksen ja serverin tuottaman autentikoinnissa käytettävän tokenin. Applikaatio ei kerää tai tallenna käyttäjästä tai laitteesta mitään muuta tietoa. Uloskirjautumisen yhteydessä applikaation muistiin jää vain edellisen servrin osoite.
+Applikaatio tallentaa puhelimeen vain serverin nimen, käyttäjätunnuksen ja serverin tuottaman autentikoinnissa käytettävän tokenin. Applikaatio ei kerää tai tallenna käyttäjästä tai laitteesta mitään muuta tietoa. Nämä tiedot säilyy sovelluksessa kunnes käyttäjä kirjautuu ulos, siitä huolimatta että sovellus suljettaisiin ilman uloskirjautumista. Uloskirjautumisen yhteydessä applikaation muistiin jää vain edellisen serverin osoite.
 
 Applikaatio lähettää ja vastaanottaa dataa vain ja ainoastaan käyttäjän määrittelemälle serverille. Tietojen lähettäminen rajoittuu käyttätunnukseen, salasanaan, mahdolliseen mittaustiedon manuaaliseen lähettämiseen sekä kytkimien asennon muuttamiseen.
 
-Serverille ei mobiiliapllikaatiosta lähetetä mitään henkilötietoa käyttäjätunnuksen lisäksi. Tieto kulkee salatun https ja wss yhteyksien kautta.
+Serverille ei mobiiliapllikaatiosta lähetetä mitään henkilötietoa käyttäjätunnuksen lisäksi. Tieto kulkee salattujen https ja wss yhteyksien kautta.
 
 ## Serveri
 

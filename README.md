@@ -11,7 +11,7 @@ Running example application: [https://tugurium.herokuapp.com](https://tugurium.h
 - sample of 9k datapoints
 - not connected to actual sensors, cameras, switches
 
-Mobile in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium)
+Mobile in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app [exp://exp.host/@vuorenkoski/Tugurium?release-channel=default](exp://exp.host/@vuorenkoski/Tugurium?release-channel=default)
 
 [User instructions in Finnish](userInstructions.md)
 
@@ -27,7 +27,7 @@ Framework: javascript, Node, Express, graphQL, Apolloserver, Sequalize, Umzug
 
 Database: Postgres
 
-Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database (postgres). Sensor/image/Switch data can be fetched from api layer. Sensordata can aggregated hourly and daily (sum or average).
+Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database (postgres). Sensor/image/Switch data can be fetched from api layer. When fetching sensor data, it can be aggregated hourly and daily (sum or average).
 
 ### Development environment api
 
@@ -35,7 +35,7 @@ Data from sensors is pushed though api layear. Meteorological data is automatica
 - http://localhost:4000/api/graphql
 - ws://localhost:4000/api/graphql
 
-### production environment api
+### Example production environment api
 
 - https://tugurium.herokuapp.com/api/image
 - https://tugurium.herokuapp.com/api/graphql
@@ -49,7 +49,7 @@ Data is fetched from backend thourgh api layer and presented in different format
 
 Development environment url: http://localhost:3000/
 
-Production environment url: https://tugurium.herokuapp.com
+Example production environment url: https://tugurium.herokuapp.com
 
 ## Mobile version
 
@@ -172,5 +172,4 @@ Dump and restore sql data when needed:
 pg_dump -F c -U tugurium_user -h localhost tugurium_db -f sqlfile.sql
 
 sudo -u postgres pg_restore -d tugurium_db -c sqlfile.sql
-
 ```

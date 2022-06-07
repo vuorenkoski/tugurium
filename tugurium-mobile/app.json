@@ -3,7 +3,7 @@
     "name": "Tugurium",
     "slug": "Tugurium",
     "version": "0.9.4",
-    "description": "Home automation client",
+    "description": "Weather application, and more...",
     "githubUrl": "https://github.com/vuorenkoski/tugurium",
     "orientation": "default",
     "icon": "./assets/newIcon3.png",

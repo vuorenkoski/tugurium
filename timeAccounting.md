@@ -30,10 +30,12 @@
 | 4.6.  | 4     | websocket subprotocol changed (mobile), publish in expo, codesnippet for arduino                                                                      |
 | 5.6.  | 4     | userinstructions, readme update, problem searching, fiew fixes                                                                                        |
 | 6.6.  | 6     | version number in settings, refactoring, view for adding measurement (browser+mobile)                                                                 |
-| total | 202   |                                                                                                                                                       |
+| 7.6.  | 1     | documentation updates                                                                                                                                 |
+| total | 203   |                                                                                                                                                       |
 
 ## Product backlog
 
+- web versio mobiilista?
 - hostin ja tokenien vaihto
 - aitan kytkimen koodaus
 
