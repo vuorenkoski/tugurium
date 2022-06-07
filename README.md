@@ -95,7 +95,7 @@ postgres=# \q
 git clone git@github.com:vuorenkoski/tugurium.git
 ```
 
-#### 4. Copy backround service script and activate run-on-boot
+#### 4. Create service for backend and make it active run-on-boot
 
 ```
 sudo cp /home/pi/tugurium/tugurium-back/tugurium.service /etc/systemd/system/.
@@ -132,13 +132,13 @@ npm install --prefix tugurium-back/
 npm install --prefix tugurium-front/
 npm run build --prefix tugurium-front/
 sudo service tugurium start
-sudo systemctl enable tugurium
 ```
 
 #### 8. Insert to crontab a script to fetch data from FMI (in this example every 60 minutes)
 
 ```
-30 * * * * sh /home/pi/tugurium/getFmiData.sh
+30 * * * * sh /home/pi/tugurium/getFmiDataVihti.sh
+15,45 * * * * sh /home/pi/tugurium/getFmiDataEspoo.sh
 ```
 
 ## Mobile version

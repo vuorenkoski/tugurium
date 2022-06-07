@@ -35,11 +35,10 @@
 
 ## Product backlog
 
-- web versio mobiilista?
-- hostin ja tokenien vaihto
 - aitan kytkimen koodaus
+- hostin ja tokenien vaihto
 
-sensorit:
+sensorien päivitys:
 
 - aitta: kytkin, lämpötila, kamera
 - mökki: lämpötilat, kamerat
