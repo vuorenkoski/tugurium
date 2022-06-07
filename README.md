@@ -4,14 +4,14 @@ This application is in Fullstack 2022 project course.
 
 Idea: Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes weather data and some other data. Frontend is build for both browser and Android device.
 
-Running example application: https://tugurium.herokuapp.com
+Running example application: [https://tugurium.herokuapp.com](https://tugurium.herokuapp.com)
 
 - credentials (normal user): vieras, fullstack
 - Heroku platform
 - sample of 9k datapoints
 - not connected to actual sensors, cameras, switches
 
-Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
+Mobile in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium)
 
 [User instructions in Finnish](userInstructions.md)
 
