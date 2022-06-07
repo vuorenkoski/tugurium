@@ -1,25 +1,21 @@
 # Tugurium
 
-Project work for FullStack 2022
+Weather application, and more
 
-Idea: frontend and backend (running in local Raspberry pi server), which collects and visualizes temperature and some other data. Frontend is build for both browser and Android device.
+Idea: Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes weather data and some other data. Frontend is build for both browser and Android device.
 
-Running application: https://tempview.vuorenkoski.fi/
-
-- Raspberry pi 2
-- 2.9m datapoints
-- somewhat slow with some queries concering many datapoints
-
-Running application: https://tugurium.herokuapp.com
+Running example application: https://tugurium.herokuapp.com
 
 - credentials (normal user): vieras, fullstack
 - Heroku platform
-- 9k datapoints (there is 10k limit in free plan)
-- not connected to actual sensors, cameras, switches or FMI data
+- sample of 9k datapoints
+- not connected to actual sensors, cameras, switches
 
 Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
 [User instructions in Finnish](userInstructions.md)
+
+[Privacy policy in Finnish](tietosuojakaytanto.md)
 
 [Time accounting](timeAccounting.md)
 
@@ -27,7 +23,7 @@ There are also some example code snippets in C, Python and Arduino to send/get d
 
 ## Backend
 
-Framework: Express, graphQL, Apolloserver, Sequalize, Umzug
+Framework: Javascipt, Node, Express, graphQL, Apolloserver, Sequalize, Umzug
 
 Database: Postgres
 
@@ -46,7 +42,7 @@ Data from sensors is pushed though api layear. Meteorological data is automatica
 - http://localhost:4000/api/graphql
 - ws://localhost:4000/api/graphql
 
-### Development environment api
+### production environment api
 
 - https://tugurium.herokuapp.com/api/image
 - https://tugurium.herokuapp.com/api/graphql
@@ -54,21 +50,17 @@ Data from sensors is pushed though api layear. Meteorological data is automatica
 
 ## Frontend
 
-Framework: React, Apollo-client, Victory, Bootstrap
+Framework: Javascipt, Node, React, Apollo-client, Victory, Bootstrap
 
 Data is fetched from backend thourgh api layer and presented in different formats: current values, tables and graphs. In addition switches can be activated from frontend. Same functionalities are implemented to both browser and android platform (except settings are available only in browser).
 
-### Development environment url
+Development environment url: http://localhost:3000/
 
-- http://localhost:3000/
-
-### production environment url
-
-- https://tugurium.herokuapp.com
+Production environment url: https://tugurium.herokuapp.com
 
 ## Mobile version
 
-Framwork: Expo, React-native, Apollo-client, Victory-native
+Framwork: Javascipt, Expo, React-native, Apollo-client, Victory-native
 
 Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
@@ -80,13 +72,13 @@ eas build -p android --profile apk
 
 ## Setting up production environment in raspberry pi
 
-1. Install node, npm and postgre
+#### 1. Install node, npm and postgre
 
 ```
 sudo apt install postgresql postgresql-contrib nodejs
 ```
 
-2. Create database (instructions in Create database -section)
+#### 2. Create database (instructions in Create database -section)
 
 Install PostgreSQL:
 
@@ -104,9 +96,9 @@ postgres=# grant all privileges on database tugurium_db to tugurium_user;
 postgres=# \q
 ```
 
-3. Clone repository to /home/pi/tugurium
+#### 3. Clone repository to /home/pi/tugurium
 
-4. Copy backround service script and activate run-on-boot
+#### 4. Copy backround service script and activate run-on-boot
 
 ```
 sudo cp /home/pi/tugurium/tugurium-back/tugurium.service /etc/systemd/system/.
@@ -114,7 +106,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable tugurium.service
 ```
 
-5. Apache2 config
+#### 5. Apache2 config
 
 Make necessary configs to tugurium-ssl.conf. After that:
 
@@ -127,14 +119,14 @@ sudo a2ensite tugurium-ssl.conf
 sudo service apache2 restart
 ```
 
-6. Create .env file to tugurium-back/.env
+#### 6. Create .env file to tugurium-back/.env
 
 - SECRET is random secret string
 - SENSOR_TOKEN is static authorization token of sensors,
 - DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
 - ADMIN_PASSWORD initial admin password
 
-7. Install dependencies, build frontend and start background service
+#### 7. Install dependencies, build frontend and start background service
 
 copy tugurium-back/tugurium.service to /etc/systemd/system
 
@@ -146,7 +138,7 @@ sudo service tugurium start
 sudo systemctl enable tugurium
 ```
 
-8. Insert to crontab a script to fetch data from FMI (in this example every 60 minutes)
+#### 8. Insert to crontab a script to fetch data from FMI (in this example every 60 minutes)
 
 ```
 30 * * * * sh /home/pi/tugurium/getFmiData.sh
@@ -160,7 +152,7 @@ Build apk:
 eas build -p android --profile apk
 ```
 
-## Some methods for database handling
+## Some methods for database maintenance
 
 Import old csv data to backend:
 
