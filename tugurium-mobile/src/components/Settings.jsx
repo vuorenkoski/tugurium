@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 
 const Settings = ({ user }) => {
   const [backendVersion, setBackendVersion] = useState('')
+  const [hostname, setHostname] = useState('')
   const authStorage = useAuthStorage()
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const Settings = ({ user }) => {
       }
     }
     authStorage.getHost().then((host) => {
+      setHostname(host)
       xhttp.open('GET', `https://${host}/api/version`, true)
       xhttp.send()
     })
@@ -46,7 +48,9 @@ const Settings = ({ user }) => {
         <Text>Frontend: Tugurium {VERSION}</Text>
       </View>
       <View style={styles.labelRow}>
-        <Text>Backend: {backendVersion}</Text>
+        <Text>
+          Backend: {backendVersion} ({hostname})
+        </Text>
       </View>
     </View>
   )
