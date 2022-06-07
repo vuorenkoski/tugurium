@@ -29,13 +29,6 @@ Database: Postgres
 
 Data from sensors is pushed though api layear. Meteorological data is automatically collected hourly. Data is stored in SQL database (postgres). Sensor/image/Switch data can be fetched from api layer. Sensordata can aggregated hourly and daily (sum or average).
 
-### ENV definitions
-
-- SECRET is random secret string
-- SENSOR_TOKEN is static authorization token of sensors,
-- DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:secret@localhost:5432/tugurium_db),
-- ADMIN_PASSWORD initial admin password
-
 ### Development environment api
 
 - http://localhost:4000/api/image
