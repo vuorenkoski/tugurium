@@ -1,6 +1,6 @@
 # Tugurium
 
-This application is in Fullstack 2022 project course.
+This application is made in Fullstack 2022 project -course.
 
 Idea: Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes weather data and some other data. Frontend is build for both browser and Android device.
 
