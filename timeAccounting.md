@@ -31,7 +31,8 @@
 | 5.6.  | 4     | userinstructions, readme update, problem searching, fiew fixes                                                                                        |
 | 6.6.  | 6     | version number in settings, refactoring, view for adding measurement (browser+mobile)                                                                 |
 | 7.6.  | 1     | documentation updates                                                                                                                                 |
-| total | 203   |                                                                                                                                                       |
+| 9.6.  | 1     | playstore settings and other tuning                                                                                                                   |
+| total | 204   |                                                                                                                                                       |
 
 ## Product backlog
 
