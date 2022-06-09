@@ -11,7 +11,9 @@ Running example application: [https://tugurium.herokuapp.com](https://tugurium.h
 - sample of 9k datapoints
 - not connected to actual sensors, cameras, switches
 
-Mobile in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app [exp://exp.host/@vuorenkoski/Tugurium?release-channel=default](exp://exp.host/@vuorenkoski/Tugurium?release-channel=default)
+Mobile app in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app: exp://exp.host/@vuorenkoski/Tugurium?release-channel=default
+
+Mobile app in Play store: [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
 
 [User instructions in Finnish](userInstructions.md)
 
