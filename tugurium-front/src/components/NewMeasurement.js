@@ -86,7 +86,7 @@ const NewMeasurement = () => {
                   defaultValue="empty"
                 >
                   <option disabled value="empty">
-                    -- valitse --
+                    -- valitse sensori --
                   </option>
                   {sensors.data.allSensors.map((s) => (
                     <option key={s.sensorName} value={s.sensorName}>
