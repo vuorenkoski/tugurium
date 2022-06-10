@@ -10,7 +10,7 @@ const checkToken = async (auth) => {
     data.sensor = data.token === SENSOR_TOKEN
     if (!data.sensor) {
       try {
-        const decodedToken = jwt.verify(data['token'], SECRET)
+        const decodedToken = jwt.verify(data.token, SECRET)
         data.currentUser = await User.findByPk(decodedToken.id)
       } catch (error) {
         return data

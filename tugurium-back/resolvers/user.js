@@ -40,7 +40,7 @@ const createUser = async (root, args, context) => {
   const { username, password } = args
 
   if (password.length < 5) {
-    throw new UserInputError('passowrd must be alteast 5 characters long', {
+    throw new UserInputError('password must be alteast 5 characters long', {
       invalidArgs: args.name,
     })
   }

@@ -15,7 +15,7 @@
 //   OneWire 2.3.7
 
 
-int debug=0;
+int debug=1;
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -48,7 +48,7 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(DC_PIN, CE_PIN, RST_PIN);
 // Configs
 const char* ssid = "xxx";
 const char* password = "xxx";
-String token = "bearer xxxx";
+String token = "bearer xxx";
 String host = "https://tugurium.herokuapp.com/api/graphql";
 const int8_t interval = 20; // Measurement interval in minutes
 const int8_t samples = 15; // number of samples from thermistor, more takes longer  but is more 'smooth'
@@ -151,7 +151,11 @@ double getTempFromServer(String sensor) {
           if (debug) Serial.println(payload);
           DeserializationError error = deserializeJson(doc, payload);
           if (!error) {
-            value = doc["data"]["sensorDetails"]["lastValue"];
+            if (doc["errors"]) {
+              Serial.println("server returned error");           
+            } else {
+              value = doc["data"]["sensorDetails"]["lastValue"];              
+            }
           }
         }
       } else {
