@@ -76,7 +76,7 @@ const setSwitchCommand = async (root, args, context) => {
 }
 
 const getSwitchCommand = async (root, args, context) => {
-  if (!context.token.sensor) {
+  if (!context.sensor) {
     throw new AuthenticationError('Not authorized')
   }
   const sw = await Switch.findOne({ where: { name: args.name } })

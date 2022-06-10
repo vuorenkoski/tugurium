@@ -61,6 +61,7 @@ int get_command() {
   server = create_socket();
   if(server != 0) {
     if (debug) printf("Successfully made the TCP connection to: %s.\n", hostname);
+  } else {
     return -1;
   }
 
@@ -156,15 +157,14 @@ int get_data(SSL *ssl) {
   if (debug) printf("Response:\n%s\n",response);
 
   // crude strin manipulation to find correct information...
-  str = strstr(response, "getSwitchCommand");
-  if (str==NULL)
-    return -1;
+  str = strstr(response, "\"data\"");
+  if (str==NULL) return -1;
+  str = strstr(str, "\"getSwitchCommand\"");
+  if (str==NULL) return -1;
   str = strstr(str, ":") + 1;
-  if (str==NULL)
-    return -1;
+  if (str==NULL) return -1;
   strend = strstr(str, "}");
-  if (strend==NULL)
-    return -1;
+  if (strend==NULL) return -1;
   strend[0] = '\0';
   for(int i = 0; str[i]; i++) str[i] = tolower(str[i]);
   if (debug) printf("----\nResponse: %s\n", str);
