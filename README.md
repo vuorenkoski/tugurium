@@ -15,7 +15,7 @@ Mobile app in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@v
 
 Mobile app in Play store: [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
 
-[User instructions in Finnish](userInstructions.md)
+[User instructions in Finnish](kayttoohje.md)
 
 [Privacy policy in Finnish](tietosuojakaytanto.md)
 

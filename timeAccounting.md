@@ -39,6 +39,10 @@
 - aitan kytkimen koodaus
 - hostin ja tokenien vaihto
 
+New to previous version
+
+- hostname visible in settings (mobile)
+
 sensorien päivitys:
 
 - aitta: kytkin, lämpötila, kamera
