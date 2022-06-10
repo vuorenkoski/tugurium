@@ -36,15 +36,8 @@
 
 ## Product backlog
 
-- aitan kytkimen koodaus
-- hostin ja tokenien vaihto
+- front: witch to blue when its on
 
 New to previous version
 
 - hostname visible in settings (mobile)
-
-sensorien päivitys:
-
-- aitta: kytkin, lämpötila, kamera
-- mökki: lämpötilat, kamerat
-- koti: nappi, alakerran lämpö, yläkerran lämpö
