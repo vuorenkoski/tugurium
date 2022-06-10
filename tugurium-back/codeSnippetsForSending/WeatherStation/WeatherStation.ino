@@ -15,7 +15,7 @@
 //   OneWire 2.3.7
 
 
-int debug=1;
+int debug=0;
 
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -152,7 +152,7 @@ double getTempFromServer(String sensor) {
           DeserializationError error = deserializeJson(doc, payload);
           if (!error) {
             if (doc["errors"]) {
-              Serial.println("server returned error");           
+              if (debug) Serial.println("server returned error");           
             } else {
               value = doc["data"]["sensorDetails"]["lastValue"];              
             }
