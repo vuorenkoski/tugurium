@@ -13,7 +13,7 @@ Running example application: [https://tugurium.herokuapp.com](https://tugurium.h
 
 Mobile app in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app: exp://exp.host/@vuorenkoski/Tugurium?release-channel=default
 
-Mobile app in Play store: [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
+Mobile app in Play store (0.9.1 in production, 0.9.4 in beta testing): [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
 
 [User instructions in Finnish](kayttoohje.md)
 
