@@ -68,7 +68,7 @@ const SwitchesView = () => {
                       {sw.on ? (
                         <div className="onButton">ON</div>
                       ) : (
-                        <div>OFF</div>
+                        <div className="offButton">OFF</div>
                       )}
                     </td>
                     {admin && (
