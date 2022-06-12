@@ -41,7 +41,7 @@ const Users = ({ user }) => {
     <div>
       <Row className="p-4 pt-3 pb-1">
         <Col>
-          <h3>Salasana</h3>
+          <h3>Salasanan vaihto</h3>
         </Col>
       </Row>
       <Row className="p-4 pt-1 pb-1">

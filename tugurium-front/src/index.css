@@ -57,6 +57,24 @@
   font: inherit;
 }
 
+.onButton {
+  color: white;
+  background: #0d6efd;
+  border: none;
+  border-radius: 5px;
+  padding: 7px;
+  font: inherit;
+}
+
+.offButton {
+  color: white;
+  background: silver;
+  border: none;
+  border-radius: 5px;
+  padding: 7px;
+  font: inherit;
+}
+
 .addButton:hover {
   color: silver;
   font: inherit;

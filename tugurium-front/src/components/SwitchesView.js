@@ -1,4 +1,4 @@
-import { Table, Row, Col, Button } from 'react-bootstrap'
+import { Table, Row, Col } from 'react-bootstrap'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import {
   ALL_SWITCHES,
@@ -64,16 +64,22 @@ const SwitchesView = () => {
                 {switches.data.allSwitches.map((sw) => (
                   <tr key={sw.id}>
                     <td>{sw.description}</td>
-                    <td>{sw.on ? <div>ON</div> : <div>OFF</div>}</td>
+                    <td>
+                      {sw.on ? (
+                        <div className="onButton">ON</div>
+                      ) : (
+                        <div>OFF</div>
+                      )}
+                    </td>
                     {admin && (
                       <td>
-                        <Button
-                          variant={sw.command ? 'primary' : 'secondary'}
+                        <button
+                          className={sw.command ? 'onButton' : 'offButton'}
                           size="sm"
                           onClick={() => handleClick(sw)}
                         >
                           {sw.command ? <div>ON</div> : <div>OFF</div>}
-                        </Button>
+                        </button>
                       </td>
                     )}
                     <td>{convertDate(Number(sw.updatedAt) / 1000)}</td>

@@ -36,8 +36,7 @@
 
 ## Product backlog
 
-- front: witch to blue when its on
-
 New to previous version
 
 - hostname visible in settings (mobile)
+- minor bug fixes and ui changes
