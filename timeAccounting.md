@@ -33,10 +33,3 @@
 | 7.6.  | 1     | documentation updates                                                                                                                                 |
 | 9.6.  | 1     | playstore settings and other tuning                                                                                                                   |
 | total | 204   |                                                                                                                                                       |
-
-## Product backlog
-
-New to previous version
-
-- hostname visible in settings (mobile)
-- minor bug fixes and ui changes
