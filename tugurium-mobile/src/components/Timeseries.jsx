@@ -213,7 +213,7 @@ const Timeseries = () => {
         <>
           <View style={styles.optionListRow}>
             <View style={styles.optionComponentStyle}>
-              <Text textType="heading2">Datapisteiden yhdistäminen</Text>
+              <Text textType="heading2">Mittauspisteiden yhdistäminen</Text>
               <DropDownSelector
                 selectorType="DropDown"
                 data={[

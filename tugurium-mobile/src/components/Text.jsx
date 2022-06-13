@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.primary,
     color: theme.colors.primary,
     padding: 20,
-    paddingTop: 40,
   },
 })
 

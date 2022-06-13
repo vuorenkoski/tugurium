@@ -202,7 +202,7 @@ const Timeseries = () => {
                   <Col className="col-auto border rounded m-3 p-3">
                     <Row>
                       <Col>
-                        <h4>Datapisteiden yhdistäminen</h4>
+                        <h4>Mittauspisteiden yhdistäminen</h4>
                       </Col>
                     </Row>
                     <Row className="pt-1">

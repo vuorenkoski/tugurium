@@ -176,7 +176,7 @@ const Statistics = () => {
             />
           </View>
           <View style={styles.graphRow}>
-            {!measurements && selectedSensor && (
+            {!measurements && selectedSensor.sensorName && (
               <Text textType="loading">{LOADING}</Text>
             )}
             {measurements && measurements.length === 0 && (
