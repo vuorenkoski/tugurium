@@ -74,6 +74,6 @@ Sovellusta voi käyttää mobiiliversiossa vastaavalla tavalla kuin selaimessaki
 
 - Käyttäjän tulee kirjatuessa syöttää myös käytettävän servirin nimi. Serverin nimi säilyy sovelluksen muistissa myös kirjautumisen jälkeen.
 - Navigaatio tulee näkyviin painamalla menu-logoa sovelluksen oikeassa yläkulmassa.
-- Graafeja ei voi zoomata eikä niissä näy yksittäisten datapisteiden tiedot.
+- Graafeja ei voi zoomata eikä niissä näy yksittäisten mittauspisteiden tiedot.
 - Kun kameran koko kuva on valittu, pääsee tästä takaisin panamalla kuvaa.
-- Asetuksista on käytössä vain salanan vaihto.
+- Asetuksista on käytössä vain salasanan vaihto.

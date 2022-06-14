@@ -21,7 +21,7 @@ Mobile app in Play store (0.9.1 in production, 0.9.4 in beta testing): [https://
 
 [Time accounting](timeAccounting.md)
 
-There are also some example code snippets in C, Python and Arduino to send/get data from sensors, switches and cameras (tugurium-back/codeSnippetsForSending).
+There are also some example code snippets in C, Python and Arduino to send/get data from sensors, switches and cameras (tugurium-back/codeSnippetsForSending). Additionally, in tugurium-back/ folder one can find javascript progrms to get data to server from Finnish Meterological Institutes open data api: [https://en.ilmatieteenlaitos.fi/open-data](https://en.ilmatieteenlaitos.fi/open-data). These kind of programs could run for example hourly.
 
 ## Backend
 
