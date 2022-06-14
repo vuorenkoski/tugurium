@@ -64,7 +64,9 @@ Poistaminen tapahtuu painamalla punaista 'poista' tekstiä. Ennen poistoa sovell
 
 Päivittäminen tapahtuu painamalla 'päivitä' tekstiä. Tällöin tulee näkyviin popup-ikkuna, jossa tietoja voi päivittää. Lopuksi painetaan 'päivitä tiedot' nappia. Lisääminen tapahtuu vastaavalla tavalla painamalla 'lisää uuusi' nappia.
 
-Koontimetodilla tarkoitetaan menetelmää, jolla mittauspisteitä yhdistetään tunneittain, päivittäin tai kuukausittain. Tässä on kaksi vaihtoehtoa: summa (SUM) tai keskiarvo (AVG). Keskiarvo soveltuu esimerkiksi lämpötiloille, jossa päivän lämpötila on päivän kaikkien mittauspisteiden keskiarvo. Summa soveltuu esimerkiksi sademäärälle: vuorokauden sademäärä on tuntikohtaisten sademäärien summa.
+**Sensorin koontimetodi:** Koontimetodilla tarkoitetaan menetelmää, jolla mittauspisteitä yhdistetään tunneittain, päivittäin tai kuukausittain. Tässä on kaksi vaihtoehtoa: summa (SUM) tai keskiarvo (AVG). Keskiarvo soveltuu esimerkiksi lämpötiloille, jossa päivän lämpötila on päivän kaikkien mittauspisteiden keskiarvo. Summa soveltuu esimerkiksi sademäärälle: vuorokauden sademäärä on tuntikohtaisten sademäärien summa.
+
+**Kytkimen komentotiedosto:** Kytkin voi olla osa serveriä tai erillinen. Mikäli kytkintä hallitsee serveri, voidaan määrittää serverillä oleva tiedosto jonka välilytksellä kytkimen asennon muuttaminen tapahtuu. Kytkimelle annetaan komento ON kirjoittamalla tiedostoon merkki '1' ja OFF kirjoittamalla tiedostoon '0'. Mikäli asetuksissa ei kytkimelle ole määritelty tiedoston nimeä, oletetaan että kytkin pollaa komentoa serveriltä tasaisin väliajoin.
 
 ## Käyttö mobiilissa
 
