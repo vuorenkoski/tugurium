@@ -1,4 +1,4 @@
-import { Table, Row, Col } from 'react-bootstrap'
+import { Table, Row, Col, Form } from 'react-bootstrap'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import {
   ALL_SWITCHES,
@@ -21,10 +21,10 @@ const SwitchesView = () => {
 
   const admin = JSON.parse(localStorage.getItem('tugurium-user')).admin
 
-  const handleClick = async (sw) => {
+  const handleClick = async (e) => {
     const variables = {
-      command: !sw.command,
-      setSwitchId: Number(sw.id),
+      command: e.target.checked,
+      setSwitchId: Number(e.target.name),
     }
     await setSwitch({ variables })
   }
@@ -56,13 +56,13 @@ const SwitchesView = () => {
             <Table striped>
               <tbody>
                 <tr>
-                  <th>Kytkin</th>
+                  <th>Nimi</th>
                   <th>Tila</th>
-                  {admin && <th>Komento</th>}
+                  {admin && <th>Kytkin</th>}
                   <th>Aikaleima</th>
                 </tr>
                 {switches.data.allSwitches.map((sw) => (
-                  <tr key={sw.id}>
+                  <tr key={sw.id} style={{ verticalAlign: 'middle' }}>
                     <td>{sw.description}</td>
                     <td>
                       {sw.on ? (
@@ -73,13 +73,15 @@ const SwitchesView = () => {
                     </td>
                     {admin && (
                       <td>
-                        <button
-                          className={sw.command ? 'onButton' : 'offButton'}
-                          size="sm"
-                          onClick={() => handleClick(sw)}
-                        >
-                          {sw.command ? <div>ON</div> : <div>OFF</div>}
-                        </button>
+                        <Form>
+                          <Form.Check
+                            type="switch"
+                            name={sw.id}
+                            checked={sw.command}
+                            onChange={handleClick.bind(this)}
+                            style={{ transform: 'scale(1.5)', margin: 10 }}
+                          />
+                        </Form>
                       </td>
                     )}
                     <td>{convertDate(Number(sw.updatedAt) / 1000)}</td>

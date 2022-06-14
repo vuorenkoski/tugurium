@@ -32,4 +32,9 @@
 | 6.6.  | 6     | version number in settings, refactoring, view for adding measurement (browser+mobile)                                                                 |
 | 7.6.  | 1     | documentation updates                                                                                                                                 |
 | 9.6.  | 1     | playstore settings and other tuning                                                                                                                   |
-| total | 204   |                                                                                                                                                       |
+| 14.6. | 1     | switch instaed of button in switches view (mobile)                                                                                                    |
+| total | 205   |                                                                                                                                                       |
+
+## Changes after last version
+
+- button to switch in switch-view (front)
