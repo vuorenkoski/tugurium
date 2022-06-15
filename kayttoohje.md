@@ -16,9 +16,9 @@ Sovellukseen tulee kirjautua valmiiksi luodolla käyttäjätunnuksella ja salasa
 
 Kirjautumisen jälkeen sovelluksen navigaatio on yläpalkissa, josta käyttäjää voi valita haluamansa sivun.
 
-### Lämpötilat nyt
+### Sensorit
 
-Kirjautumisen jälkeen aukeaa automaattisesti välilehti ’Lämpötilat nyt’. Tässä listassa näkyvät kaikki asennetut sensorit, niiden viimeisin mittaustulos ja tieto koska tämä mittaus on tehty.
+Kirjautumisen jälkeen aukeaa automaattisesti välilehti ’Sensorit’. Tässä listassa näkyvät kaikki asennetut sensorit, niiden viimeisin mittaustulos ja tieto koska tämä mittaus on tehty.
 
 ### Aikasarjat
 
@@ -52,7 +52,7 @@ Välilehti näyttää luettelon kaikista sensoreista, niiden mittauspisteiden lu
 
 Lisäksi välilehdellä voi valita sensorin jonka osalta näytetään graafi mittauspisteiden lukumäärästä vuorokaudessa. Graafi on interaktiivinen kuten ’Aikasarjat’ kohdassa esiteltiin.
 
-### Lisää mittaus
+### Uusi mittaus
 
 Välilehti näkyy vain admin käyttäjäjälle. Tällä voidaan manuaalisesti syöttää mittaustulos serverille. Ensin valitaan sensori jolla mittaustulos kirjataan. Tämän jälkeen syötetään mittaustulos (desimaaliluku) ja painetaan lisää.
 

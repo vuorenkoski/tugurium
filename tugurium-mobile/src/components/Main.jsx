@@ -105,7 +105,7 @@ const MenuElement = ({ logout, admin }) => {
             optionsWrapper: styles.optionsWrapper,
           }}
         >
-          <MenuItem text="Lämpötilat" page="/" navigate={navigate} />
+          <MenuItem text="Sensorit" page="/" navigate={navigate} />
           <MenuItem text="Aikasarjat" page="/timeseries" navigate={navigate} />
           <MenuItem text="Vuosivertailu" page="/years" navigate={navigate} />
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
@@ -113,7 +113,7 @@ const MenuElement = ({ logout, admin }) => {
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
           {admin && (
             <MenuItem
-              text="Lisää mittaus"
+              text="Uusi mittaus"
               page="/newMeasurement"
               navigate={navigate}
             />

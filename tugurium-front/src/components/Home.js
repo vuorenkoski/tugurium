@@ -15,7 +15,7 @@ const Home = () => {
     <div>
       <Row className="p-4 pb-0">
         <Col>
-          <h2>Viimeisimmät lämpötilat</h2>
+          <h2>Viimeisimmät mittaukset</h2>
         </Col>
       </Row>
       {!sensors.data && sensors.loading && (

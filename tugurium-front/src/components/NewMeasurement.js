@@ -59,7 +59,7 @@ const NewMeasurement = () => {
     <div>
       <Row className="p-4 pb-0">
         <Col>
-          <h2>Lisää mittaus</h2>
+          <h2>Lisää uusi mittauspiste</h2>
         </Col>
       </Row>
       {!sensors.data && sensors.loading && (

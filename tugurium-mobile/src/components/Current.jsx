@@ -67,7 +67,7 @@ const Current = () => {
   return (
     <ScrollView>
       <View style={styles.labelRow}>
-        <Text textType="heading1">Viimeisimmät lämpötilat</Text>
+        <Text textType="heading1">Viimeisimmät mittaukset</Text>
       </View>
       {!sensors.data && sensors.loading && (
         <View style={styles.row}>

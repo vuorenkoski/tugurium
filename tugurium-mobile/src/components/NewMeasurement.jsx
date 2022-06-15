@@ -89,7 +89,7 @@ const NewMeasurement = () => {
   return (
     <View>
       <View style={styles.labelRow}>
-        <Text textType="heading1">Lisää mittaus</Text>
+        <Text textType="heading1">Lisää uusi mittauspiste</Text>
       </View>
       {!sensors.data && sensors.loading && (
         <View style={styles.row}>

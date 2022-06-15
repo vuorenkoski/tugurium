@@ -69,7 +69,7 @@ const App = () => {
                     isActive ? 'activeMenuitem' : 'menuitem'
                   }
                 >
-                  Lämpötilat nyt
+                  Sensorit
                 </NavLink>
               </Nav.Link>
               <Nav.Link href="#" as="span">
@@ -130,7 +130,7 @@ const App = () => {
                       isActive ? 'activeMenuitem' : 'menuitem'
                     }
                   >
-                    Lisää mittaus
+                    Uusi mittaus
                   </NavLink>
                 </Nav.Link>
               )}
