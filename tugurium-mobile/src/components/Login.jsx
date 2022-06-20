@@ -52,7 +52,10 @@ const styles = StyleSheet.create({
 const LoginForm = ({ onSubmit }) => {
   return (
     <View style={styles.inputBox}>
-      <FormikTextInput name="host" placeholder="serveri" />
+      <FormikTextInput
+        name="host"
+        placeholder="serveri, esim. www.example.com"
+      />
       <FormikTextInput
         name="username"
         placeholder="käyttäjänimi"
