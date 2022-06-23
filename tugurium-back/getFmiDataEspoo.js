@@ -65,7 +65,7 @@ const parseAndSaveMostRecent = async (data) => {
         where: { sensorName: nameConversion[keys[i]] },
       })
       const value = parseFloat(response[keys[i]].value)
-      if (value) {
+      if (!isNaN(value)) {
         const timestamp = response[keys[i]].date.getTime() / 1000
         const data = {
           sensorId: sensor.id,
