@@ -1,5 +1,5 @@
-import { View, StyleSheet } from 'react-native'
-import { useState } from 'react'
+import { View, StyleSheet, AppState } from 'react-native'
+import { useState, useEffect } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 
 import Text from './Text'
@@ -138,14 +138,27 @@ const Timeseries = () => {
     onError: (e) => console.log(e),
   })
 
-  const handleSensorChange = async (value) => {
-    setSelectedSensors(value)
+  useEffect(() => {
+    AppState.addEventListener('change', (nextAppState) => {
+      if (
+        graphData.length>0 &&
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        refreshData(selectedSensors, period, year)
+      }
+      appState.current = nextAppState
+    })
+  }, [])
+
+  const refreshData = async (selectedSensors, period, year) => {
     const newData = []
 
-    for (let i = 0; i < value.length; i++) {
+    for (let i in selectedSensors) {
+      const sensor = selectedSensors[i]
       const resp = await getSensorData({
         variables: {
-          sensorName: value[i],
+          sensorName: sensor,
           average: period,
           minDate: year.minEpoch,
           maxDate: year.maxEpoch,
@@ -159,44 +172,21 @@ const Timeseries = () => {
     setGraphData(newData)
   }
 
+  const handleSensorChange = async (value) => {
+    setSelectedSensors(value)
+    refreshData(value, period, year)
+  }
+
   const handlePeriodChange = async (item) => {
     const value = item.value
     setPeriod(value)
-    const newData = []
-    for (let i in selectedSensors) {
-      const sensor = selectedSensors[i]
-      const resp = await getSensorData({
-        variables: {
-          sensorName: sensor,
-          average: value,
-          minDate: year.minEpoch,
-          maxDate: year.maxEpoch,
-        },
-      })
-      const processedData = processData(resp.data)
-      if (processedData) newData.push(processedData)
-    }
-    setGraphData(newData)
+    refreshData(selectedSensors, value, year)
   }
 
   const handleYearChange = async (item) => {
     const value = item
     setYear(value)
-    const newData = []
-    for (let i in selectedSensors) {
-      const sensor = selectedSensors[i]
-      const resp = await getSensorData({
-        variables: {
-          sensorName: sensor,
-          average: period,
-          minDate: value.minEpoch,
-          maxDate: value.maxEpoch,
-        },
-      })
-      const processedData = processData(resp.data)
-      if (processedData) newData.push(processedData)
-    }
-    setGraphData(newData)
+    refreshData(selectedSensors, period, value)
   }
 
   return (
