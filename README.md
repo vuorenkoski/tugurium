@@ -70,16 +70,10 @@ eas build -p android --profile apk
 #### 1. Install node, npm and postgre
 
 ```
-sudo apt install postgresql postgresql-contrib nodejs
+sudo apt install nodejs npm postgresql postgresql-contrib libpq-dev 
 ```
 
-#### 2. Create database (instructions in Create database -section)
-
-Install PostgreSQL:
-
-```
-sudo apt install postgresql postgresql-contrib libpq-dev
-```
+#### 2. Create database
 
 Create database:
 

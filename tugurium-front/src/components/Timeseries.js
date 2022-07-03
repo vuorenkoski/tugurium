@@ -11,6 +11,11 @@ const createYearSeries = (data) => {
   const yearSeries = []
   const currentEpoch = Math.floor(new Date().valueOf() / 1000)
   yearSeries.push({
+    label: '2 päivää',
+    minEpoch: currentEpoch - 60 * 60 * 24 * 2,
+    maxEpoch: currentEpoch,
+  })
+  yearSeries.push({
     label: 'Viimeinen viikko',
     minEpoch: currentEpoch - 60 * 60 * 24 * 7,
     maxEpoch: currentEpoch,
