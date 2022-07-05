@@ -9,6 +9,7 @@ import Statistics from './components/Statistics'
 import SwitchesView from './components/SwitchesView'
 import NewMeasurement from './components/NewMeasurement'
 import ImagesView from './components/ImagesView'
+import MessagesView from './components/MessagesView'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 import { VERSION } from './util/config'
 
@@ -134,6 +135,18 @@ const App = () => {
                   </NavLink>
                 </Nav.Link>
               )}
+              {user.admin && (
+                <Nav.Link href="#" as="span">
+                  <NavLink
+                    to="/messages"
+                    className={({ isActive }) =>
+                      isActive ? 'activeMenuitem' : 'menuitem'
+                    }
+                  >
+                    Viestit
+                  </NavLink>
+                </Nav.Link>
+              )}
               <Nav.Link href="#" as="span">
                 <NavLink
                   to="/settings"
@@ -161,6 +174,7 @@ const App = () => {
           <Route path="/annual" element={<Years />} />
           <Route path="/" element={<Home />} />
           <Route path="/timeseries" element={<Timeseries />} />
+          <Route path="/messages" element={<MessagesView />} />
         </Routes>
       </Router>
     </div>

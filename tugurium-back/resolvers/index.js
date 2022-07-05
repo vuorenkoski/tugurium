@@ -39,6 +39,8 @@ const {
   changePassword,
 } = require('./user')
 
+const { allMessages, newMessage, addMessage } = require('./message')
+
 const resolvers = {
   Query: {
     sensorData,
@@ -54,6 +56,7 @@ const resolvers = {
     getFirstTimestamp,
     getSwitchCommand,
     getUser,
+    allMessages,
   },
   Mutation: {
     addMeasurement,
@@ -72,10 +75,12 @@ const resolvers = {
     deleteSwitch,
     setSwitchCommand,
     setSwitchStatus,
+    addMessage,
   },
   Subscription: {
     statusChanged,
     newMeasurement,
+    newMessage,
   },
 }
 

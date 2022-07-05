@@ -59,12 +59,21 @@ const typeDefs = gql`
     admin: Boolean!
   }
 
+  type Message {
+    id: ID!
+    from: String!
+    message: String!
+    important: Boolean!
+    createdAt: String!
+  }
+
   type Token {
     token: String
     user: User
   }
 
   type Query {
+    allMessages: [Message]
     allSensors: [Sensor]
     allImages: [Image]
     allSwitches: [Switch]
@@ -118,11 +127,13 @@ const typeDefs = gql`
     deleteSwitch(id: Int!): Switch
     setSwitchCommand(id: Int!, command: Boolean): Switch
     setSwitchStatus(name: String!, on: Boolean!): Switch
+    addMessage(from: String!, message: String!, important: Boolean!): Message
   }
 
   type Subscription {
     statusChanged: Switch!
     newMeasurement: Sensor!
+    newMessage: Message!
   }
 `
 
