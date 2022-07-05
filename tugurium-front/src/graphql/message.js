@@ -19,6 +19,7 @@ export const NEW_MESSAGE = gql`
       from
       message
       important
+      createdAt
     }
   }
 `

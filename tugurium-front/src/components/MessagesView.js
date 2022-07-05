@@ -1,7 +1,7 @@
 import { Table, Row, Col } from 'react-bootstrap'
 import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_MESSAGES, NEW_MESSAGE } from '../graphql/message'
-import { convertDate, convertTemp } from '../util/conversions'
+import { convertDate } from '../util/conversions'
 import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const Home = () => {
@@ -45,8 +45,11 @@ const Home = () => {
                 {messages.data.allMessages.map((m) => (
                   <tr key={m.id}>
                     <td>{m.from}</td>
-                    <td>{m.message}</td>
-                    <td>{convertDate(m.createdAt)}</td>
+                    <td>
+                      {m.important && <b>{m.message}</b>}
+                      {!m.important && m.message}
+                    </td>
+                    <td>{convertDate(m.createdAt / 1000)}</td>
                   </tr>
                 ))}
               </tbody>
