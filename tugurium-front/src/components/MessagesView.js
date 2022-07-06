@@ -1,15 +1,25 @@
+import { useEffect } from 'react'
 import { Table, Row, Col } from 'react-bootstrap'
-import { useQuery, useSubscription } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { ALL_MESSAGES, NEW_MESSAGE } from '../graphql/message'
 import { convertDate } from '../util/conversions'
 import { NETWORK_ERROR, LOADING } from '../util/config'
 
 const Home = () => {
-  const messages = useQuery(ALL_MESSAGES, {
+  const { subscribeToMore, ...messages } = useQuery(ALL_MESSAGES, {
     fetchPolicy: 'network-only',
   })
-
-  useSubscription(NEW_MESSAGE)
+  useEffect(() => {
+    subscribeToMore({
+      document: NEW_MESSAGE,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev
+        return Object.assign({}, prev, {
+          allMessages: [subscriptionData.data.newMessage, ...prev.allMessages],
+        })
+      },
+    })
+  }, [])
 
   return (
     <div>

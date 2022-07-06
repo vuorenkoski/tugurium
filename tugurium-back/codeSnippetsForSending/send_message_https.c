@@ -22,7 +22,7 @@ void send_message(char *);
 int create_socket();
 
 // send data with sll connection
-void send_data(char *, SSL *);
+void send_data_message(char *, SSL *);
 
 void main() {
     send_message("tämä on kokeilu viesti");
@@ -66,7 +66,7 @@ void send_message(char *message) {
     if (debug) printf("Error: Could not get a certificate from: %s.\n", hostname);
     return;
   }
-  send_data(message, ssl);
+  send_data_message(message, ssl);
 
   SSL_free(ssl);
   close(server);
@@ -99,7 +99,7 @@ int create_socket() {
   return sockfd;
 }
 
-void send_data(char *message, SSL *ssl) {
+void send_data_message(char *message, SSL *ssl) {
   char *message_fmt = "POST /api/graphql HTTP/1.0\r\nContent-Type: application/json\r\nContent-Length: %i\r\nAuthorization: BEARER %s\r\n\r\n%s";
   char *content_fmt = "{ \"query\": \"%s\", \"variables\": { \"from\": \"%s\", \"message\": \"%s\", \"important\": false }}\r\n";
   char *query = "mutation Mutation($from: String!, $message: String!, $important: Boolean!) {addMessage(from: $from, message: $message, important: $important) {message}}";
