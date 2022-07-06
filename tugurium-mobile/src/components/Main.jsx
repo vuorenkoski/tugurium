@@ -22,6 +22,7 @@ import Images from './Images'
 import Switches from './Switches'
 import Settings from './Settings'
 import Timeseries from './Timeseries'
+import MessagesView from './MessagesView'
 import theme from '../theme'
 import Text from './Text'
 
@@ -110,6 +111,7 @@ const MenuElement = ({ logout, admin }) => {
           <MenuItem text="Vuosivertailu" page="/years" navigate={navigate} />
           <MenuItem text="Kamerat" page="/images" navigate={navigate} />
           <MenuItem text="Kytkimet" page="/switches" navigate={navigate} />
+          <MenuItem text="Viestit" page="/messages" navigate={navigate} />
           <MenuItem text="Tilastoja" page="/statistics" navigate={navigate} />
           {admin && (
             <MenuItem
@@ -176,6 +178,7 @@ const Main = () => {
                 element={<Switches user={user} />}
                 exact
               />
+              <Route path="/messages" element={<MessagesView />} exact />
               <Route path="/timeseries" element={<Timeseries />} exact />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -5,7 +5,7 @@ import { ALL_MESSAGES, NEW_MESSAGE } from '../graphql/message'
 import { convertDate } from '../util/conversions'
 import { NETWORK_ERROR, LOADING } from '../util/config'
 
-const Home = () => {
+const MessagesView = () => {
   const { subscribeToMore, ...messages } = useQuery(ALL_MESSAGES, {
     fetchPolicy: 'network-only',
   })
@@ -71,4 +71,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default MessagesView

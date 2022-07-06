@@ -39,3 +39,4 @@
 
 - button to switch in switch-view (front)
 - some label changes in ui (mobile+front)
+- messages (back+front+mobile)
