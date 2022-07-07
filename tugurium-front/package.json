@@ -1,6 +1,6 @@
 {
   "name": "tugurium-front",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "dependencies": {
     "@apollo/client": "^3.6.4",
     "apollo-link-context": "^1.0.20",

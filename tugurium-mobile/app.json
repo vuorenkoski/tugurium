@@ -2,7 +2,7 @@
   "expo": {
     "name": "Tugurium",
     "slug": "Tugurium",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Weather application, and more...",
     "githubUrl": "https://github.com/vuorenkoski/tugurium",
     "orientation": "default",
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/newIcon3.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 7,
+      "versionCode": 8,
       "package": "com.vuorenkoski.tuguriumMobile",
       "googleServicesFile": "./google-services.json"
     },
