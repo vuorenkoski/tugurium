@@ -68,7 +68,7 @@ eas build -p android --profile apk
 #### 1. Install node, npm and postgre
 
 ```
-sudo apt install nodejs npm postgresql postgresql-contrib libpq-dev 
+sudo apt install nodejs npm postgresql postgresql-contrib libpq-dev
 ```
 
 #### 2. Create database
@@ -116,6 +116,15 @@ sudo service apache2 restart
 - SENSOR_TOKEN is static authorization token of sensors,
 - DATABASE_URL is URL for postgre database (for example postgres://tugurium_user:DB_PASSWORD@localhost:5432/tugurium_db),
 - ADMIN_PASSWORD initial admin password
+
+These are for sending new important message as email. One needs access to smtp server for this to work.
+
+- EMAIL_USERNAME
+- EMAIL_PASSWORD
+- EMAIL_FROM
+- EMAIL_HOST
+- EMAIL_PORT
+- EMAIL_TO
 
 #### 7. Install dependencies, build frontend and start background service
 
