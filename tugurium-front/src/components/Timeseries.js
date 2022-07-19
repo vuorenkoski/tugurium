@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useQuery, useLazyQuery } from '@apollo/client'
 import { Row, Col, Form } from 'react-bootstrap'
 
@@ -92,16 +93,33 @@ const Timeseries = () => {
   const [year, setYear] = useState(null)
   const [zoomDomain, setZoomDomain] = useState({})
   const [data, setData] = useState([])
+  const [searchParams] = useSearchParams()
+
+  const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA)
 
   useQuery(GET_FIRST_TIMESTAMP, {
     onCompleted: (data) => {
       const series = createYearSeries(data)
       setYears(series)
       setYear(series[0])
+      const initialSensor = searchParams.get('sensor')
+      if (initialSensor) {
+        setSelectedSensors([initialSensor])
+        getSensorData({
+          variables: {
+            sensorName: initialSensor,
+            average: 'HOUR',
+            minDate: series[0].minEpoch,
+            maxDate: series[0].maxEpoch,
+          },
+          onCompleted: (response) => {
+            const processedData = processData(response)
+            if (processedData) setData([processedData])
+          },
+        })
+      }
     },
   })
-
-  const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA)
 
   const sensors = useQuery(ALL_SENSORS)
 
@@ -278,6 +296,9 @@ const Timeseries = () => {
                             <Form.Check
                               type={'checkbox'}
                               id={s.sensorName}
+                              defaultChecked={selectedSensors.includes(
+                                s.sensorName
+                              )}
                               label={s.sensorFullname}
                               defaultValue={false}
                               onChangeCapture={handleSensorChange.bind(this)}

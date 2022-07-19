@@ -3,6 +3,7 @@ import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../util/conversions'
 import { NETWORK_ERROR, LOADING } from '../util/config'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   const sensors = useQuery(ALL_SENSORS, {
@@ -44,7 +45,18 @@ const Home = () => {
                 </tr>
                 {sensors.data.allSensors.map((s) => (
                   <tr key={s.sensorName}>
-                    <td>{s.sensorFullname}</td>
+                    <td>
+                      {
+                        <>
+                          <a
+                            href={'/timeseries?sensor=' + s.sensorName}
+                            className="sensorLink"
+                          >
+                            {s.sensorFullname}
+                          </a>
+                        </>
+                      }
+                    </td>
                     <td>{convertTemp(s.lastValue, s.sensorUnit)}</td>
                     <td>{convertDate(s.lastTimestamp)}</td>
                   </tr>
