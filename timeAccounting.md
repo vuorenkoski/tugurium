@@ -36,3 +36,5 @@
 | total | 205   |                                                                                                                                                       |
 
 ## Changes after last version
+
+- link from current view to timeseries view (mobile+front)

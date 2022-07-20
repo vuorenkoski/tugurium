@@ -1,12 +1,13 @@
 import { useRef, useEffect } from 'react'
 
 import Text from './Text'
-import { View, StyleSheet, ScrollView, AppState } from 'react-native'
+import { View, StyleSheet, ScrollView, AppState, Pressable } from 'react-native'
 import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../utils/conversions'
 import ItemBox from './ItemBox'
 import { NETWORK_ERROR, LOADING } from '../utils/config'
+import { useNavigate } from 'react-router-native'
 
 const styles = StyleSheet.create({
   labelRow: {
@@ -24,13 +25,23 @@ const styles = StyleSheet.create({
   },
 })
 
-const SensorItem = ({ item }) => {
+const onPressSensor = ({ sensorName, nav }) => {
+  nav('/timeseries', { exact: true, state: { sensorName } })
+}
+
+const SensorItem = ({ item, nav }) => {
   return (
     <ItemBox style={styles.itemBoxStyle}>
       <View style={styles.row}>
-        <Text textType="primaryText" style={{ paddingRight: 10 }}>
-          {item.sensorFullname}
-        </Text>
+        <Pressable
+          onPress={() =>
+            onPressSensor({ sensorName: item.sensorName, nav: nav })
+          }
+        >
+          <Text textType="primaryText" style={{ paddingRight: 10 }}>
+            {item.sensorFullname}
+          </Text>
+        </Pressable>
         <Text textType="primaryText">
           {convertTemp(item.lastValue, item.sensorUnit)}
         </Text>
@@ -43,6 +54,7 @@ const SensorItem = ({ item }) => {
 }
 
 const Current = () => {
+  const navigate = useNavigate()
   const appState = useRef(AppState.currentState)
   const sensors = useQuery(ALL_SENSORS, {
     fetchPolicy: 'network-only',
@@ -83,7 +95,7 @@ const Current = () => {
         {sensors.data &&
           sensors.data.allSensors &&
           sensors.data.allSensors.map((item) => (
-            <SensorItem key={item.id} item={item} />
+            <SensorItem key={item.id} item={item} nav={navigate} />
           ))}
       </View>
     </ScrollView>

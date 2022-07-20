@@ -8,6 +8,7 @@ import { ALL_SENSORS } from '../graphql/sensor'
 import { GET_FIRST_TIMESTAMP, SENSOR_DATA } from '../graphql/measurement'
 import DropDownSelector from './DropDownSelector'
 import { NETWORK_ERROR, LOADING } from '../utils/config'
+import { useLocation } from 'react-router-native'
 
 const styles = StyleSheet.create({
   content: {
@@ -120,40 +121,14 @@ const Timeseries = () => {
   const [year, setYear] = useState({ label: null })
   const [graphData, setGraphData] = useState([])
 
-  useQuery(GET_FIRST_TIMESTAMP, {
-    onCompleted: (data) => {
-      const series = createYearSeries(data)
-      setYears(series)
-      setYear(series[0])
-    },
-    onError: (e) => console.log(e),
-  })
+  const location = useLocation()
 
   const [getSensorData, { loading }] = useLazyQuery(SENSOR_DATA, {
     onError: (e) => console.log(e),
   })
 
-  const sensors = useQuery(ALL_SENSORS, {
-    fetchPolicy: 'network-only',
-    onError: (e) => console.log(e),
-  })
-
-  useEffect(() => {
-    AppState.addEventListener('change', (nextAppState) => {
-      if (
-        graphData.length>0 &&
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        refreshData(selectedSensors, period, year)
-      }
-      appState.current = nextAppState
-    })
-  }, [])
-
   const refreshData = async (selectedSensors, period, year) => {
     const newData = []
-
     for (let i in selectedSensors) {
       const sensor = selectedSensors[i]
       const resp = await getSensorData({
@@ -171,6 +146,38 @@ const Timeseries = () => {
     }
     setGraphData(newData)
   }
+
+  useQuery(GET_FIRST_TIMESTAMP, {
+    onCompleted: (data) => {
+      const series = createYearSeries(data)
+      setYears(series)
+      setYear(series[0])
+      if (location.state) {
+        const initialSensor = location.state.sensorName
+        setSelectedSensors([initialSensor])
+        refreshData([initialSensor], period, series[0])
+      }
+    },
+    onError: (e) => console.log(e),
+  })
+
+  const sensors = useQuery(ALL_SENSORS, {
+    fetchPolicy: 'network-only',
+    onError: (e) => console.log(e),
+  })
+
+  useEffect(() => {
+    AppState.addEventListener('change', (nextAppState) => {
+      if (
+        graphData.length > 0 &&
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        refreshData(selectedSensors, period, year)
+      }
+      appState.current = nextAppState
+    })
+  }, [])
 
   const handleSensorChange = async (value) => {
     setSelectedSensors(value)
