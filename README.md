@@ -1,10 +1,8 @@
 # Tugurium
 
-This application is made in Fullstack 2022 project -course.
+Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes data coming from different types of sensors (for example temperature, wind speed...). Frontend is build for both browser and Android device.
 
-Idea: Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes weather data and some other data. Frontend is build for both browser and Android device.
-
-Running example application: [https://tugurium.herokuapp.com](https://tugurium.herokuapp.com)
+Running example: [https://tugurium.herokuapp.com](https://tugurium.herokuapp.com)
 
 - credentials (normal user): vieras, fullstack
 - Heroku platform
@@ -13,7 +11,7 @@ Running example application: [https://tugurium.herokuapp.com](https://tugurium.h
 
 Mobile app in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app: exp://exp.host/@vuorenkoski/Tugurium?release-channel=default
 
-Mobile app in Play store (0.9.1 in production, 0.9.4 in beta testing): [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
+Mobile app in Play store (1.0.2 in production, 0.9.4 in beta testing): [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
 
 [User guide in Finnish](kayttoohje.md)
 
