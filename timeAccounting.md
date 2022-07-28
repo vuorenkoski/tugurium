@@ -38,3 +38,4 @@
 ## Changes after last version
 
 - link from current view to timeseries view (mobile+front)
+- login does not splash if signed in (mobile)

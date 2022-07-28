@@ -166,19 +166,6 @@ const Timeseries = () => {
     onError: (e) => console.log(e),
   })
 
-  useEffect(() => {
-    AppState.addEventListener('change', (nextAppState) => {
-      if (
-        graphData.length > 0 &&
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        refreshData(selectedSensors, period, year)
-      }
-      appState.current = nextAppState
-    })
-  }, [])
-
   const handleSensorChange = async (value) => {
     setSelectedSensors(value)
     refreshData(value, period, year)

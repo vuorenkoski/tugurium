@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   date: {
-    width: 100,
+    width: 150,
   },
   col: {
     flexDirection: 'column',

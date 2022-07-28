@@ -29,19 +29,13 @@ const onPressSensor = ({ sensorName, nav }) => {
   nav('/timeseries', { exact: true, state: { sensorName } })
 }
 
-const SensorItem = ({ item, nav }) => {
+const SensorItem = ({ item }) => {
   return (
     <ItemBox style={styles.itemBoxStyle}>
       <View style={styles.row}>
-        <Pressable
-          onPress={() =>
-            onPressSensor({ sensorName: item.sensorName, nav: nav })
-          }
-        >
-          <Text textType="primaryText" style={{ paddingRight: 10 }}>
-            {item.sensorFullname}
-          </Text>
-        </Pressable>
+        <Text textType="primaryText" style={{ paddingRight: 10 }}>
+          {item.sensorFullname}
+        </Text>
         <Text textType="primaryText">
           {convertTemp(item.lastValue, item.sensorUnit)}
         </Text>
@@ -95,7 +89,14 @@ const Current = () => {
         {sensors.data &&
           sensors.data.allSensors &&
           sensors.data.allSensors.map((item) => (
-            <SensorItem key={item.id} item={item} nav={navigate} />
+            <Pressable
+              key={item.id}
+              onPress={() =>
+                onPressSensor({ sensorName: item.sensorName, nav: navigate })
+              }
+            >
+              <SensorItem item={item} />
+            </Pressable>
           ))}
       </View>
     </ScrollView>
