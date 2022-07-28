@@ -135,10 +135,12 @@ const Main = () => {
   const apolloClient = useApolloClient()
 
   const [user, setUser] = useState(null)
+  const [storageChecked, setStorageChecked] = useState(false)
 
   useEffect(async () => {
     const user = await authStorage.getUser()
     setUser(user)
+    setStorageChecked(true)
   }, [])
 
   const logout = async () => {
@@ -146,6 +148,10 @@ const Main = () => {
     await authStorage.removeUser()
     await apolloClient.clearStore()
     setUser(null)
+  }
+
+  if (!storageChecked) {
+    return (<View></View>)
   }
 
   if (user) {
