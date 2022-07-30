@@ -33,15 +33,24 @@ const sensorData = async (root, args, context) => {
     raw: true,
   })
 
-  let measurements = await sequelize.query(
-    `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp 
-       FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
-    { nest: true, type: QueryTypes.SELECT }
-  )
-  measurements = measurements.map((m) => ({
-    value: m.value,
-    timestamp: m.timestamp * period,
-  }))
+  let measurements = null
+
+  if (period === 1) {
+    measurements = await sequelize.query(
+      `SELECT value, timestamp, id FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}`,
+      { nest: true, type: QueryTypes.SELECT }
+    )
+  } else {
+    measurements = await sequelize.query(
+      `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp, id as id
+         FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
+      { nest: true, type: QueryTypes.SELECT }
+    )
+    measurements = measurements.map((m) => ({
+      value: m.value,
+      timestamp: m.timestamp * period,
+    }))
+  }
   const data = {
     sensorFullname: sensor.sensorFullname,
     sensorName: sensor.sensorName,
@@ -104,6 +113,16 @@ const addMeasurement = async (root, args, context) => {
   }
 }
 
+const deleteMeasurement = async (root, args, context) => {
+  if (!context.currentUser || !context.currentUser.admin) {
+    throw new AuthenticationError('Not authorized')
+  }
+
+  const measurement = await Measurement.findOne({ where: { id: args.id } })
+  await measurement.destroy()
+  return measurement
+}
+
 const getFirstTimestamp = async (root, args, context) => {
   if (!context.currentUser) {
     throw new AuthenticationError('Not authorized')
@@ -130,6 +149,7 @@ const newMeasurement = {
 module.exports = {
   getFirstTimestamp,
   addMeasurement,
+  deleteMeasurement,
   datapoints,
   sensorData,
   newMeasurement,

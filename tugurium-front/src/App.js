@@ -10,6 +10,7 @@ import SwitchesView from './components/SwitchesView'
 import NewMeasurement from './components/NewMeasurement'
 import ImagesView from './components/ImagesView'
 import MessagesView from './components/MessagesView'
+import DeleteMeasurement from './components/DeleteMeasurement'
 import { Navbar, Nav, NavbarBrand } from 'react-bootstrap'
 import { VERSION } from './util/config'
 
@@ -138,6 +139,18 @@ const App = () => {
               {user.admin && (
                 <Nav.Link href="#" as="span">
                   <NavLink
+                    to="/deleteMeasurement"
+                    className={({ isActive }) =>
+                      isActive ? 'activeMenuitem' : 'menuitem'
+                    }
+                  >
+                    Poista mittaus
+                  </NavLink>
+                </Nav.Link>
+              )}
+              {user.admin && (
+                <Nav.Link href="#" as="span">
+                  <NavLink
                     to="/messages"
                     className={({ isActive }) =>
                       isActive ? 'activeMenuitem' : 'menuitem'
@@ -168,6 +181,7 @@ const App = () => {
         <Routes>
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/newMeasurement" element={<NewMeasurement />} />
+          <Route path="/deleteMeasurement" element={<DeleteMeasurement />} />
           <Route path="/switches" element={<SwitchesView />} />
           <Route path="/images" element={<ImagesView />} />
           <Route path="/settings" element={<Settings />} />

@@ -96,6 +96,7 @@ const typeDefs = gql`
 
   type Mutation {
     addMeasurement(sensorName: String!, value: String): Measurement
+    deleteMeasurement(id: Int!): Measurement
     login(username: String!, password: String!): Token
     createUser(username: String!, password: String!): User
     deleteUser(id: Int!): User

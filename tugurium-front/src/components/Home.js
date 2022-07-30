@@ -3,7 +3,6 @@ import { useQuery, useSubscription } from '@apollo/client'
 import { ALL_SENSORS, NEW_MEASUREMENT } from '../graphql/sensor'
 import { convertDate, convertTemp } from '../util/conversions'
 import { NETWORK_ERROR, LOADING } from '../util/config'
-import { Link } from 'react-router-dom'
 
 const Home = () => {
   const sensors = useQuery(ALL_SENSORS, {

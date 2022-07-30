@@ -16,6 +16,7 @@ const {
   addMeasurement,
   datapoints,
   sensorData,
+  deleteMeasurement,
   newMeasurement,
 } = require('./measurement')
 
@@ -76,6 +77,7 @@ const resolvers = {
     setSwitchCommand,
     setSwitchStatus,
     addMessage,
+    deleteMeasurement,
   },
   Subscription: {
     statusChanged,

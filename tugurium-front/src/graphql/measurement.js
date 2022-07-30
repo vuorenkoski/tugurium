@@ -26,6 +26,7 @@ export const SENSOR_DATA = gql`
       measurements {
         value
         timestamp
+        id
       }
     }
   }
@@ -35,6 +36,13 @@ export const ADD_MEASUREMENT = gql`
     addMeasurement(sensorName: $sensorName, value: $value) {
       value
       timestamp
+    }
+  }
+`
+export const DELETE_MEASUREMENT = gql`
+  mutation Mutation($deleteMeasurementId: Int!) {
+    deleteMeasurement(id: $deleteMeasurementId) {
+      id
     }
   }
 `
