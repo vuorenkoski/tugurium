@@ -134,6 +134,7 @@ const Timeseries = () => {
           maxDate: year.maxEpoch,
         },
         onCompleted: (response) => {
+          console.log(response)
           const processedData = processData(response)
           if (processedData) {
             const newData = data.concat(processedData)

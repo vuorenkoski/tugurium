@@ -42,13 +42,14 @@ const sensorData = async (root, args, context) => {
     )
   } else {
     measurements = await sequelize.query(
-      `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp, id as id
+      `SELECT ${sensor.agrmethod}(value) as value, timestamp / ${period} as timestamp
          FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
     measurements = measurements.map((m) => ({
       value: m.value,
       timestamp: m.timestamp * period,
+      id: null,
     }))
   }
   const data = {

@@ -42,7 +42,7 @@ const typeDefs = gql`
   }
 
   type Measurement {
-    id: ID!
+    id: ID
     sensor: Sensor!
     value: Float!
     timestamp: Int!

@@ -9,7 +9,7 @@ import {
   Container,
   Button,
 } from 'react-bootstrap'
-import { DELETE_MEASUREMENT, SENSOR_DATA } from '../graphql/measurement'
+import { DELETE_MEASUREMENT, SENSOR_DATA_WITH_ID } from '../graphql/measurement'
 import { ALL_SENSORS } from '../graphql/sensor'
 import { NETWORK_ERROR, LOADING } from '../util/config'
 import { convertDate, convertTemp } from '../util/conversions'
@@ -30,7 +30,7 @@ const DeleteMeasurement = () => {
   const [deleteMeasurement] = useMutation(DELETE_MEASUREMENT, {
     refetchQueries: [
       {
-        query: SENSOR_DATA,
+        query: SENSOR_DATA_WITH_ID,
         variables: {
           sensorName: selectedSensor,
           average: 'NO',
@@ -41,7 +41,7 @@ const DeleteMeasurement = () => {
     ],
   })
 
-  const sensorData = useQuery(SENSOR_DATA, {
+  const sensorData = useQuery(SENSOR_DATA_WITH_ID, {
     variables: {
       sensorName: selectedSensor,
       average: 'NO',
