@@ -19,7 +19,7 @@ const Chart = ({ data, yDomain }) => {
         domain={{
           y: yDomain,
         }}
-        scale={{ x: 'time' }}
+        scale={{ y: 'linear', x: 'time' }}
         height={chartStyle.height}
       >
         <VictoryAxis

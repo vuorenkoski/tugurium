@@ -80,8 +80,8 @@ const LoginContainer = ({ onSubmit }) => {
   const [host, setHost] = useState('')
   const authStorage = useAuthStorage()
 
-  useEffect(async () => {
-    const hostname = await authStorage.getHost()
+  useEffect(() => {
+    const hostname = authStorage.getHost()
     setHost(hostname)
   }, [])
 

@@ -137,8 +137,8 @@ const Main = () => {
   const [user, setUser] = useState(null)
   const [storageChecked, setStorageChecked] = useState(false)
 
-  useEffect(async () => {
-    const user = await authStorage.getUser()
+  useEffect(() => {
+    const user = authStorage.getUser()
     setUser(user)
     setStorageChecked(true)
   }, [])
@@ -151,7 +151,7 @@ const Main = () => {
   }
 
   if (!storageChecked) {
-    return (<View></View>)
+    return <View></View>
   }
 
   if (user) {
