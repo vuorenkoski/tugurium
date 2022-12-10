@@ -1,5 +1,5 @@
 module.exports = {
-  VERSION: '1.0.4 -beta',
+  VERSION: '1.0.4',
   AGGREGATE_METHODS: ['SUM', 'AVG'],
   COLORS: ['black', 'red', 'blue', 'green', 'orange', 'grey'],
   NETWORK_ERROR: 'Virhe: Verkkovirhe (backend ei tavoitettavissa?)',
