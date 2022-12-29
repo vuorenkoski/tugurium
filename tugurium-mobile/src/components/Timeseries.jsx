@@ -97,7 +97,7 @@ const processData = (data) => {
       scaleFn = scaleDown
       scaleTxt = ' /10'
     }
-    if (max < 4 && max > 0) {
+    if (max < 4 && max > 0 && min > 0) {
       scaleFn = scaleUp
       scaleTxt = ' x10'
     }
