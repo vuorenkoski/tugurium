@@ -34,6 +34,7 @@ const sensorData = async (root, args, context) => {
   })
 
   let measurements = null
+  let ms = []
 
   if (period === 1) {
     measurements = await sequelize.query(
@@ -46,6 +47,24 @@ const sensorData = async (root, args, context) => {
          FROM measurements WHERE sensor_id='${sensor.id}' ${minReq}${maxReq}GROUP BY timestamp / ${period}`,
       { nest: true, type: QueryTypes.SELECT }
     )
+    if (sensor.agrmethod === 'SUM') {
+      measurements = measurements.sort((a, b) => a.timestamp - b.timestamp)
+      idx = 0
+      for (let i = 0; i < measurements.length; i++) {
+        if (idx != 0) {
+          idx += 1
+          while (idx < measurements[i].timestamp) {
+            ms.push({ value: 0, timestamp: idx, })
+            idx += 1
+          }
+        } else {
+          idx = measurements[i].timestamp
+        }
+        ms.push(measurements[i])
+      }
+      measurements = ms
+    }
+
     measurements = measurements.map((m) => ({
       value: m.value,
       timestamp: m.timestamp * period,
