@@ -2,15 +2,6 @@
 
 Frontend and backend (running for example in local Raspberry pi server), which collects and visualizes data coming from different types of sensors (for example temperature, wind speed...). Frontend is build for both browser and Android device.
 
-Running example: [https://tugurium.herokuapp.com](https://tugurium.herokuapp.com)
-
-- credentials (normal user): vieras, fullstack
-- Heroku platform
-- sample of 9k datapoints
-- not connected to actual sensors, cameras, switches
-
-Mobile app in Expo: [https://expo.dev/@vuorenkoski/Tugurium](https://expo.dev/@vuorenkoski/Tugurium). Direct link for Expo mobile app: exp://exp.host/@vuorenkoski/Tugurium?release-channel=default
-
 Mobile app in Play store (1.0.2 in production, 0.9.4 in beta testing): [https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile](https://play.google.com/store/apps/details?id=com.vuorenkoski.tuguriumMobile)
 
 [User guide in Finnish](kayttoohje.md)
@@ -33,12 +24,6 @@ Data from sensors is pushed though api layear. Meteorological data is automatica
 - http://localhost:4000/api/graphql
 - ws://localhost:4000/api/graphql
 
-### Example production environment api
-
-- https://tugurium.herokuapp.com/api/image
-- https://tugurium.herokuapp.com/api/graphql
-- wss://tugurium.herokuapp.com/api/graphql
-
 ## Frontend
 
 Framework: Javascipt, Node, React, Apollo-client, Victory, Bootstrap
@@ -52,8 +37,6 @@ Example production environment url: https://tugurium.herokuapp.com
 ## Mobile version
 
 Framwork: Javascipt, Expo, React-native, Apollo-client, Victory-native
-
-Mobile in Expo: https://expo.dev/@vuorenkoski/Tugurium
 
 Build apk:
 
