@@ -1,6 +1,8 @@
 // Fetches most recent obaservation data from FMI open data API
 //
-// Espoo fmisid=874863 (temperature 30min interval)
+// Hiiskula fmisid=874863 (temperature 30min interval)
+//
+// https://opendata.fmi.fi/wfs?request=getFeature&storedquery_id=fmi::observations::weather::daily::simple&fmisid=101135&parameters=rrday,snow&starttime=2024-01-01&endtime=2024-12-31
 
 const { Sensor, Measurement } = require('./models')
 
@@ -10,14 +12,15 @@ const { DATABASE_URL } = require('./util/config')
 const parseString = require('xml2js').parseString
 const http = require('http')
 
-const optionsEspoo = {
+const optionsHiiskula = {
   host: 'opendata.fmi.fi',
-  path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=874863&parameters=temperature&timestep=30',
+  path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::daily::simple&fmisid=101135&parameters=rrday,snow',
 }
 
 // define sensornames in database
 const nameConversion = {
-  temperature: 'FESP',
+  rrday: 'FHIS',
+  snow: 'FHIL',
 }
 
 const sequelize = new Sequelize(DATABASE_URL, {
@@ -41,37 +44,28 @@ const connectToDatabase = async () => {
   return null
 }
 
-const parseAndSaveMostRecent = async (data) => {
-  let response = {}
+const parseAndSaveAll = async (data) => {
   for (let i in data['wfs:FeatureCollection']['wfs:member']) {
     const element =
       data['wfs:FeatureCollection']['wfs:member'][i]['BsWfs:BsWfsElement'][0]
     const parameter = element['BsWfs:ParameterName'][0]
-    const value = element['BsWfs:ParameterValue'][0]
+    let value = element['BsWfs:ParameterValue'][0]
     const date = new Date(element['BsWfs:Time'][0])
-    if (!response[parameter]) {
-      response[parameter] = {}
-    }
-    if (!response[parameter].date || response[parameter].date < date) {
-      response[parameter].date = date
-      response[parameter].value = value
-    }
-  }
-  const keys = Object.keys(response)
-  for (let i in keys) {
-    // Only 1.5 hour difference is allowed comapred to current time
-    if (new Date() - response[keys[i]].date < 90 * 60 * 1000) {
+    if (parameter && !isNaN(value)) {
+      if (value==-1) {
+        value = 0
+      }
       const sensor = await Sensor.findOne({
-        where: { sensorName: nameConversion[keys[i]] }, logging: false,
-      })
-      const value = parseFloat(response[keys[i]].value)
-      if (!isNaN(value)) {
-        const timestamp = response[keys[i]].date.getTime() / 1000
-        const data = {
-          sensorId: sensor.id,
-          value,
-          timestamp,
-        }
+        where: { sensorName: nameConversion[parameter] },
+        logging: false })
+      const timestamp = date.getTime() / 1000
+      const data = {
+        sensorId: sensor.id,
+        value: parseFloat(value),
+        timestamp,
+      }
+      if (sensor.lastTimestamp<timestamp) {
+        //console.log(data)
         sensor.lastTimestamp = timestamp
         sensor.lastValue = value
         await sensor.save({ logging: false })
@@ -90,14 +84,15 @@ const callback = (response) => {
 
   response.on('end', () => {
     parseString(xml, function (err, result) {
-      parseAndSaveMostRecent(result)
+      parseAndSaveAll(result)
     })
   })
 }
 
 const main = async () => {
   await connectToDatabase()
-  http.request(optionsEspoo, callback).end()
+  http.request(optionsHiiskula, callback).end()
 }
 
 main()
+

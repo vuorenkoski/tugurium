@@ -2,6 +2,8 @@
 //
 // Röykkä fmisid=101149 (temperature, snow depth and 1h rain)
 // Maasoja fmisid=100976 (wind speed)
+//
+// Röykkä remontissa 2025 kevääseen. Tilalle espoo/nuuksio: fmisid=852678
 
 const { Sensor, Measurement } = require('./models')
 
@@ -13,7 +15,7 @@ const http = require('http')
 
 const optionsRoykka = {
   host: 'opendata.fmi.fi',
-  path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=101149&parameters=r_1h,temperature,snow_aws&timestep=60',
+  path: '/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&fmisid=852678&parameters=r_1h,temperature,snow_aws&timestep=60',
 }
 
 const optionsMaasoja = {
@@ -71,7 +73,7 @@ const parseAndSaveMostRecent = async (data) => {
     // Only 1.5 hour difference is allowed comapred to current time
     if (new Date() - response[keys[i]].date < 90 * 60 * 1000) {
       const sensor = await Sensor.findOne({
-        where: { sensorName: nameConversion[keys[i]] },
+        where: { sensorName: nameConversion[keys[i]] }, logging: false,
       })
       const value = parseFloat(response[keys[i]].value)
       if (!isNaN(value)) {
@@ -83,7 +85,7 @@ const parseAndSaveMostRecent = async (data) => {
         }
         sensor.lastTimestamp = timestamp
         sensor.lastValue = value
-        await sensor.save()
+        await sensor.save({ logging: false })
         await Measurement.create(data, { logging: false })  
       }
     }
